@@ -22,6 +22,7 @@
 16. `15-news-activities` จัดการข่าว กิจกรรม และการลงทะเบียน
 17. `16-backup-recovery` สำรองและกู้คืนระบบ
 18. `17-observability` ติดตามสุขภาพระบบและแจ้งเตือนความผิดปกติ
+19. `18-ci-cd` ตรวจโค้ด Build Container และควบคุม Release
 
 ## เอกสารรวมศูนย์
 
@@ -34,4 +35,4 @@
 - ห้ามข้าม RLS หรืออ่านข้อมูลสุขภาพโดยไม่มี Role
 - ค่าการเชื่อมต่อที่มีความสำคัญอยู่ฝั่ง Server เท่านั้น
 - ทุกการเปลี่ยนสถานะสำคัญสร้าง Audit Log
-- Production ต้องผ่าน Security QA ก่อนเปลี่ยน `demoMode` เป็น `false`
+- Production ต้องผ่าน Security QA และ CI ก่อนเปลี่ยน `demoMode` เป็น `false`
