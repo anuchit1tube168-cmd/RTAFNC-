@@ -1,0 +1,18 @@
+project_id = "rtafnc-student-system"
+
+[api]
+enabled = true
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+site_url = "http://localhost:5500"
+additional_redirect_urls = ["http://localhost:5500"]
+enable_signup = true
+enable_anonymous_sign_ins = true
+
+[functions.line-auth]
+enabled = true
+verify_jwt = true
