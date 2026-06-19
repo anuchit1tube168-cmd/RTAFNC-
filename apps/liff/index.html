@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="./config.js" onerror="console.info('config.js not found; demo mode enabled')"></script>
+  <script src="./config.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -35,9 +35,9 @@
         <span id="memberStatus" class="member-status">DEMO</span>
       </div>
       <div class="metrics">
-        <article><small>ชั่วโมงความดี</small><strong id="goodHours">206</strong></article>
-        <article><small>รออนุมัติ</small><strong id="pendingCount">2</strong></article>
-        <article><small>ไปโรงพยาบาล</small><strong id="hospitalCount">2</strong></article>
+        <article><small>ชั่วโมงความดี</small><strong id="goodHours">0</strong></article>
+        <article><small>รออนุมัติ</small><strong id="pendingCount">0</strong></article>
+        <article><small>ไปโรงพยาบาล</small><strong id="hospitalCount">0</strong></article>
         <article><small>ข่าวใหม่</small><strong id="newsCount">3</strong></article>
       </div>
     </section>
@@ -68,7 +68,6 @@
   </div>
 
   <div id="toast" class="toast" aria-live="polite"></div>
-
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./app-runtime.js"></script>
 </body>
 </html>
