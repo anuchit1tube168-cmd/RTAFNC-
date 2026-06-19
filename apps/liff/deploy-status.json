@@ -2,6 +2,8 @@
   "application": "RTAFNC Student LIFF",
   "deployment": "github-pages",
   "mode": "demo",
-  "updated_at": "2026-06-19T22:15:00+07:00",
+  "public_repository": true,
+  "redeploy_requested": true,
+  "updated_at": "2026-06-19T23:00:00+07:00",
   "notice": "Public demo only. No real student or medical data."
 }
