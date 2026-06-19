@@ -1,0 +1,39 @@
+name: Build Staging SQL Bundle
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/seed.sql'
+      - 'supabase/verify.sql'
+      - 'tools/build_staging_sql.py'
+
+permissions:
+  contents: read
+
+jobs:
+  build-sql-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build staging SQL bundle
+        run: python3 tools/build_staging_sql.py
+
+      - name: Validate generated file
+        run: |
+          test -s dist/rtafnc-staging-bootstrap.sql
+          grep -q '0001_core_schema.sql' dist/rtafnc-staging-bootstrap.sql
+          grep -q '0002_line_member_auth.sql' dist/rtafnc-staging-bootstrap.sql
+          grep -q '0003_staff_roles_and_policies.sql' dist/rtafnc-staging-bootstrap.sql
+          grep -q 'RTAFNC-DEMO-6700000' dist/rtafnc-staging-bootstrap.sql
+
+      - name: Upload SQL bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: rtafnc-staging-bootstrap
+          path: dist/rtafnc-staging-bootstrap.sql
+          if-no-files-found: error
+          retention-days: 14
