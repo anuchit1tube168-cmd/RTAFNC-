@@ -23,10 +23,13 @@
 17. `16-backup-recovery` สำรองและกู้คืนระบบ
 18. `17-observability` ติดตามสุขภาพระบบและแจ้งเตือนความผิดปกติ
 19. `18-ci-cd` ตรวจโค้ด Build Container และควบคุม Release
+20. `19-production-activation` ควบคุมการเปิดระบบจริงและ Rollback
+21. `20-database-bootstrap` สร้าง Supabase Staging และตรวจฐานข้อมูล
 
 ## เอกสารรวมศูนย์
 
 - `CONTROL_MATRIX.md` แสดงระดับการปฏิบัติ Dependency และ Release Gate
+- `docs/DATABASE_BOOTSTRAP.md` เป็นคู่มือสร้างฐานข้อมูล Staging
 - แต่ละโฟลเดอร์มี `SKILL.md` ของตนเอง
 
 ## กฎรวมศูนย์
@@ -35,4 +38,4 @@
 - ห้ามข้าม RLS หรืออ่านข้อมูลสุขภาพโดยไม่มี Role
 - ค่าการเชื่อมต่อที่มีความสำคัญอยู่ฝั่ง Server เท่านั้น
 - ทุกการเปลี่ยนสถานะสำคัญสร้าง Audit Log
-- Production ต้องผ่าน Security QA และ CI ก่อนเปลี่ยน `demoMode` เป็น `false`
+- Production ต้องผ่าน Database Verification, Security QA และ CI ก่อนเปลี่ยน `demoMode` เป็น `false`
