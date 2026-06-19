@@ -1,0 +1,69 @@
+name: RTAFNC CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check apps/liff/app-runtime.js
+          node --check apps/admin/app.js
+          node --check apps/liff/config.js
+          node --check apps/admin/config.js
+
+      - name: Validate preview server
+        run: python3 -m py_compile tools/preview_server.py
+
+      - name: Check required files
+        run: |
+          test -f apps/liff/index.html
+          test -f apps/admin/index.html
+          test -f portal/index.html
+          test -f supabase/migrations/0001_core_schema.sql
+          test -f supabase/migrations/0002_line_member_auth.sql
+          test -f supabase/migrations/0003_staff_roles_and_policies.sql
+          test -f supabase/functions/line-auth/index.ts
+          test -f skills/CONTROL_MATRIX.md
+
+      - name: Reject obvious committed secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RInE --exclude-dir=.git --exclude='ci.yml' '(sk-proj-[A-Za-z0-9_-]{20,}|SUPABASE_SERVICE_ROLE_KEY[[:space:]]*=[[:space:]]*[^[:space:]]+|LINE_CHANNEL_SECRET[[:space:]]*=[[:space:]]*[^[:space:]]+|TELEGRAM_BOT_TOKEN[[:space:]]*=[[:space:]]*[^[:space:]]+)' .; then
+            echo 'Potential secret found in repository.'
+            exit 1
+          fi
+
+      - name: Build Docker image
+        run: docker build -f deploy/Dockerfile -t rtafnc-portal:ci .
+
+      - name: Start container
+        run: |
+          docker run -d --name rtafnc-ci -p 18080:8080 \
+            -e DEMO_MODE=true \
+            rtafnc-portal:ci
+          sleep 3
+
+      - name: Smoke test routes
+        run: |
+          curl --fail http://127.0.0.1:18080/healthz
+          curl --fail http://127.0.0.1:18080/
+          curl --fail http://127.0.0.1:18080/liff/
+          curl --fail http://127.0.0.1:18080/admin/
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker logs rtafnc-ci || true
