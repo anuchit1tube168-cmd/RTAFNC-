@@ -5,6 +5,13 @@ services:
       dockerfile: deploy/Dockerfile
     container_name: rtafnc-portal
     restart: unless-stopped
+    environment:
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:-}
+      LIFF_ID: ${LIFF_ID:-}
+      LINE_OA_ID: ${LINE_OA_ID:-}
+      DEFAULT_SEMESTER: ${DEFAULT_SEMESTER:-1}
+      DEMO_MODE: ${DEMO_MODE:-true}
     ports:
       - "8080:8080"
     healthcheck:
