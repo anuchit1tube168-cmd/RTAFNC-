@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#075f4b">
+  <meta name="robots" content="noindex,nofollow">
+  <title>RTAFNC Portal</title>
+  <style>
+    :root{--g:#075f4b;--n:#173b5e;--cream:#f6f2e9;--ink:#1d2b25;--muted:#718079;--line:#e5e1d8;--shadow:0 16px 38px rgba(30,50,40,.1)}*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#e9eee9,#f6f2e9);color:var(--ink);font-family:Arial,"Noto Sans Thai",sans-serif}.wrap{width:min(980px,100%);min-height:100vh;margin:auto;padding:32px 18px}.hero{padding:28px;border-radius:28px;background:linear-gradient(145deg,#075f4b,#173b5e);color:#fff;box-shadow:var(--shadow)}.brand{display:flex;align-items:center;gap:14px}.logo{width:64px;height:64px;display:grid;place-items:center;border:4px solid #d9c28c;border-radius:50%;font-weight:900;background:#075f4b}.hero h1,.hero p{margin:0}.hero p{margin-top:7px;opacity:.75}.status{display:inline-flex;margin-top:18px;padding:7px 10px;border-radius:99px;background:rgba(255,255,255,.13);font-size:11px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.card{display:block;padding:22px;border:1px solid var(--line);border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:var(--shadow);transition:.2s}.card:hover{transform:translateY(-2px)}.card span,.card strong,.card small{display:block}.card span{font-size:42px}.card strong{font-size:20px;margin-top:12px}.card small{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.55}.card.student strong{color:var(--g)}.card.staff strong{color:var(--n)}.note{margin-top:16px;padding:14px;border:1px solid #ead9ae;border-radius:15px;background:#fff7e3;color:#6f5b33;font-size:11px;line-height:1.6}@media(max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}.hero{padding:22px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="brand"><div class="logo">วพอ.</div><div><h1>RTAFNC Control Portal</h1><p>Student LIFF · Staff Dashboard · Private Deployment</p></div></div>
+      <span class="status">Private Server Ready Structure</span>
+    </section>
+    <section class="grid">
+      <a class="card student" href="/liff/"><span>📱</span><strong>Student LIFF</strong><small>หน้าใช้งานนักเรียนสำหรับเปิดจาก LINE Official Account มีระบบความดี 8 หัวข้อและข้อมูลไปโรงพยาบาลแยกกัน</small></a>
+      <a class="card staff" href="/admin/"><span>🖥️</span><strong>Staff Dashboard</strong><small>หน้าตรวจความดี แผงเจ้าหน้าที่แพทย์ ข่าวสาร ทะเบียนนักเรียน และสถานะระบบ</small></a>
+    </section>
+    <div class="note">หน้า Portal นี้ใช้เป็นจุดเข้าเมื่อ Deploy บน Private Server จริง ส่วนผู้ใช้นักเรียนควรเข้าผ่าน Rich Menu ของ LINE ไปยัง /liff/ โดยตรง</div>
+  </main>
+</body>
+</html>
