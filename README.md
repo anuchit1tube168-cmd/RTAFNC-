@@ -1,31 +1,107 @@
 # RTAFNC Student System
 
-Private repository for the Royal Thai Air Force Nursing College student portal.
+ระบบต้นแบบสำหรับนักเรียนพยาบาลทหารอากาศ ใช้งานผ่าน LINE Official Account และ LINE LIFF พร้อม Staff Console สำหรับเจ้าหน้าที่
 
-## Scope
+> **สถานะปัจจุบัน: Public Demo Repository**
+> ห้ามใส่ข้อมูลนักเรียนจริง ข้อมูลสุขภาพจริง รหัสผ่าน หรือข้อมูลลับลงใน Repository นี้
 
-- LINE OA + LIFF member portal
-- Student identity linking by LINE User ID and internal student UUID
-- Good-deed records with 8 official categories
-- Hospital and health records in a separate restricted module
-- News, activities, documents, PDF export, Telegram and LINE notifications
-- Supabase PostgreSQL, Row Level Security, Private Storage and Edge Functions
+## Online demo
+
+เมื่อ GitHub Pages Workflow สำเร็จ:
+
+- Student LIFF Demo: `https://anuchit1tube168-cmd.github.io/RTAFNC-/`
+- Staff Console Demo: `https://anuchit1tube168-cmd.github.io/RTAFNC-/admin-demo/`
+- Deployment health: `https://anuchit1tube168-cmd.github.io/RTAFNC-/health.json`
+
+GitHub Pages ต้องตั้งค่า:
+
+```text
+Settings → Pages → Source → GitHub Actions
+```
+
+## Implemented demo functions
+
+### Student LIFF
+
+- Dashboard และบัตรสมาชิก
+- บันทึกความดีครบ 8 ประเภท
+- เพิ่ม แก้ไข ลบ คัดลอก และบันทึกร่าง
+- ตรวจความถูกต้องของ Input
+- แนบ JPG, PNG, WebP และ PDF ไม่เกิน 10 MB ต่อไฟล์
+- ค้นหาและกรองประวัติ
+- บันทึกการไปโรงพยาบาลแยกจากความดี
+- นัดติดตามอาการและปิดการรักษา
+- ข่าวใหม่ / อ่านแล้ว / รับทราบ
+- ส่งออก JSON และพิมพ์สรุป
+- เก็บข้อมูลสาธิตใน localStorage
+
+### Staff Console
+
+- Dashboard ภาพรวม
+- คิวตรวจและอนุมัติความดี
+- อนุมัติ / ส่งกลับแก้ไข / ไม่อนุมัติ
+- Medical Role Panel แยกจากผู้ตรวจความดี
+- จัดการข่าวและกลุ่มเป้าหมาย
+- ทะเบียนนักเรียนและตรวจรหัสซ้ำ
+- นำเข้ารายชื่อแบบ CSV
+- สร้าง Activation Code แบบครั้งเดียว
+- Audit Log
+- Notification Queue Simulation
+- Role-based UI Demo
+
+## Planned production architecture
+
+- LINE Login + LIFF
+- Supabase PostgreSQL, Auth, RLS and Private Storage
+- Edge Functions
+- LINE Messaging API
+- Telegram notifications
+- PDF report export
+- Google Sheet export / archive workflow
+
+## Project structure
+
+```text
+apps/liff/                    Student LIFF frontend
+apps/admin/                   Staff Console demo
+supabase/migrations/          Database schema and RLS
+supabase/functions/           Server-side Edge Functions
+docs/                         Architecture and security documentation
+tests/                        Static contract and secret checks
+.github/workflows/pages.yml   Demo deployment
+```
 
 ## Security rules
 
-- Never commit real student records, health data, passwords, tokens or service-account files.
-- Keep LINE Channel Secret, LINE Channel Access Token, Telegram Bot Token, Supabase service-role key and Google credentials in server-side secrets only.
-- Public browser code may contain only LIFF ID, Supabase Project URL and Publishable Key after RLS has been verified.
-- Hospital data must have stricter access policies than good-deed data.
+- Never commit real student records or health records.
+- Never commit server-side credentials or messaging tokens.
+- Browser code may contain only public project identifiers after RLS has passed testing.
+- Hospital records and hospital files must have stricter policies than good-deed data.
+- Staff UI role checks are not a security boundary; Production security must be enforced by Auth and RLS.
+- LINE profile information is display-only. Identity must be verified server-side from the raw LINE ID token.
 
-## Planned structure
+## Production readiness
 
-```text
-apps/liff/                 Student LIFF frontend
-apps/admin/                Staff dashboard
-supabase/migrations/       Database schema and RLS
-supabase/functions/        LINE auth, notifications and PDF services
-docs/                      Architecture and security documentation
+See:
+
+- `docs/PRODUCTION_GAP_ANALYSIS.md`
+- `apps/liff/config.example.js`
+
+Keep this setting until all go-live gates pass:
+
+```js
+demoMode: true
 ```
 
-Status: private project initialization complete.
+## Local preview
+
+```bash
+python3 tools/preview_server.py --port 5500
+```
+
+Then open:
+
+```text
+Student LIFF: http://localhost:5500/liff/
+Staff Admin:  http://localhost:5500/admin/
+```
