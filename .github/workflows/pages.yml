@@ -1,10 +1,11 @@
-name: Deploy RTAFNC Student LIFF
+name: Deploy RTAFNC LIFF Demo
 
 on:
   push:
     branches: [main]
     paths:
       - 'apps/liff/**'
+      - 'apps/admin/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -18,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  validate-and-deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -28,17 +29,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare public Student LIFF site
+      - name: Validate static application
         run: |
+          set -euo pipefail
+          node --check apps/liff/app-runtime.js
+          node --check apps/liff/interaction-hotfix.js
+          node --check apps/liff/config.js
+          node --check apps/admin/app.js
+          node --check apps/admin/config.js
+          test -s apps/liff/index.html
+          test -s apps/liff/styles.css
+          test -s apps/admin/index.html
+          test -s apps/admin/styles.css
+
+      - name: Prepare public demo artifact
+        run: |
+          set -euo pipefail
           rm -rf public
-          mkdir -p public
+          mkdir -p public/admin-demo
           cp -R apps/liff/. public/
+          cp -R apps/admin/. public/admin-demo/
           touch public/.nojekyll
           cp public/index.html public/404.html
+          printf '{"application":"RTAFNC Student LIFF","mode":"demo","commit":"%s","deployed_at":"%s"}\n' \
+            "$GITHUB_SHA" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > public/health.json
           test -s public/index.html
-          test -s public/styles.css
           test -s public/app-runtime.js
           test -s public/config.js
+          test -s public/admin-demo/index.html
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
