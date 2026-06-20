@@ -6,6 +6,9 @@ on:
     paths:
       - 'apps/liff/**'
       - 'apps/admin/**'
+      - 'supabase/functions/line-auth/**'
+      - 'docs/PRODUCTION_GAP_ANALYSIS.md'
+      - 'tests/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -37,6 +40,7 @@ jobs:
           node --check apps/liff/config.js
           node --check apps/admin/app.js
           node --check apps/admin/config.js
+          node tests/static-contract.test.mjs
           test -s apps/liff/index.html
           test -s apps/liff/styles.css
           test -s apps/admin/index.html
