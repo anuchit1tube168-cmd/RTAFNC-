@@ -1,0 +1,38 @@
+name: RTAFNC Quality Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JavaScript syntax
+        run: |
+          set -euo pipefail
+          node --check apps/liff/app-runtime.js
+          node --check apps/liff/interaction-hotfix.js
+          node --check apps/liff/config.js
+          node --check apps/admin/app.js
+          node --check apps/admin/interaction-hotfix.js
+          node --check apps/admin/config.js
+
+      - name: Contract and secret checks
+        run: node tests/static-contract.test.mjs
+
+      - name: Required production files
+        run: |
+          set -euo pipefail
+          test -s supabase/functions/line-auth/index.ts
+          test -s supabase/migrations/202606200001_atomic_line_linking.sql
+          test -s docs/PRODUCTION_GAP_ANALYSIS.md
