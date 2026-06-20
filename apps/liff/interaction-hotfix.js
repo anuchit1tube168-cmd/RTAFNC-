@@ -1,25 +1,26 @@
 (() => {
-  let searchTimer = null;
+  let focusTimer = null;
 
+  // The main renderer replaces filter inputs after each keystroke.
+  // Allow the original input event to update application state, then restore
+  // focus and caret position on the replacement element.
   document.addEventListener("input", (event) => {
     const input = event.target.closest?.("input[data-filter]");
     if (!input) return;
 
-    event.stopImmediatePropagation();
-    window.clearTimeout(searchTimer);
+    window.clearTimeout(focusTimer);
     const filterName = input.dataset.filter;
     const currentValue = input.value;
+    const selectionStart = input.selectionStart ?? currentValue.length;
+    const selectionEnd = input.selectionEnd ?? currentValue.length;
 
-    searchTimer = window.setTimeout(() => {
-      input.dispatchEvent(new Event("change", { bubbles: true }));
-      window.setTimeout(() => {
-        const replacement = document.querySelector(`input[data-filter="${filterName}"]`);
-        if (!replacement) return;
-        replacement.value = currentValue;
-        replacement.focus({ preventScroll: true });
-        replacement.setSelectionRange(currentValue.length, currentValue.length);
-      }, 0);
-    }, 350);
+    focusTimer = window.setTimeout(() => {
+      const replacement = document.querySelector(`input[data-filter="${filterName}"]`);
+      if (!replacement) return;
+      replacement.value = currentValue;
+      replacement.focus({ preventScroll: true });
+      replacement.setSelectionRange(selectionStart, selectionEnd);
+    }, 0);
   }, true);
 
   window.addEventListener("error", (event) => {
