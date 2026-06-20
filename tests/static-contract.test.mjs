@@ -8,13 +8,19 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 const requiredFiles = [
   "apps/liff/index.html",
   "apps/liff/app-runtime.js",
+  "apps/liff/interaction-hotfix.js",
   "apps/liff/styles.css",
+  "apps/liff/extensions.css",
   "apps/liff/config.js",
   "apps/admin/index.html",
   "apps/admin/app.js",
+  "apps/admin/interaction-hotfix.js",
   "apps/admin/styles.css",
+  "apps/admin/config.js",
   "supabase/functions/line-auth/index.ts",
+  "supabase/migrations/202606200001_atomic_line_linking.sql",
   "docs/PRODUCTION_GAP_ANALYSIS.md",
+  "docs/RLS_TEST_MATRIX.md",
 ];
 
 for (const file of requiredFiles) {
@@ -23,9 +29,12 @@ for (const file of requiredFiles) {
 }
 
 const liffRuntime = read("apps/liff/app-runtime.js");
+const liffExtension = read("apps/liff/interaction-hotfix.js");
+const liffIndex = read("apps/liff/index.html");
 const liffConfig = read("apps/liff/config.js");
 const adminRuntime = read("apps/admin/app.js");
 const lineAuth = read("supabase/functions/line-auth/index.ts");
+const atomicLinking = read("supabase/migrations/202606200001_atomic_line_linking.sql");
 
 const goodDeedCodes = ["GD01", "GD02", "GD03", "GD04", "GD05", "GD06", "GD07", "GD08"];
 for (const code of goodDeedCodes) {
@@ -45,6 +54,17 @@ for (const functionName of studentFunctions) {
   assert.ok(liffRuntime.includes(`function ${functionName}`) || liffRuntime.includes(`async function ${functionName}`), `Missing Student LIFF function: ${functionName}`);
 }
 
+const studentExtensions = [
+  "register-activity",
+  "cancel-activity",
+  "read-staff-news",
+  "rtafnc_demo_activity_registrations",
+];
+for (const extension of studentExtensions) {
+  assert.ok(liffExtension.includes(extension), `Missing Student LIFF extension: ${extension}`);
+}
+assert.ok(liffIndex.includes("extensions.css"), "Student LIFF must load extension styles");
+
 const adminCapabilities = [
   "viewDeed",
   "viewHospital",
@@ -53,6 +73,8 @@ const adminCapabilities = [
   "generateCode",
   "logAudit",
   "queueNotification",
+  "openImportStudents",
+  "auditPage",
 ];
 for (const functionName of adminCapabilities) {
   assert.ok(adminRuntime.includes(`function ${functionName}`) || adminRuntime.includes(`async function ${functionName}`), `Missing Staff function: ${functionName}`);
@@ -62,13 +84,19 @@ assert.match(liffConfig, /demoMode\s*:\s*true/, "Public config must remain in de
 assert.ok(lineAuth.includes("https://api.line.me/oauth2/v2.1/verify"), "LINE ID token must be verified by the server");
 assert.ok(lineAuth.includes("SUPABASE_SERVICE_ROLE_KEY"), "LINE auth requires server-side service-role secret");
 assert.ok(lineAuth.includes("LINE_CHANNEL_ID"), "LINE auth requires server-side LINE channel ID");
+assert.ok(lineAuth.includes("ALLOWED_ORIGINS"), "LINE auth should support an explicit origin allow-list");
+assert.ok(lineAuth.includes("link_line_account_with_activation"), "LINE auth must use the atomic linking RPC");
+assert.ok(atomicLinking.includes("for update"), "Atomic activation linking must lock the activation-code row");
+assert.ok(atomicLinking.includes("grant execute") && atomicLinking.includes("service_role"), "Atomic linking RPC must be server-only");
 
 const filesToScan = [
   "apps/liff/index.html",
   "apps/liff/app-runtime.js",
+  "apps/liff/interaction-hotfix.js",
   "apps/liff/config.js",
   "apps/admin/index.html",
   "apps/admin/app.js",
+  "apps/admin/interaction-hotfix.js",
   "apps/admin/config.js",
 ];
 
