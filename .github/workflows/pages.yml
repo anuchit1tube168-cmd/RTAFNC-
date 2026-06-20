@@ -7,6 +7,7 @@ on:
       - 'apps/liff/**'
       - 'apps/admin/**'
       - 'supabase/functions/line-auth/**'
+      - 'supabase/migrations/**'
       - 'docs/PRODUCTION_GAP_ANALYSIS.md'
       - 'tests/**'
       - '.github/workflows/pages.yml'
@@ -39,6 +40,7 @@ jobs:
           node --check apps/liff/interaction-hotfix.js
           node --check apps/liff/config.js
           node --check apps/admin/app.js
+          node --check apps/admin/interaction-hotfix.js
           node --check apps/admin/config.js
           node tests/static-contract.test.mjs
           test -s apps/liff/index.html
