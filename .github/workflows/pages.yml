@@ -45,6 +45,7 @@ jobs:
           node tests/static-contract.test.mjs
           test -s apps/liff/index.html
           test -s apps/liff/styles.css
+          test -s apps/liff/extensions.css
           test -s apps/admin/index.html
           test -s apps/admin/styles.css
 
@@ -61,8 +62,10 @@ jobs:
             "$GITHUB_SHA" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > public/health.json
           test -s public/index.html
           test -s public/app-runtime.js
+          test -s public/extensions.css
           test -s public/config.js
           test -s public/admin-demo/index.html
+          test -s public/admin-demo/interaction-hotfix.js
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
