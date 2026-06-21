@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b7a49">
+  <title>แบบ นร./กสศ.01 | ระบบขอทุน วพอ.</title>
+  <link rel="stylesheet" href="./styles.css?v=20260621-gsef01-1">
+</head>
+<body>
+  <header class="appbar">
+    <div class="brand">
+      <div class="brand-mark">วพอ.</div>
+      <div>
+        <strong>ระบบขอทุน นพอ. · แบบ นร./กสศ.01</strong>
+        <small>กรอกข้อมูลบนมือถือ + Preview แบบฟอร์มราชการ A4 แนวนอน</small>
+      </div>
+    </div>
+    <button id="printBtn" class="primary">พิมพ์ / Save PDF</button>
+  </header>
+
+  <main class="workspace">
+    <aside class="entry-panel">
+      <section class="panel-card">
+        <h2>ข้อมูลหลัก</h2>
+        <div class="grid2">
+          <label>ปีการศึกษา <input id="year" value="2569"></label>
+          <label>ภาคเรียน <input id="term" value="1"></label>
+          <label>โรงเรียน <input id="school" value="วิทยาลัยพยาบาลทหารอากาศ"></label>
+          <label>สังกัด <input id="agency" value="กรมแพทย์ทหารอากาศ"></label>
+          <label>ชั้น <input id="classLevel" value="นพอ. ชั้นปี 2"></label>
+          <label>ชื่อ <input id="firstName" value="นพอ.ตัวอย่าง"></label>
+          <label>นามสกุล <input id="lastName" value="ระบบทดสอบ"></label>
+          <label>เลขบัตร/รหัส <input id="citizenId" maxlength="13" value="1234567890123"></label>
+        </div>
+        <label>รูปนักเรียน/ผู้ปกครอง <input id="portraitInput" type="file" accept="image/*"></label>
+      </section>
+
+      <section class="panel-card">
+        <h2>ครอบครัว / ผู้ปกครอง</h2>
+        <div class="grid2">
+          <label>สถานภาพครอบครัว
+            <select id="familyStatus">
+              <option>พ่อแม่หย่าร้าง</option>
+              <option>พ่อแม่อยู่ด้วยกัน</option>
+              <option>พ่อแม่แยกกันอยู่</option>
+              <option>พ่อเสียชีวิต/สาบสูญ</option>
+              <option>แม่เสียชีวิต/สาบสูญ</option>
+            </select>
+          </label>
+          <label>นักเรียนอาศัยอยู่กับ
+            <select id="livingWith">
+              <option>พ่อ/แม่</option><option>ญาติ</option><option>อยู่ลำพัง</option><option>ผู้ปกครอง/นายจ้าง</option><option>ครัวเรือนสถาบัน</option>
+            </select>
+          </label>
+          <label>ชื่อผู้ปกครอง <input id="guardianName" value="นายทดสอบ"></label>
+          <label>ความสัมพันธ์ <input id="guardianRelation" value="บิดา"></label>
+          <label>การศึกษาสูงสุด <input id="guardianEdu" value="ป.1-ป.6"></label>
+          <label>อาชีพ <input id="guardianJob" value="เกษตรกร"></label>
+          <label>เบอร์โทร <input id="guardianPhone" value="0111111111"></label>
+          <label>เลขบัตรผู้ปกครอง <input id="guardianId" maxlength="13" value="3100000000008"></label>
+        </div>
+      </section>
+
+      <section class="panel-card">
+        <div class="section-row">
+          <h2>สมาชิกครัวเรือน</h2>
+          <button id="addMember" class="secondary">+ เพิ่มสมาชิก</button>
+        </div>
+        <div id="memberEditor" class="member-editor"></div>
+        <div class="status-box">
+          <span>สมาชิกทั้งหมด</span><b id="memberCountBox">0 คน</b>
+          <span>รายได้เฉลี่ยครัวเรือน</span><b id="householdAverage">0 บาท/เดือน</b>
+        </div>
+      </section>
+
+      <section class="panel-card">
+        <h2>หลักฐานรูปบ้าน / ความเป็นอยู่</h2>
+        <input id="homePhotos" type="file" accept="image/*" multiple>
+        <div id="homeGallery" class="home-gallery"><span>ยังไม่มีรูปบ้าน</span></div>
+        <div class="actions">
+          <button id="draftBtn" class="secondary">บันทึกร่าง</button>
+          <button id="submitBtn" class="primary">ส่งให้อาจารย์ที่ปรึกษา</button>
+        </div>
+        <p id="statusText" class="status-text">สถานะ: ร่าง</p>
+      </section>
+    </aside>
+
+    <section class="preview-zone">
+      <div class="preview-toolbar">
+        <strong>Official Preview</strong>
+        <span>เลื่อนซ้าย/ขวาได้บนมือถือ · A4 Landscape</span>
+      </div>
+
+      <article id="paper" class="paper-a4">
+        <div class="form-top">
+          <div class="gsef-logo"><div class="logo-symbol">∞</div><div>กสศ</div></div>
+          <div class="form-title">
+            <h1>แบบขอรับเงินอุดหนุนนักเรียนยากจน</h1>
+            <p>ภาคเรียนที่ <span data-bind="term"></span> ปีการศึกษา <span data-bind="year"></span></p>
+            <p>โรงเรียน <span class="fill" data-bind="school"></span> สังกัด <span class="fill" data-bind="agency"></span></p>
+          </div>
+          <div class="form-meta">
+            <div class="meta-box">แบบ นร./กสศ.01 หน้า 1</div>
+            <small>ฉบับปรับปรุง 19 มีนาคม 2568</small>
+            <div class="portrait"><img id="portraitPreview" alt="รูปประกอบ"><span>รูปประกอบ</span></div>
+          </div>
+        </div>
+
+        <section class="student-line">
+          <b>1. ข้อมูลนักเรียน</b>
+          <span>ชื่อนักเรียน <span class="fill blue" data-bind="firstName"></span></span>
+          <span>นามสกุล <span class="fill blue" data-bind="lastName"></span></span>
+          <span>ชั้น <span class="fill blue" data-bind="classLevel"></span></span>
+        </section>
+
+        <div class="id-row"><span>เลขประจำตัวประชาชน/เลขรหัส G</span><div id="idBoxes" class="id-boxes"></div></div>
+        <div class="choice-row" id="familyStatusChoices"></div>
+        <div class="choice-row" id="livingChoices"></div>
+
+        <section class="guardian-line">
+          <span>ชื่อผู้ปกครองนักเรียน <span class="fill blue" data-bind="guardianName"></span></span>
+          <span>ความสัมพันธ์กับนักเรียน <span class="fill blue" data-bind="guardianRelation"></span></span>
+          <span>การศึกษาสูงสุด <span class="fill blue" data-bind="guardianEdu"></span></span>
+          <span>อาชีพ <span class="fill blue" data-bind="guardianJob"></span></span>
+          <span>เบอร์โทรศัพท์ <span class="fill blue" data-bind="guardianPhone"></span></span>
+          <span>เลขประจำตัวประชาชน <span class="mini-id blue" data-bind="guardianId"></span></span>
+        </section>
+
+        <div class="welfare"><span class="tick checked"></span> ได้สวัสดิการแห่งรัฐ (ทะเบียนคนจน)</div>
+
+        <section class="household-head">
+          <b>2. จำนวนสมาชิกในครัวเรือน (รวมตัวนักเรียน) รวม <span class="blue" id="memberCountText">0</span> คน</b>
+          <small>(สมาชิกในครัวเรือนหมายถึง สมาชิกที่อาศัยอยู่ในครัวเรือนเดียวกันตั้งแต่ 3 เดือนขึ้นไปและมีค่าใช้จ่ายร่วมกัน)</small>
+        </section>
+
+        <table class="official-table">
+          <thead>
+            <tr>
+              <th rowspan="3" class="col-no">คนที่</th>
+              <th rowspan="3" class="col-name">ชื่อ - นามสกุล</th>
+              <th rowspan="3" class="col-rel">ความสัมพันธ์<br>กับนักเรียน</th>
+              <th rowspan="3" class="col-id">เลขประจำตัว<br>ประชาชน</th>
+              <th rowspan="3" class="col-edu">การศึกษา<br>สูงสุด</th>
+              <th rowspan="3" class="col-age">อายุ</th>
+              <th colspan="9">รายได้เฉลี่ยต่อเดือนแยกตามประเภท (บาท)</th>
+              <th rowspan="3" class="col-total">รายได้รวม<br>เฉลี่ย<br>ต่อเดือน</th>
+            </tr>
+            <tr>
+              <th colspan="3">(หากมีใส่เครื่องหมาย ✔)</th>
+              <th rowspan="2">ค่าจ้าง<br>เงินเดือน</th>
+              <th rowspan="2">อาชีพ<br>เกษตรกรรม<br>(หลังหักต้นทุน)</th>
+              <th rowspan="2">ธุรกิจ<br>ส่วนตัว<br>(หลังหักต้นทุน)</th>
+              <th colspan="2">สวัสดิการจากรัฐ</th>
+              <th rowspan="2">รายได้จาก<br>แหล่งอื่นๆ<br>(เงินโอน ค่าเช่า ฯลฯ)</th>
+            </tr>
+            <tr>
+              <th>มีความพิการ<br>ทางร่างกาย/สติปัญญา</th>
+              <th>มีโรคเรื้อรัง<br>ยกเว้น<br>หวัด/เบาหวาน</th>
+              <th>ได้รับเงิน<br>โครงการกระตุ้น<br>เศรษฐกิจ 10,000 บาท</th>
+              <th>เบี้ยยังชีพ<br>ผู้สูงอายุ/<br>อุดหนุนอื่นๆ</th>
+              <th>โครงการ<br>กระตุ้นเศรษฐกิจ<br>10,000 บาท</th>
+            </tr>
+          </thead>
+          <tbody id="officialRows"></tbody>
+        </table>
+      </article>
+    </section>
+  </main>
+
+  <script src="./app.js?v=20260621-gsef01-1"></script>
+</body>
+</html>
