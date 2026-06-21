@@ -1,0 +1,4 @@
+/good-deed-v2.html
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+/apps/good-deed-certificate/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
