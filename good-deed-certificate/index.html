@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>คลังบันทึกความดีและใบประกาศผล วพอ.</title>
+  <style>
+    :root{
+      --red:#b9372c;--red2:#8f241d;--blue:#123a68;--gold:#d6a43a;--ink:#20242a;--muted:#6b7280;
+      --bg:#f4f6f9;--card:#fff;--line:#e5e7eb;--soft:#fff7f6;--green:#12805c;--amber:#b7791f;
+      --radius:24px;--radius2:16px;--shadow:0 24px 70px rgba(15,23,42,.14);--shadow2:0 12px 34px rgba(15,23,42,.10)
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:"TH Sarabun New","Noto Sans Thai",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:16px} button,input,select,textarea{font:inherit} button{cursor:pointer;border:0}
+    .hidden{display:none!important}.muted{color:var(--muted)}.strong{font-weight:800}.page{min-height:100vh}.seal{width:52px;height:52px;border-radius:16px;background:linear-gradient(145deg,#ffe8a7,#fff,#f6c24a);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(185,55,44,.15),0 8px 20px rgba(185,55,44,.18);color:var(--red);font-weight:900;font-size:15px}.pill{display:inline-flex;gap:6px;align-items:center;border-radius:999px;padding:7px 12px;background:#f3f4f6;color:#374151;font-size:13px;font-weight:700}.pill.red{background:#fff0ef;color:var(--red)}.pill.green{background:#e9fbf3;color:var(--green)}.pill.gold{background:#fff7df;color:#9a6a10}.pill.blue{background:#eef6ff;color:var(--blue)}
+    .login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at top,#fff 0,#f2f4f7 42%,#e8ecf2 100%)}
+    .login-card{width:min(460px,100%);border-radius:34px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}.login-top{height:175px;background:linear-gradient(135deg,var(--red2),#db4e43);position:relative;display:flex;justify-content:center;align-items:center}.login-top:after{content:"";position:absolute;left:-5%;right:-5%;bottom:-1px;height:52px;background:#fff;border-radius:50% 50% 0 0/55% 55% 0 0}.login-seal{z-index:1;width:92px;height:92px;border-radius:24px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);display:grid;place-items:center;border:1px solid rgba(255,255,255,.25)}.login-body{padding:34px 36px 38px;text-align:center}.login-body h1{margin:0;color:var(--red);font-size:31px}.login-body p{margin:8px 0 26px;color:var(--muted)}.field{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:999px;padding:0 16px;min-height:58px;box-shadow:0 6px 16px rgba(15,23,42,.04);margin:14px 0}.field input{border:0;outline:0;width:100%;background:transparent}.icon{color:#9ca3af}.btn{height:48px;border-radius:999px;background:var(--red);color:#fff;padding:0 20px;font-weight:800;box-shadow:0 10px 20px rgba(185,55,44,.28)}.btn:hover{background:var(--red2)}.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}.btn.blue{background:var(--blue)}.btn.small{height:38px;padding:0 14px;font-size:14px}.login-btn{width:100%;height:58px;margin-top:20px}.demo{margin-top:18px;font-size:14px;background:#f9fafb;border-radius:18px;padding:12px;color:#6b7280}
+    .app{display:none}.app.active{display:block}.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.nav{max-width:1160px;margin:auto;height:74px;display:flex;align-items:center;gap:18px;padding:0 20px}.brand{display:flex;align-items:center;gap:12px;font-weight:900;color:var(--red);font-size:21px;margin-right:auto}.nav a{color:#374151;text-decoration:none;font-weight:800;padding:10px 12px;border-radius:12px}.nav a.active,.nav a:hover{background:#f3f4f6}.user-chip{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#f3f4f6;font-weight:800}.avatar{width:36px;height:36px;border-radius:999px;background:#e5e7eb;display:grid;place-items:center}.container{max-width:1160px;margin:auto;padding:26px 20px 60px}.hero{display:flex;gap:18px;align-items:center;justify-content:space-between;margin:8px 0 24px}.hero h2{font-size:36px;line-height:1.15;margin:0}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.filters{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow2);display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}.control label{display:block;font-weight:800;font-size:14px;margin:0 0 6px}.control input,.control select,.control textarea{width:100%;border:1px solid var(--line);border-radius:14px;min-height:45px;padding:10px 12px;background:#fff;outline:0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}.stat{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow2)}.stat .num{font-size:32px;font-weight:900;color:var(--red);line-height:1}.stat .label{color:var(--muted);font-weight:700;margin-top:6px}.content-grid{display:grid;grid-template-columns:1fr 330px;gap:20px}.feed.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.feed.list{display:flex;flex-direction:column;gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow2);overflow:hidden}.deed{display:grid;grid-template-columns:200px 1fr}.feed.grid .deed{display:block}.thumb{min-height:170px;background:linear-gradient(135deg,#fff0ef,#fff,#eef6ff);display:grid;place-items:center;position:relative;border-right:1px solid var(--line)}.feed.grid .thumb{height:170px;border-right:0;border-bottom:1px solid var(--line)}.doc-preview{width:138px;height:96px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 12px 22px rgba(15,23,42,.08);display:grid;place-items:center;color:var(--red);font-weight:900;transform:rotate(-2deg)}.pdf-tag{position:absolute;right:14px;top:14px;background:var(--red);color:#fff;border-radius:10px;padding:8px 10px;font-weight:900}.deed-body{padding:18px}.deed-title{font-size:21px;font-weight:900;line-height:1.25;margin:10px 0 10px}.meta{display:grid;gap:8px;color:#5f6673;font-size:14px}.teacher{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.photo{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#fef3c7);display:grid;place-items:center}.card-actions{display:grid;grid-template-columns:1fr 70px 70px;margin-top:14px;gap:8px}.icon-btn{height:42px;border-radius:12px;background:#f9fafb;color:#374151;font-weight:900}.icon-btn.danger{background:#fff1f2;color:#be123c}.side{display:grid;gap:16px}.panel{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow2)}.panel h3{margin:0 0 12px;font-size:21px}.bar{height:10px;background:#f1f5f9;border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:999px}.rank{display:grid;gap:12px}.rank-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}.rank-no{width:28px;height:28px;border-radius:10px;background:#fff0ef;color:var(--red);display:grid;place-items:center;font-weight:900}
+    .footer{margin-top:38px;background:#fff;border-top:1px solid var(--line);padding:34px 20px}.footer-inner{max-width:1160px;margin:auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}.footer h4{margin:0 0 10px;color:var(--red)}.footer a{display:block;margin:8px 0;color:#4b5563;text-decoration:none}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.58);display:none;place-items:center;z-index:50;padding:20px}.modal-backdrop.show{display:grid}.modal{width:min(980px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;box-shadow:var(--shadow)}.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}.modal-head h3{margin:0;font-size:25px}.modal-body{padding:24px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.form-grid .full{grid-column:1/-1}.student-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.tag{display:inline-flex;gap:6px;align-items:center;background:#fff0ef;color:var(--red);border-radius:999px;padding:7px 12px;font-weight:800}.drop{border:2px dashed #e5e7eb;border-radius:18px;padding:20px;background:#fafafa;text-align:center}.modal-foot{position:sticky;bottom:0;background:#fff;display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--line)}
+    .certificate{background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow2);padding:26px;margin-top:18px}.paper{width:min(760px,100%);min-height:980px;margin:auto;background:#fff;border:10px solid #f7e7c0;outline:2px solid var(--red);padding:54px;text-align:center}.paper h1{color:var(--red);font-size:36px;margin:12px 0}.paper .name{font-size:34px;font-weight:900;color:var(--blue);margin:22px 0}.paper table{width:100%;border-collapse:collapse;margin-top:22px;text-align:left}.paper th,.paper td{border:1px solid #ddd;padding:10px}.sign{margin-top:70px;display:flex;justify-content:flex-end;text-align:center}.mobile-tabs{display:none;gap:8px;margin-bottom:14px}.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;border-radius:14px;padding:13px 16px;box-shadow:var(--shadow2);z-index:80;display:none}.toast.show{display:block}
+    @media(max-width:900px){.nav{height:auto;min-height:70px;flex-wrap:wrap;padding:12px 16px}.nav a{display:none}.brand{font-size:18px}.hero{display:block}.hero h2{font-size:28px;margin-bottom:14px}.filters{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}.feed.grid{grid-template-columns:1fr}.deed{grid-template-columns:1fr}.thumb{border-right:0;border-bottom:1px solid var(--line)}.side{order:-1}.footer-inner{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.login-body{padding:30px 24px}.paper{padding:28px;min-height:auto}.mobile-tabs{display:flex}.hero-actions .btn{flex:1}.card-actions{grid-template-columns:1fr 52px 52px}}
+    @media print{body{background:#fff}.topbar,.hero,.filters,.stats,.feed,.side,.footer,.btn,.mobile-tabs{display:none!important}.container{padding:0}.content-grid{display:block}.certificate{box-shadow:none;border:0;padding:0;margin:0}.paper{width:210mm;min-height:297mm;border:8px solid #f7e7c0;outline:2px solid var(--red);box-shadow:none;border-radius:0}}
+  </style>
+</head>
+<body>
+  <section id="loginPage" class="login-wrap page">
+    <div class="login-card">
+      <div class="login-top"><div class="login-seal"><div class="seal">วพอ.</div></div></div>
+      <div class="login-body">
+        <h1>ยินดีต้อนรับ!</h1>
+        <p>เข้าสู่ระบบคลังบันทึกความดีและใบประกาศผล</p>
+        <div class="field"><span class="icon">👤</span><input id="username" value="admin" placeholder="Username"></div>
+        <div class="field"><span class="icon">🔒</span><input id="password" type="password" value="1234" placeholder="Password"></div>
+        <button class="btn login-btn" onclick="login()">เข้าสู่ระบบ</button>
+        <div class="demo">Demo: <b>admin/1234</b> | <b>advisor/1234</b> | <b>student/1234</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="app" class="app page">
+    <header class="topbar">
+      <nav class="nav">
+        <div class="brand"><div class="seal">วพอ.</div><span>คลังบันทึกความดี วพอ.</span></div>
+        <a class="active" href="#feed" onclick="showSection('feed')">🏠 หน้าแรก</a>
+        <a href="#profile" onclick="showSection('profile')">👤 โปรไฟล์</a>
+        <a href="#certificate" onclick="showSection('certificate')">📜 ใบประกาศ</a>
+        <a href="#admin" onclick="showSection('admin')">⚙️ จัดการ</a>
+        <div class="user-chip"><div class="avatar" id="userInitial">US</div><span id="roleText">ผู้ดูแลระบบ</span></div>
+        <button class="icon-btn" onclick="logout()">↪</button>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="hero">
+        <div><h2>📡 ความเคลื่อนไหวบันทึกความดีและใบประกาศผล</h2><p class="muted">เก็บหลักฐาน ตรวจรับรอง ออกใบประกาศ และสรุปรายงานให้ผู้บริหารได้ทันที</p></div>
+        <div class="hero-actions">
+          <button class="btn ghost small" onclick="setView('grid')">▦ Grid</button>
+          <button class="btn ghost small" onclick="setView('list')">☰ List</button>
+          <button class="btn" onclick="openModal()">+ เพิ่มบันทึกความดี</button>
+        </div>
+      </div>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="filters">
+        <div class="control"><label>ประเภท</label><select id="fCategory" onchange="render()"><option>ทั้งหมด</option><option>จิตอาสาและสาธารณประโยชน์</option><option>วินัยและความรับผิดชอบ</option><option>ภาวะผู้นำ</option><option>วิชาการ/นวัตกรรม</option><option>ทหาร/การฝึก</option></select></div>
+        <div class="control"><label>ระดับกิจกรรม</label><select id="fLevel" onchange="render()"><option>ทั้งหมด</option><option>วิทยาลัย</option><option>กรมแพทย์ ทอ.</option><option>กองทัพอากาศ</option><option>ประเทศ</option><option>นานาชาติ</option></select></div>
+        <div class="control"><label>ภาคเรียน</label><select id="fSem" onchange="render()"><option>ทั้งหมด</option><option>1</option><option>2</option></select></div>
+        <div class="control"><label>ปีการศึกษา</label><input id="fYear" oninput="render()" placeholder="เช่น 2569"></div>
+        <div class="control"><label>ค้นหาชื่อนักเรียน</label><input id="fSearch" oninput="render()" placeholder="พิมพ์ชื่อ / กิจกรรม"></div>
+      </section>
+
+      <section class="mobile-tabs"><button class="btn ghost small" onclick="showSection('feed')">รายการ</button><button class="btn ghost small" onclick="showSection('profile')">โปรไฟล์</button><button class="btn ghost small" onclick="showSection('certificate')">ใบประกาศ</button></section>
+
+      <div class="content-grid">
+        <section id="feed" class="feed grid"></section>
+        <aside class="side" id="sidePanel">
+          <div class="panel"><h3>📊 Dashboard แยกหมวด</h3><div id="categoryBars"></div></div>
+          <div class="panel"><h3>🏅 Top ชั่วโมงความดี</h3><div class="rank" id="ranking"></div></div>
+          <div class="panel"><h3>⚡ งานรอตรวจ</h3><p class="muted">อาจารย์ที่ปรึกษาสามารถกดรับรองหรือส่งกลับแก้ไขได้ในเวอร์ชันเชื่อม Google Sheet</p><button class="btn blue" onclick="exportCsv()">Export Excel/CSV</button></div>
+        </aside>
+        <section id="profile" class="hidden"></section>
+        <section id="certificate" class="certificate hidden"></section>
+        <section id="admin" class="panel hidden"><h3>⚙️ จัดการระบบ</h3><p>ตั้งค่าโลโก้ หน่วยงาน รายชื่อนักเรียน หมวดกิจกรรม สิทธิ์ผู้ใช้ และลายเซ็นผู้รับรอง</p><div class="stats"><div class="stat"><div class="num">4</div><div class="label">กลุ่มสิทธิ์</div></div><div class="stat"><div class="num">10</div><div class="label">หมวดกิจกรรม</div></div><div class="stat"><div class="num">A4</div><div class="label">ใบประกาศ</div></div><div class="stat"><div class="num">QR</div><div class="label">ตรวจสอบเอกสาร</div></div></div></section>
+      </div>
+    </main>
+
+    <footer class="footer"><div class="footer-inner"><div><h4>คลังบันทึกความดีและใบประกาศผล วพอ.</h4><p class="muted">ระบบรวบรวมและบริหารจัดการข้อมูลกิจกรรมความดีของนักเรียน เพื่อจัดเก็บหลักฐานอย่างเป็นระบบและนำไปอ้างอิงได้สะดวก</p></div><div><h4>เมนูลัด</h4><a href="#feed">› หน้าแรก</a><a href="#profile">› โปรไฟล์ของฉัน</a><a href="#certificate">› ใบประกาศผล</a></div><div><h4>ติดต่อ / ช่วยเหลือ</h4><a>✉ ติดต่อผู้ดูแลระบบ</a><a>ⓘ คู่มือการใช้งานระบบ</a></div></div></footer>
+  </section>
+
+  <div class="modal-backdrop" id="modal"><div class="modal">
+    <div class="modal-head"><h3>📄 เพิ่มข้อมูลบันทึกความดี / ใบประกาศผล</h3><button class="icon-btn" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="control full"><label>ชื่อนักเรียน / ผู้ร่วมกิจกรรม *</label><input id="mStudents" placeholder="พิมพ์ชื่อแล้วกด +"><div class="student-tags"><span class="tag">👤 นพอ. อนุชิต ทำจะดี</span><span class="tag">👤 นพอ. สุชาติ คีมทอง</span></div></div>
+        <div class="control"><label>หมวดกิจกรรม *</label><select id="mCategory"><option>จิตอาสาและสาธารณประโยชน์</option><option>วินัยและความรับผิดชอบ</option><option>ภาวะผู้นำ</option><option>วิชาการ/นวัตกรรม</option><option>ทหาร/การฝึก</option></select></div>
+        <div class="control"><label>ระดับกิจกรรม *</label><select id="mLevel"><option>วิทยาลัย</option><option>กรมแพทย์ ทอ.</option><option>กองทัพอากาศ</option><option>ประเทศ</option><option>นานาชาติ</option></select></div>
+        <div class="control full"><label>ชื่อกิจกรรม / ผลงาน / ภารกิจ *</label><input id="mTitle" placeholder="เช่น จิตอาสาช่วยงานหน่วยแพทย์เคลื่อนที่"></div>
+        <div class="control"><label>วันที่ทำกิจกรรม</label><input id="mDate" type="date"></div>
+        <div class="control"><label>ปีการศึกษา</label><input id="mYear" value="2569"></div>
+        <div class="control"><label>ภาคเรียน</label><select id="mSem"><option>1</option><option>2</option></select></div>
+        <div class="control"><label>รูปแบบ</label><select id="mFormat"><option>Onsite</option><option>Online</option><option>Hybrid</option></select></div>
+        <div class="control"><label>จำนวนชั่วโมง *</label><input id="mHours" type="number" value="6" min="0.5" max="24" step="0.5"></div>
+        <div class="control"><label>หน่วยงานที่จัด</label><input id="mOrg" placeholder="เช่น วิทยาลัยพยาบาลทหารอากาศ"></div>
+        <div class="control"><label>สถานที่จัด</label><input id="mPlace" placeholder="เช่น วพอ. / ชุมชน / โรงพยาบาล"></div>
+        <div class="control full"><label>รายละเอียดกิจกรรม</label><textarea id="mDesc" rows="4" placeholder="สรุปสิ่งที่ทำ ผลลัพธ์ และผู้รับรอง"></textarea></div>
+        <div class="control full"><label>อัปโหลดหลักฐาน รูปภาพ / PDF</label><div class="drop"><input id="mFile" type="file" multiple accept="image/*,.pdf"><p class="muted">ระบบต้นแบบจะแสดงชื่อไฟล์ ส่วนเวอร์ชันจริงจะบีบอัดภาพด้วย Canvas ก่อนส่งเข้า Google Drive</p><div id="fileList"></div></div></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="addRecord()">+ เพิ่มข้อมูล</button></div>
+  </div></div>
+  <div class="toast" id="toast">บันทึกสำเร็จ</div>
+
+  <script>
+    const users={admin:{password:'1234',role:'ผู้ดูแลระบบ',initial:'AD'},advisor:{password:'1234',role:'อาจารย์ที่ปรึกษา',initial:'AV'},student:{password:'1234',role:'นักเรียน',initial:'ST'}};
+    const students=['นพอ. อนุชิต ทำจะดี','นพอ. สุชาติ คีมทอง','นพอ. เอมอร เสาร์อ่อน','นพอ. ทวีวัฒน์ รูปแก้ว'];
+    let view=localStorage.getItem('goodDeedView')||'grid';
+    let deeds=JSON.parse(localStorage.getItem('goodDeeds')||'null')||[
+      {id:'GD-2569-0001',title:'จิตอาสาช่วยงานหน่วยแพทย์เคลื่อนที่และดูแลประชาชน',category:'จิตอาสาและสาธารณประโยชน์',level:'วิทยาลัย',sem:'1',year:'2569',date:'19/6/2569',hours:8,student:'นพอ. อนุชิต ทำจะดี',org:'วิทยาลัยพยาบาลทหารอากาศ',status:'รับรองแล้ว',stars:7},
+      {id:'GD-2569-0002',title:'ฝึกระเบียบวินัยและเป็นหัวหน้าชุดช่วยเหลือเพื่อนร่วมรุ่น',category:'ทหาร/การฝึก',level:'กองทัพอากาศ',sem:'1',year:'2569',date:'21/6/2569',hours:6,student:'นพอ. สุชาติ คีมทอง',org:'กรมแพทย์ทหารอากาศ',status:'รอตรวจ',stars:4},
+      {id:'GD-2569-0003',title:'นำเสนอโครงงานนวัตกรรมการพยาบาลเพื่อสังคมสูงวัย',category:'วิชาการ/นวัตกรรม',level:'ประเทศ',sem:'1',year:'2569',date:'22/6/2569',hours:12,student:'นพอ. เอมอร เสาร์อ่อน',org:'โครงการพัฒนานักเรียน',status:'รับรองแล้ว',stars:12},
+      {id:'GD-2569-0004',title:'กิจกรรมเพื่อนช่วยเพื่อน ดูแลความเรียบร้อยและส่งเสริมคุณธรรม',category:'ภาวะผู้นำ',level:'วิทยาลัย',sem:'1',year:'2569',date:'24/6/2569',hours:5,student:'นพอ. ทวีวัฒน์ รูปแก้ว',org:'ฝ่ายปกครอง',status:'ส่งกลับแก้ไข',stars:2}
+    ];
+    function save(){localStorage.setItem('goodDeeds',JSON.stringify(deeds))}
+    function login(){const u=document.getElementById('username').value.trim();const p=document.getElementById('password').value.trim();if(users[u]&&users[u].password===p){document.getElementById('loginPage').classList.add('hidden');document.getElementById('app').classList.add('active');document.getElementById('roleText').textContent=users[u].role;document.getElementById('userInitial').textContent=users[u].initial;render();toast('เข้าสู่ระบบสำเร็จ')}else toast('User หรือ Password ไม่ถูกต้อง')}
+    function logout(){location.reload()}
+    function setView(v){view=v;localStorage.setItem('goodDeedView',v);render()}
+    function filtered(){const c=fCategory.value,l=fLevel.value,s=fSem.value,y=fYear.value.trim(),q=fSearch.value.trim().toLowerCase();return deeds.filter(d=>(c==='ทั้งหมด'||d.category===c)&&(l==='ทั้งหมด'||d.level===l)&&(s==='ทั้งหมด'||d.sem===s)&&(!y||d.year.includes(y))&&(!q||(d.title+d.student+d.category+d.org).toLowerCase().includes(q)))}
+    function statusPill(st){if(st==='รับรองแล้ว')return '<span class="pill green">✓ รับรองแล้ว</span>';if(st==='รอตรวจ')return '<span class="pill gold">⏳ รอตรวจ</span>';return '<span class="pill red">↺ ส่งกลับแก้ไข</span>'}
+    function render(){const data=filtered();document.getElementById('feed').className='feed '+view;document.getElementById('feed').innerHTML=data.map((d,i)=>`<article class="card deed"><div class="thumb"><div class="doc-preview">ใบรับรอง<br>${d.id}</div><span class="pdf-tag">PDF</span></div><div class="deed-body"><div>${statusPill(d.status)} <span class="pill blue">${d.category}</span></div><div class="deed-title">${d.title}</div><div class="meta"><span>📅 ${d.date}</span><span>🏛 ${d.org}</span><span>⏱ ${d.hours} ชั่วโมง • ระดับ ${d.level}</span></div><div class="teacher"><div class="photo">👤</div><div><b>${d.student}</b><br><span class="muted">ปีการศึกษา ${d.year} / ภาคเรียน ${d.sem}</span></div><div style="margin-left:auto;color:#eab308;font-weight:900">★ ${d.stars}</div></div><div class="card-actions"><button class="icon-btn" onclick="printCert('${d.student}')">🖨 พิมพ์ใบประกาศ</button><button class="icon-btn" onclick="star(${i})">★</button><button class="icon-btn danger" onclick="removeDeed(${i})">🗑</button></div></div></article>`).join('')||'<div class="panel">ไม่พบข้อมูลตามเงื่อนไข</div>';renderStats(data);renderSide();renderProfile();renderCertificate();}
+    function renderStats(data){const approved=data.filter(d=>d.status==='รับรองแล้ว').length,pending=data.filter(d=>d.status==='รอตรวจ').length,hours=data.reduce((a,b)=>a+Number(b.hours),0);stats.innerHTML=`<div class="stat"><div class="num">${data.length}</div><div class="label">รายการทั้งหมด</div></div><div class="stat"><div class="num">${pending}</div><div class="label">รอตรวจรับรอง</div></div><div class="stat"><div class="num">${approved}</div><div class="label">รับรองแล้ว</div></div><div class="stat"><div class="num">${hours}</div><div class="label">ชั่วโมงความดีรวม</div></div>`}
+    function renderSide(){const cats=[...new Set(deeds.map(d=>d.category))];categoryBars.innerHTML=cats.map(c=>{let n=deeds.filter(d=>d.category===c).length;return `<p><b>${c}</b> <span class="muted">${n} รายการ</span></p><div class="bar"><span style="width:${Math.min(100,n*25)}%"></span></div>`}).join('');const sums={};deeds.forEach(d=>sums[d.student]=(sums[d.student]||0)+Number(d.hours));ranking.innerHTML=Object.entries(sums).sort((a,b)=>b[1]-a[1]).slice(0,5).map((r,i)=>`<div class="rank-row"><div class="rank-no">${i+1}</div><div><b>${r[0]}</b><br><span class="muted">ชั่วโมงสะสม</span></div><b>${r[1]}</b></div>`).join('')}
+    function renderProfile(){const name=students[0],mine=deeds.filter(d=>d.student===name),total=mine.reduce((a,b)=>a+Number(b.hours),0);profile.innerHTML=`<div class="panel"><h3>👤 โปรไฟล์นักเรียน</h3><div class="stats"><div class="stat"><div class="num">${total}</div><div class="label">ชั่วโมงสะสม</div></div><div class="stat"><div class="num">${mine.length}</div><div class="label">กิจกรรมทั้งหมด</div></div><div class="stat"><div class="num">${mine.filter(d=>d.status==='รับรองแล้ว').length}</div><div class="label">รับรองแล้ว</div></div><div class="stat"><div class="num">ดีมาก</div><div class="label">ระดับเกียรติคุณ</div></div></div><h3>${name}</h3><p class="muted">รหัสนักเรียน 1104 • ชั้นปี 1 • รุ่น 2569 • หมวดตัวอย่าง</p>${mine.map(d=>`<p>• ${d.title} <b>${d.hours} ชม.</b> ${statusPill(d.status)}</p>`).join('')}</div>`}
+    function renderCertificate(){const name=students[0],mine=deeds.filter(d=>d.student===name&&d.status==='รับรองแล้ว'),total=mine.reduce((a,b)=>a+Number(b.hours),0),level=total>=50?'ดีเยี่ยม':total>=25?'ดีมาก':total>=10?'ดี':'อยู่ระหว่างสะสม';certificate.innerHTML=`<button class="btn" onclick="window.print()">🖨 พิมพ์ / Save PDF</button><div class="paper"><div class="seal" style="margin:auto;width:76px;height:76px">วพอ.</div><h1>ใบประกาศผลบันทึกความดี</h1><p>วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ</p><p>ขอมอบใบประกาศผลฉบับนี้ให้แก่</p><div class="name">${name}</div><p>รหัสนักเรียน 1104 ชั้นปีที่ 1 รุ่น 2569</p><p>เพื่อรับรองว่าเป็นผู้มีประวัติการเข้าร่วมกิจกรรมความดีและกิจกรรมสาธารณประโยชน์ที่ได้รับการตรวจสอบแล้ว</p><h2>รวมจำนวน ${total} ชั่วโมง • ระดับ ${level}</h2><table><thead><tr><th>กิจกรรม</th><th>วันที่</th><th>ชั่วโมง</th></tr></thead><tbody>${mine.map(d=>`<tr><td>${d.title}</td><td>${d.date}</td><td>${d.hours}</td></tr>`).join('')}</tbody></table><p style="margin-top:28px">เลขที่เอกสาร CERT-2569-0001 • QR VERIFY</p><div class="sign"><div>ลงชื่อ ........................................<br>(ผู้อำนวยการวิทยาลัยพยาบาลทหารอากาศ)<br>ผู้รับรอง</div></div></div>`}
+    function showSection(id){['feed','profile','certificate','admin'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById('sidePanel').classList.toggle('hidden',id!=='feed');document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));render()}
+    function openModal(){modal.classList.add('show');mDate.valueAsDate=new Date()}function closeModal(){modal.classList.remove('show')}function addRecord(){if(!mTitle.value.trim())return toast('กรุณากรอกชื่อกิจกรรม');deeds.unshift({id:'GD-2569-'+String(deeds.length+1).padStart(4,'0'),title:mTitle.value.trim(),category:mCategory.value,level:mLevel.value,sem:mSem.value,year:mYear.value,date:new Date(mDate.value||Date.now()).toLocaleDateString('th-TH'),hours:Number(mHours.value||0),student:'นพอ. อนุชิต ทำจะดี',org:mOrg.value||'วิทยาลัยพยาบาลทหารอากาศ',status:'รอตรวจ',stars:0});save();closeModal();render();toast('เพิ่มข้อมูลแล้ว รอตรวจรับรอง')}
+    function star(i){filtered()[i].stars++;save();render();toast('ส่งดาวให้ผลงานแล้ว ⭐')}function removeDeed(i){if(confirm('ลบรายการนี้?')){const item=filtered()[i];deeds=deeds.filter(d=>d.id!==item.id);save();render()}}
+    function exportCsv(){const rows=[['id','title','category','level','year','semester','student','hours','status'],...deeds.map(d=>[d.id,d.title,d.category,d.level,d.year,d.sem,d.student,d.hours,d.status])];const csv=rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv'}));a.download='good-deed-report.csv';a.click();toast('ดาวน์โหลด CSV แล้ว')}
+    function printCert(){showSection('certificate');setTimeout(()=>window.print(),200)}function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
+    mFile.addEventListener('change',e=>fileList.innerHTML=[...e.target.files].map(f=>`<span class="pill">📎 ${f.name}</span>`).join(' '));
+  </script>
+</body>
+</html>
