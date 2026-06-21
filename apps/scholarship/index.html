@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#075f4b">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="ระบบขอทุน นักเรียนพยาบาลทหารอากาศ วพอ. พร้อมแนบรูปนักเรียน รูปบ้าน และอนุมัติผ่านอาจารย์ที่ปรึกษา">
+  <title>RTAFNC Scholarship Portal</title>
+  <link rel="stylesheet" href="./styles.css?v=20260621-1">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">วพอ.</div>
+        <div>
+          <strong>RTAFNC Scholarship</strong>
+          <small>LINE OA · ขอทุน · อนุมัติอาจารย์ที่ปรึกษา</small>
+        </div>
+      </div>
+      <button id="lineStatus" class="chip" type="button">LINE DEMO</button>
+    </header>
+
+    <section class="member-card" aria-label="ข้อมูลผู้ใช้งาน">
+      <div class="member-row">
+        <label class="avatar uploader" for="studentPhoto">
+          <img id="studentPhotoPreview" alt="รูปนักเรียน" hidden>
+          <span id="avatarText">นพอ.</span>
+        </label>
+        <input id="studentPhoto" class="sr-only" type="file" accept="image/*">
+        <div class="member-copy">
+          <span>ระบบคำขอทุนการศึกษา</span>
+          <h1 id="memberName">นพอ.ตัวอย่าง วพอ.</h1>
+          <p id="memberMeta">ชั้นปี 2 · รุ่น 67 · เปิดผ่าน LINE Official Account</p>
+        </div>
+        <span id="memberStatus" class="member-status">DRAFT</span>
+      </div>
+      <div class="metrics">
+        <article><small>สถานะ</small><strong id="metricStatus">ร่าง</strong></article>
+        <article><small>รายได้/คน</small><strong id="metricIncome">0</strong></article>
+        <article><small>รูปบ้าน</small><strong id="metricPhotos">0</strong></article>
+        <article><small>คะแนน</small><strong id="metricScore">-</strong></article>
+      </div>
+    </section>
+
+    <main id="main" class="page-content">
+      <section class="section page active" data-view="home">
+        <div class="demo-banner"><span>V2</span>โปรเจกต์นี้แยกจาก Student Portal เดิม แต่ใช้แนว UI เดียวกัน: card ใหญ่ด้านบน, bottom nav, สีเขียว-ทองของ วพอ. และออกแบบให้เปิดใน LINE OA ได้</div>
+        <div class="section-head">
+          <div><p>WORKFLOW</p><h2>ขอทุนแบบมีหลักฐานภาพ</h2></div>
+          <span class="result-count">5 ขั้นตอน</span>
+        </div>
+        <div class="timeline">
+          <article><b>1</b><div><strong>นักเรียนกรอกคำขอ</strong><small>ข้อมูลส่วนตัว ครอบครัว รายได้ เหตุผลขอทุน</small></div></article>
+          <article><b>2</b><div><strong>แนบรูปนักเรียนและรูปบ้าน</strong><small>ใช้ดูสภาพความเป็นอยู่โดยไม่ต้องส่งไฟล์แยกใน LINE</small></div></article>
+          <article><b>3</b><div><strong>ส่งให้อาจารย์ที่ปรึกษา</strong><small>แจ้งเตือนผ่าน LINE OA / LIFF link</small></div></article>
+          <article><b>4</b><div><strong>อาจารย์อนุมัติหรือส่งกลับแก้ไข</strong><small>มีบันทึกความเห็นทุกครั้ง</small></div></article>
+          <article><b>5</b><div><strong>ออก PDF เสนอคณะกรรมการ</strong><small>ฟอร์มราชการ A4 พร้อมหลักฐานครบ</small></div></article>
+        </div>
+        <button class="primary full" data-jump="apply" type="button">เริ่มกรอกคำขอทุน</button>
+      </section>
+
+      <section class="section page" data-view="apply">
+        <div class="section-head">
+          <div><p>APPLICATION</p><h2>แบบคำขอทุน นพอ.</h2></div>
+          <span class="result-count">บันทึกอัตโนมัติในเครื่อง</span>
+        </div>
+        <form id="scholarshipForm" class="form-grid">
+          <label>ชื่อ-สกุลนักเรียน
+            <input name="studentName" value="นพอ.ตัวอย่าง ระบบทดสอบ" required>
+          </label>
+          <label>รหัสนักเรียน
+            <input name="studentId" value="6700001" inputmode="numeric" required>
+          </label>
+          <label>ชั้นปี / รุ่น
+            <input name="classYear" value="ชั้นปี 2 / รุ่น 67">
+          </label>
+          <label>คะแนนเฉลี่ยสะสม
+            <input name="gpa" value="3.45" inputmode="decimal">
+          </label>
+          <label>เบอร์โทรศัพท์
+            <input name="phone" value="08x-xxx-xxxx" inputmode="tel">
+          </label>
+          <label>อาจารย์ที่ปรึกษา
+            <input name="advisor" value="อาจารย์ที่ปรึกษา แผนกปกครอง">
+          </label>
+          <label class="wide">ที่อยู่ปัจจุบัน / ที่พักระหว่างเรียน
+            <textarea name="currentAddress" rows="2">หอพักนักเรียนพยาบาลทหารอากาศ วิทยาลัยพยาบาลทหารอากาศ</textarea>
+          </label>
+          <label>รายได้ครอบครัวต่อเดือน
+            <input id="familyIncome" name="familyIncome" value="18000" inputmode="numeric">
+          </label>
+          <label>จำนวนสมาชิกครอบครัว
+            <input id="familyMembers" name="familyMembers" value="5" inputmode="numeric">
+          </label>
+          <label>รายได้เฉลี่ยต่อคน/เดือน
+            <input id="incomePerHead" name="incomePerHead" value="3600" readonly>
+          </label>
+          <label>จำนวนเงินที่ขอรับทุน
+            <input name="requestedAmount" value="10000" inputmode="numeric">
+          </label>
+          <label class="wide">เหตุผลความจำเป็นในการขอทุน
+            <textarea name="reason" rows="4">ครอบครัวมีรายได้จำกัด มีภาระค่าใช้จ่ายด้านการศึกษา ค่าเดินทาง และค่าอุปกรณ์การเรียน ต้องการทุนเพื่อแบ่งเบาภาระผู้ปกครอง</textarea>
+          </label>
+          <label class="wide">ข้อมูลผู้ปกครอง / ผู้รับผิดชอบค่าใช้จ่าย
+            <textarea name="guardian" rows="3">นาย/นาง ผู้ปกครองตัวอย่าง ความสัมพันธ์: บิดา/มารดา อาชีพ: รับจ้างทั่วไป รายได้ไม่แน่นอน</textarea>
+          </label>
+          <label class="wide">บัญชีรับเงินทุน
+            <input name="bankAccount" value="ธนาคารตัวอย่าง / เลขบัญชี xxx-x-xxxxx-x / ชื่อนักเรียน">
+          </label>
+          <div class="button-row wide">
+            <button class="secondary" id="saveDraft" type="button">บันทึกร่าง</button>
+            <button class="primary" id="submitAdvisor" type="button">ส่งให้อาจารย์ที่ปรึกษา</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="section page" data-view="evidence">
+        <div class="section-head">
+          <div><p>EVIDENCE</p><h2>รูปนักเรียนและรูปบ้าน</h2></div>
+          <span id="evidenceCount" class="result-count">0 รูป</span>
+        </div>
+        <div class="upload-card">
+          <div class="upload-icon">🏠</div>
+          <strong>อัปโหลดรูปบ้าน/ที่พักอาศัย</strong>
+          <small>รองรับหลายรูป เช่น หน้าบ้าน ห้องพัก พื้นที่ครัว ห้องน้ำ สภาพแวดล้อม เพื่อประกอบการพิจารณาฐานะและความเป็นอยู่</small>
+          <input id="housePhotos" type="file" accept="image/*" multiple>
+        </div>
+        <div id="housePhotoGrid" class="photo-grid empty"><span>ยังไม่มีรูปบ้าน</span></div>
+        <div class="note-card"><strong>แนวทางความเป็นส่วนตัว</strong><p>ใช้รูปเท่าที่จำเป็นต่อการพิจารณาทุนเท่านั้น หลีกเลี่ยงข้อมูลอ่อนไหว เช่น บัตรประชาชน สมุดบัญชี หรือเอกสารส่วนตัวที่ไม่เกี่ยวข้องในภาพถ่าย</p></div>
+      </section>
+
+      <section class="section page" data-view="approve">
+        <div class="section-head">
+          <div><p>ADVISOR</p><h2>หน้าตรวจของอาจารย์ที่ปรึกษา</h2></div>
+          <span class="result-count">Demo role</span>
+        </div>
+        <article class="approval-card">
+          <div class="record-title">
+            <span class="record-icon gold">🎓</span>
+            <div><h3>คำขอทุน: นพอ.ตัวอย่าง ระบบทดสอบ</h3><p id="approvalSummary">สถานะปัจจุบัน: ร่าง · ยังไม่ได้ส่ง</p></div>
+          </div>
+          <label>ความเห็นอาจารย์ที่ปรึกษา
+            <textarea id="advisorComment" rows="4">ตรวจข้อมูลเบื้องต้นแล้ว เห็นควรเสนอคณะกรรมการพิจารณาตามลำดับ</textarea>
+          </label>
+          <div class="button-row">
+            <button class="secondary" id="returnEdit" type="button">ส่งกลับแก้ไข</button>
+            <button class="primary" id="advisorApprove" type="button">อาจารย์อนุมัติ</button>
+          </div>
+        </article>
+        <div id="activityLog" class="activity-log"><strong>ประวัติ</strong><p>ยังไม่มีรายการ</p></div>
+      </section>
+
+      <section class="section page" data-view="pdf">
+        <div class="section-head">
+          <div><p>PDF</p><h2>ตัวอย่างแบบเสนอขอทุน</h2></div>
+          <span class="result-count">A4 Print</span>
+        </div>
+        <div id="pdfSheet" class="pdf-sheet">
+          <header>
+            <div class="pdf-logo">วพอ.</div>
+            <div><h2>แบบคำขอรับทุนการศึกษา นักเรียนพยาบาลทหารอากาศ</h2><p>วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ</p></div>
+          </header>
+          <table>
+            <tbody>
+              <tr><th>ชื่อ-สกุล</th><td data-pdf="studentName">นพอ.ตัวอย่าง ระบบทดสอบ</td><th>รหัส</th><td data-pdf="studentId">6700001</td></tr>
+              <tr><th>ชั้นปี/รุ่น</th><td data-pdf="classYear">ชั้นปี 2 / รุ่น 67</td><th>GPA</th><td data-pdf="gpa">3.45</td></tr>
+              <tr><th>รายได้ครอบครัว</th><td data-pdf="familyIncome">18,000 บาท/เดือน</td><th>เฉลี่ยต่อคน</th><td data-pdf="incomePerHead">3,600 บาท/เดือน</td></tr>
+              <tr><th>เหตุผล</th><td colspan="3" data-pdf="reason">ครอบครัวมีรายได้จำกัด มีภาระค่าใช้จ่ายด้านการศึกษา ค่าเดินทาง และค่าอุปกรณ์การเรียน</td></tr>
+              <tr><th>ความเห็น อ.ที่ปรึกษา</th><td colspan="3" id="pdfAdvisorComment">-</td></tr>
+            </tbody>
+          </table>
+          <div class="pdf-signatures"><span>ลงชื่อ นักเรียนผู้ขอทุน</span><span>ลงชื่อ อาจารย์ที่ปรึกษา</span><span>ลงชื่อ ประธานกรรมการ</span></div>
+        </div>
+        <button class="primary full" id="printPdf" type="button">พิมพ์ / Save as PDF</button>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="เมนูหลัก">
+      <button class="active" data-page="home" type="button"><span>⌂</span>หน้าหลัก</button>
+      <button data-page="apply" type="button"><span>✎</span>คำขอ</button>
+      <button data-page="evidence" type="button"><span>▣</span>หลักฐาน</button>
+      <button data-page="approve" type="button"><span>✓</span>อนุมัติ</button>
+      <button data-page="pdf" type="button"><span>PDF</span>เอกสาร</button>
+    </nav>
+  </div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script src="./app.js?v=20260621-1"></script>
+</body>
+</html>
