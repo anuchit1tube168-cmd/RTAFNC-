@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Playground OS | Clip → Research → GitHub Agent</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0c1d35;
+      --card:#10233d;
+      --card2:#162c4c;
+      --line:rgba(255,255,255,.12);
+      --text:#f7fbff;
+      --muted:#a9bbd6;
+      --cyan:#5de2ff;
+      --blue:#5b8cff;
+      --purple:#ad7cff;
+      --pink:#ff72b6;
+      --gold:#ffd36a;
+      --green:#7dffb2;
+      --danger:#ff6d6d;
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+      --radius:26px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 5%, rgba(93,226,255,.18), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(255,114,182,.16), transparent 32%),
+        linear-gradient(145deg, var(--bg), var(--bg2));
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit}
+    .app{max-width:1220px;margin:0 auto;padding:22px}
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:22px;
+      align-items:stretch;
+      margin-top:10px;
+    }
+    .panel{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+    }
+    .hero-main{padding:32px;position:relative;min-height:360px}
+    .badge{
+      display:inline-flex;gap:9px;align-items:center;
+      border:1px solid rgba(93,226,255,.35);
+      color:#c9f8ff;
+      background:rgba(93,226,255,.1);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:700;
+      font-size:13px;
+    }
+    h1{font-size:clamp(34px,5vw,68px);line-height:.95;margin:20px 0 14px;letter-spacing:-2px}
+    .lead{font-size:18px;line-height:1.75;color:var(--muted);max-width:720px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+    .btn{
+      border:0;
+      border-radius:16px;
+      padding:13px 16px;
+      color:#07111f;
+      background:linear-gradient(135deg,var(--cyan),var(--green));
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(93,226,255,.18);
+    }
+    .btn.secondary{color:var(--text);background:rgba(255,255,255,.08);border:1px solid var(--line)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+    .stat{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .stat b{display:block;font-size:24px}
+    .stat span{font-size:12px;color:var(--muted)}
+    .map{position:relative;padding:22px;min-height:360px;background:linear-gradient(150deg,rgba(93,226,255,.08),rgba(255,114,182,.08))}
+    .grid-map{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;height:100%}
+    .room{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.035));
+      min-height:150px;
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .room:hover{transform:translateY(-4px);border-color:rgba(93,226,255,.45)}
+    .room:before{
+      content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:28px;
+      background:linear-gradient(135deg,var(--cyan),var(--purple));opacity:.18;transform:rotate(35deg)
+    }
+    .room .icon{font-size:30px;margin-bottom:8px}
+    .room h3{margin:0 0 6px;font-size:17px}
+    .room p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+    .section{margin-top:22px;display:grid;grid-template-columns:.75fr 1.25fr;gap:22px}
+    .card{padding:22px}
+    .card h2{margin:0 0 8px;font-size:24px}
+    .muted{color:var(--muted);line-height:1.7}
+    .pipeline{display:grid;gap:12px;margin-top:18px}
+    .step{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:13px}
+    .num{min-width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--purple));font-weight:900}
+    .step b{display:block;margin-bottom:3px}
+    .step span{color:var(--muted);font-size:13px;line-height:1.5}
+    .tasks{display:grid;gap:10px;margin-top:16px}
+    .task{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.055)}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 16px var(--gold)}
+    .tag{border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:12px}
+    .status-done .dot{background:var(--green);box-shadow:0 0 16px var(--green)}
+    .status-risk .dot{background:var(--danger);box-shadow:0 0 16px var(--danger)}
+    .rooms-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+    .mini{padding:18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.055)}
+    .mini h3{margin:8px 0 6px}.mini p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    .command{margin-top:22px;padding:22px}
+    .terminal{background:#050a12;border:1px solid rgba(93,226,255,.2);border-radius:22px;padding:18px;overflow:auto;color:#c7f9d4;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:13px;line-height:1.7}
+    .footer{color:var(--muted);padding:24px;text-align:center;font-size:13px}
+    @media(max-width:900px){.hero,.section{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.rooms-list{grid-template-columns:1fr}.app{padding:14px}.hero-main{padding:24px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="panel hero-main">
+        <div class="badge">🚀 AI Playground OS • RTAFNC GitHub Lab</div>
+        <h1>Clip → Research → GitHub Agent</h1>
+        <p class="lead">
+          ศูนย์รวมการแปลงคลิป ไอเดีย ไลฟ์ หรือโพสต์ ให้กลายเป็นโปรเจกต์จริงบน GitHub
+          แยกห้องทำงานแบบ Playground OS: ถอดคลิป ค้นหาเว็บ ทำ Skill.md แตก Issue สร้าง Prototype และติดตามงานจาก Command Center
+        </p>
+        <div class="hero-actions">
+          <button class="btn" onclick="scrollToBoard()">เปิด Command Center</button>
+          <button class="btn secondary" onclick="copyPrompt()">Copy AI Prompt</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>8</b><span>Agent Rooms</span></div>
+          <div class="stat"><b>5</b><span>Core Outputs</span></div>
+          <div class="stat"><b>7</b><span>Day MVP Roadmap</span></div>
+          <div class="stat"><b>0</b><span>Secrets in Frontend</span></div>
+        </div>
+      </div>
+
+      <div class="panel map">
+        <div class="grid-map">
+          <div class="room" onclick="selectRoom('Clip Intake')"><div class="icon">🎬</div><h3>Clip Intake</h3><p>รับคลิป/ภาพ/ลิงก์ แล้วสรุปเป็น brief</p></div>
+          <div class="room" onclick="selectRoom('Deep Research')"><div class="icon">🔎</div><h3>Deep Research</h3><p>ค้นหาเว็บ ตรวจ source และความเสี่ยง</p></div>
+          <div class="room" onclick="selectRoom('GitHub Factory')"><div class="icon">🐙</div><h3>GitHub Factory</h3><p>แตกเป็น issue, backlog, prompt สำหรับ Codex</p></div>
+          <div class="room" onclick="selectRoom('Command Center')"><div class="icon">📊</div><h3>Command Center</h3><p>ดู KPI, status, task, risk และ deploy</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="panel card">
+        <h2>Selected Room</h2>
+        <p id="selectedRoom" class="muted">เลือกห้องบนแผนที่เพื่อเริ่มทำงาน</p>
+        <div class="pipeline">
+          <div class="step"><div class="num">1</div><div><b>ถอดคลิป</b><span>แยกสิ่งที่เห็นจริง keyword feature และสิ่งที่ยังไม่ชัวร์</span></div></div>
+          <div class="step"><div class="num">2</div><div><b>ค้นหาเว็บ</b><span>ตรวจข้อมูลจาก official docs และ source ที่น่าเชื่อถือ</span></div></div>
+          <div class="step"><div class="num">3</div><div><b>สร้าง Skill.md</b><span>ทำให้ AI ใช้ซ้ำได้ ไม่ต้องเริ่มใหม่ทุกครั้ง</span></div></div>
+          <div class="step"><div class="num">4</div><div><b>ลง GitHub Issue</b><span>แตกงานให้ Codex/Claude/GPT ทำต่อเป็นชิ้น ๆ</span></div></div>
+          <div class="step"><div class="num">5</div><div><b>Prototype</b><span>ทำหน้าเว็บ/แดชบอร์ดที่เปิดดูได้จริงก่อนต่อ backend</span></div></div>
+        </div>
+      </div>
+
+      <div class="panel card" id="board">
+        <h2>Command Center</h2>
+        <p class="muted">สถานะรวมของโปรเจกต์ AI Playground OS</p>
+        <div class="tasks">
+          <div class="task status-done"><div class="dot"></div><div>สร้าง README/SKILL/AGENTS</div><span class="tag">Done</span></div>
+          <div class="task status-done"><div class="dot"></div><div>สร้าง static dashboard prototype</div><span class="tag">Done</span></div>
+          <div class="task"><div class="dot"></div><div>เพิ่ม Clip Intake Form</div><span class="tag">Next</span></div>
+          <div class="task"><div class="dot"></div><div>เพิ่ม Research Source Tracker</div><span class="tag">Next</span></div>
+          <div class="task"><div class="dot"></div><div>เพิ่ม GitHub Issue Generator</div><span class="tag">Next</span></div>
+          <div class="task status-risk"><div class="dot"></div><div>ห้ามใส่ API key/token ใน frontend</div><span class="tag">Risk</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel card" style="margin-top:22px">
+      <h2>Agent Rooms</h2>
+      <p class="muted">โครงห้องที่รวมแนว Playground OS กับงานจริงบน GitHub</p>
+      <div class="rooms-list">
+        <div class="mini"><div>🎬</div><h3>Clip Intake Room</h3><p>ถอดคลิปเป็น brief, keyword, feature, risk</p></div>
+        <div class="mini"><div>🔎</div><h3>Deep Research Room</h3><p>ค้นหาเว็บ ตรวจ official docs และสรุปความน่าเชื่อถือ</p></div>
+        <div class="mini"><div>🧠</div><h3>Skill Factory</h3><p>สร้าง Skill.md, SOP, prompt template สำหรับใช้ซ้ำ</p></div>
+        <div class="mini"><div>🐙</div><h3>GitHub Factory</h3><p>แตกงานเป็น issue, PR plan, acceptance criteria</p></div>
+        <div class="mini"><div>🎨</div><h3>Prototype Studio</h3><p>สร้างหน้าเว็บต้นแบบแบบมือถือก่อน</p></div>
+        <div class="mini"><div>📊</div><h3>Command Center</h3><p>ติดตาม KPI, status, deploy, risk</p></div>
+        <div class="mini"><div>📣</div><h3>Content Office</h3><p>ต่อยอด TikTok, Facebook, Shopee, YouTube content pack</p></div>
+        <div class="mini"><div>🛡️</div><h3>RTAFNC Ops Room</h3><p>ใช้กับงานวิทยาลัยโดยแยกข้อมูลลับออกจาก public</p></div>
+        <div class="mini"><div>🔐</div><h3>Security Room</h3><p>ตรวจ token, privacy, copyright, human approval</p></div>
+      </div>
+    </section>
+
+    <section class="panel command">
+      <h2>AI Command</h2>
+      <p class="muted">คำสั่งตัวอย่างสำหรับให้ Codex / Claude / GPT ทำงานต่อ</p>
+      <pre class="terminal" id="prompt">Read ai-playground-os/README.md, SKILL.md, AGENTS.md, and PROJECT_BOARD.md first.
+Implement APG-003: Add Clip Intake Form to ai-playground-os/index.html.
+Use mock data only. Do not touch other folders. Do not add API keys or secrets.
+Make the UI mobile responsive and include a button to generate GitHub Issue Markdown.</pre>
+    </section>
+
+    <div class="footer">AI Playground OS • Built as static MVP for GitHub Pages • No secrets in frontend</div>
+  </main>
+
+  <script>
+    function selectRoom(name){
+      const map = {
+        'Clip Intake':'🎬 Clip Intake Room: เริ่มจากใส่คลิป/ภาพ/ไอเดีย แล้วถอดเป็น brief ที่ใช้ทำงานต่อได้',
+        'Deep Research':'🔎 Deep Research Room: ค้นหาแหล่งข้อมูล ตรวจ official docs และทำ risk note',
+        'GitHub Factory':'🐙 GitHub Factory: แปลง brief เป็น issue/backlog/prompt สำหรับ AI coding agent',
+        'Command Center':'📊 Command Center: ติดตามสถานะงาน KPI และความเสี่ยงทั้งหมด'
+      };
+      document.getElementById('selectedRoom').textContent = map[name] || name;
+    }
+    function scrollToBoard(){document.getElementById('board').scrollIntoView({behavior:'smooth'});}
+    async function copyPrompt(){
+      const text = document.getElementById('prompt').innerText;
+      try{ await navigator.clipboard.writeText(text); alert('คัดลอก prompt แล้ว'); }
+      catch(e){ alert('คัดลอกไม่ได้ ให้ลาก copy จากกล่อง AI Command'); }
+    }
+  </script>
+</body>
+</html>
