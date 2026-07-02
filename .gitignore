@@ -22,6 +22,10 @@ build/
 .vite/
 coverage/
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Logs and OS
 *.log
 .DS_Store
