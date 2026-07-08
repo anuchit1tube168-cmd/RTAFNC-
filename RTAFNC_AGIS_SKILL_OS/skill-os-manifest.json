@@ -1,0 +1,28 @@
+{
+  "name": "RTAFNC AGIS Skill OS",
+  "version": "0.3.0",
+  "updated": "2026-07-08",
+  "domains": [
+    "education",
+    "discipline",
+    "OBE",
+    "assessment",
+    "Thai documents",
+    "web apps",
+    "knowledge extraction"
+  ],
+  "workflow": ["INSPECT", "CLARIFY", "DESIGN", "BUILD", "VERIFY", "DELIVER"],
+  "skills": [
+    {"domain": "master", "title": "Master Skill Router", "path": "00_MASTER/MASTER_SKILL_ROUTER.md"},
+    {"domain": "standard", "title": "Professional Skill MD Standard", "path": "00_MASTER/PROFESSIONAL_SKILL_MD_STANDARD.md"},
+    {"domain": "prompt", "title": "Prompt Library", "path": "00_MASTER/PROMPT_LIBRARY.md"},
+    {"domain": "obe", "title": "RTAFNC OBE Skill V4", "path": "01_OBE/RTAFNC_OBE_SKILL_V4.md"},
+    {"domain": "obe", "title": "PLO/Sub-PLO Dictionary", "path": "01_OBE/PLO_SUBPLO_DICTIONARY.md"},
+    {"domain": "obe", "title": "CQI Loop Template", "path": "01_OBE/CQI_LOOP_TEMPLATE.md"},
+    {"domain": "assessment", "title": "Assessment System Skill", "path": "02_ASSESSMENT/ASSESSMENT_SYSTEM_SKILL.md"},
+    {"domain": "docx", "title": "Thai DOCX Usage", "path": "03_DOCX_REPORT/THAI_DOCX_USAGE.md"},
+    {"domain": "webapp", "title": "WebApp Skill Router", "path": "04_WEBAPP/WEBAPP_SKILL_ROUTER.md"},
+    {"domain": "video", "title": "YouTube to Skill Prompt", "path": "05_VIDEO_TO_SKILL/YOUTUBE_TO_SKILL_PROMPT.md"},
+    {"domain": "graph", "title": "Graphify Usage", "path": "06_GRAPHIFY/GRAPHIFY_USAGE.md"}
+  ]
+}
