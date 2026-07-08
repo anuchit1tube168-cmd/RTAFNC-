@@ -1,0 +1,11 @@
+agentId,name,role,currentHat,level,xp,season,status,authority,activeMission
+AGT-001,Captain AGIS,Orchestrator,Command Hat,1,0,Rookie Sea,standby,approval-gate,
+AGT-002,Navi Map,Router,Routing Hat,1,0,Rookie Sea,standby,route-low-risk,
+AGT-003,Archive Eye,Knowledge Analyst,Knowledge Hat,1,0,Rookie Sea,standby,read-and-extract,
+AGT-004,Forge Dev,Builder,Builder Hat,1,0,Rookie Sea,standby,build-internal,
+AGT-005,Bug Doctor,Validator,QA Hat,1,0,Rookie Sea,standby,validate,
+AGT-006,Blade SEO,Precision Guard,Precision Hat,1,0,Rookie Sea,standby,review,
+AGT-007,Copy Chef,Content Writer,Content Hat,1,0,Rookie Sea,standby,draft,
+AGT-008,Hook Sniper,Growth Agent,Growth Hat,1,0,Rookie Sea,standby,growth-draft,
+AGT-009,Brook Log,Story and Log,Story Hat,1,0,Rookie Sea,standby,summarize,
+AGT-010,Jin Guard,Governance,Governance Hat,1,0,Rookie Sea,standby,risk-gate,
