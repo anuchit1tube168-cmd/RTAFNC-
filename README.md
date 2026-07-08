@@ -67,9 +67,19 @@ apps/admin/                   Staff Console demo
 supabase/migrations/          Database schema and RLS
 supabase/functions/           Server-side Edge Functions
 docs/                         Architecture and security documentation
+docs/sop/                     SOP indexes and operational documentation
+skills/                       Reusable AI/operator skills for this repository
 tests/                        Static contract and secret checks
 .github/workflows/pages.yml   Demo deployment
 ```
+
+## Operational skills
+
+This repository now includes reusable skills for building and auditing operating procedures.
+
+- `skills/sop-it-operations/SKILL.md` - SOP skill for System Admin, IT Support Ticketing, incident, access control, backup/restore, patch, SLA/KPI, evidence, and audit controls.
+- `skills/sop-it-operations/README.md` - usage guide for the SOP IT Operations skill.
+- `docs/sop/sop-it-operations-index.md` - SOP catalog and operational index.
 
 ## Security rules
 
