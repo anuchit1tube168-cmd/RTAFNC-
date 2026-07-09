@@ -16,7 +16,10 @@
 - ตารางค้นหา/กรองรายการ
 - Admin อนุมัติ/ไม่อนุมัติ/ลบรายการ
 - Export CSV ภาษาไทย
-- Firestore Security Rules แยกสิทธิ์ admin / staff / viewer
+- หน้า Report พร้อมปุ่ม Print / Save PDF ผ่าน browser
+- กราฟสรุป 6 เดือนล่าสุดแบบไม่ใช้ library เพิ่ม
+- หน้า Settings สำหรับ admin แก้ชื่อองค์กร ปีงบประมาณ และหมวดหมู่
+- Firestore Security Rules แยกสิทธิ์ admin / staff / viewer และล็อก staff ไม่ให้อนุมัติรายการเอง
 - Audit log เบื้องต้น
 - Responsive รองรับมือถือ แท็บเล็ต และคอมพิวเตอร์
 
@@ -44,6 +47,14 @@ transactions/{id}
   approvedBy
   approvedByEmail
   createdAt
+  updatedAt
+
+settings/app
+  organizationName
+  fiscalYear
+  categories
+  updatedBy
+  updatedByEmail
   updatedAt
 
 auditLogs/{id}
@@ -93,6 +104,8 @@ role = admin
 active = true
 ```
 
+จากนั้นกลับเข้าเว็บ จะเห็นเมนู `ตั้งค่า` และปุ่มอนุมัติรายการ
+
 ## ข้อห้ามสำคัญ
 
 - ห้าม commit ไฟล์ `.env` จริงขึ้น GitHub
@@ -102,9 +115,8 @@ active = true
 
 ## รอบพัฒนาถัดไป
 
-- เพิ่มหน้า Settings จัดการหมวดหมู่จาก Firestore
-- เพิ่ม Export PDF
 - เพิ่มแนบหลักฐานใบเสร็จผ่าน Firebase Storage
 - จำกัดสิทธิ์ตามหน่วยงาน/แผนก
-- เพิ่ม Dashboard รายเดือนและกราฟ
+- เพิ่ม Dashboard รายเดือนแบบละเอียด
+- เพิ่ม backup เป็น Google Sheet รายเดือน
 - เพิ่ม Line Notify/Telegram ผ่าน Google Apps Script หรือ webhook ฝั่ง server ในเฟสถัดไป
