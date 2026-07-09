@@ -17,6 +17,20 @@ import { db, serverTimestamp } from '../firebase';
 const txCollection = collection(db, 'transactions');
 const usersCollection = collection(db, 'users');
 const auditCollection = collection(db, 'auditLogs');
+const appSettingsRef = doc(db, 'settings', 'app');
+
+export const defaultSettings = {
+  organizationName: import.meta.env.VITE_ORG_NAME || 'วิทยาลัยพยาบาลทหารอากาศ',
+  fiscalYear: new Date().getFullYear() + 543,
+  categories: [
+    'อาหาร/เครื่องดื่ม',
+    'การเดินทาง/พาหนะ',
+    'วัสดุสำนักงาน',
+    'งานกิจการนักเรียน',
+    'ฝึก/อบรม',
+    'รายรับอื่น ๆ'
+  ]
+};
 
 export async function ensureUserProfile(user) {
   const ref = doc(db, 'users', user.uid);
@@ -35,6 +49,30 @@ export async function ensureUserProfile(user) {
     return { uid: user.uid, role: 'staff', active: true, email: user.email, displayName: user.displayName || user.email };
   }
   return { uid: user.uid, ...snap.data() };
+}
+
+export function watchSettings(callback) {
+  return onSnapshot(appSettingsRef, (snapshot) => {
+    callback(snapshot.exists() ? { ...defaultSettings, ...snapshot.data() } : defaultSettings);
+  }, () => callback(defaultSettings));
+}
+
+export async function saveSettings(settings, userProfile) {
+  const nextSettings = {
+    ...settings,
+    categories: String(settings.categoriesText || '')
+      .split('\n')
+      .map((item) => item.trim())
+      .filter(Boolean),
+    fiscalYear: Number(settings.fiscalYear || defaultSettings.fiscalYear),
+    updatedAt: serverTimestamp(),
+    updatedBy: userProfile.uid,
+    updatedByEmail: userProfile.email
+  };
+  delete nextSettings.categoriesText;
+  await setDoc(appSettingsRef, nextSettings, { merge: true });
+  await addAudit('update_settings', 'settings', 'app', userProfile.uid, userProfile.email);
+  return nextSettings;
 }
 
 export function watchTransactions(userProfile, callback) {
