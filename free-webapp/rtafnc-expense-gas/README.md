@@ -4,6 +4,7 @@
 
 - Google Apps Script เป็นตัว WebApp และ Backend
 - Google Sheets เป็นฐานข้อมูล
+- Google Drive เก็บไฟล์หลักฐานแนบรายการ
 - Google Account Login ผ่านสิทธิ์ของ Apps Script Web App
 - GitHub ใช้เก็บ source code / version
 - ไม่ต้องใช้ Firebase Auth
@@ -37,15 +38,17 @@ free-webapp/rtafnc-expense-gas/
 
 - เปิดเป็น WebApp ผ่าน Google Apps Script
 - Auto-create Google Sheet Database ครั้งแรก
+- Auto-create Google Drive Folder สำหรับหลักฐาน
 - Login ด้วย Google Account จาก Apps Script
 - สร้าง user คนแรกเป็น admin อัตโนมัติ
 - user คนถัดไปเป็น staff อัตโนมัติ
 - role: admin / staff / viewer
 - Dashboard สรุปรายรับ รายจ่าย คงเหลือ และรายการรออนุมัติ
 - Form บันทึกรายการ
+- แนบหลักฐานรูปภาพ/PDF ไม่เกิน 5MB ต่อรายการ
 - Table ค้นหาและกรองรายการ
 - Admin อนุมัติ / ไม่อนุมัติ / ลบรายการ
-- Export CSV ภาษาไทย
+- Export CSV ภาษาไทย พร้อม link หลักฐาน
 - Report พร้อม Print / Save PDF ผ่าน browser
 - Settings สำหรับแก้ชื่อองค์กร ปีงบประมาณ และหมวดหมู่
 - Audit log ลง Google Sheet
@@ -60,6 +63,14 @@ Settings
 AuditLogs
 ```
 
+## Drive Folder ที่ระบบสร้าง
+
+```text
+RTAFNC Expense Tracker Evidence
+```
+
+ไฟล์หลักฐานจะถูกเก็บใน folder นี้ และ URL จะถูกบันทึกใน column `evidenceUrl`
+
 ## Deploy แบบง่าย
 
 1. เปิด Google Apps Script
@@ -73,6 +84,16 @@ AuditLogs
 9. Who has access: Anyone with Google account หรือเฉพาะโดเมนองค์กร
 10. เปิด URL ที่ได้
 
+## หมายเหตุเรื่องหลักฐาน
+
+ค่าเริ่มต้น `APP.evidencePublicLink = false` หมายถึงไฟล์หลักฐานจะไม่ถูกเปิด public link อัตโนมัติ
+
+ถ้า admin เปิดไฟล์หลักฐานของ staff ไม่ได้ ให้ใช้หนึ่งในทางเลือกนี้:
+
+1. Deploy แบบ Execute as: Me เพื่อให้ไฟล์ถูกสร้างภายใต้เจ้าของระบบ
+2. ตั้ง sharing ของ folder หลักฐานใน Google Drive ให้ admin เปิดดูได้
+3. ถ้าต้องการ link เปิดได้เลย ให้เปลี่ยน `APP.evidencePublicLink` เป็น `true` แต่ควรใช้เฉพาะข้อมูลที่ไม่อ่อนไหว
+
 ## หมายเหตุเรื่อง Login
 
 ถ้าต้องการให้ระบบอ่านอีเมลผู้ใช้ได้ชัดเจนที่สุด ควรใช้ Google Workspace/โดเมนองค์กร และตั้งค่า WebApp ให้ผู้ใช้ต้อง login ก่อน
@@ -82,6 +103,7 @@ AuditLogs
 ## ข้อดีเมื่อเทียบกับ Firebase
 
 - ข้อมูลง่ายต่อการตรวจสอบ เพราะอยู่ใน Google Sheet
+- หลักฐานอยู่ใน Google Drive
 - ผู้ดูแลที่ไม่ใช่โปรแกรมเมอร์เปิดดูข้อมูลได้ทันที
 - ไม่ต้องตั้ง Firestore Rules
 - ไม่ต้องตั้ง Firebase config
