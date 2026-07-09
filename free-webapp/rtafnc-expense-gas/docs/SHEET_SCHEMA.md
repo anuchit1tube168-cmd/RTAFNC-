@@ -1,6 +1,6 @@
 # Sheet Schema
 
-ระบบสร้าง Google Sheet Database อัตโนมัติ 4 sheet
+ระบบสร้าง Google Sheet Database อัตโนมัติ 4 sheet และสร้าง Google Drive Folder สำหรับเก็บหลักฐาน
 
 ## Users
 
@@ -24,6 +24,8 @@
 | amount | จำนวนเงิน |
 | date | วันที่รายการ |
 | note | รายละเอียด |
+| evidenceName | ชื่อไฟล์หลักฐาน |
+| evidenceUrl | URL ไฟล์หลักฐานใน Google Drive |
 | status | pending / approved / rejected |
 | createdByEmail | ผู้บันทึก |
 | approvedByEmail | ผู้อนุมัติ |
@@ -49,6 +51,22 @@
 | actorEmail | ผู้กระทำ |
 | detail | รายละเอียด |
 
+## Drive Folder
+
+ระบบสร้าง folder ชื่อ:
+
+```text
+RTAFNC Expense Tracker Evidence
+```
+
+ไฟล์หลักฐานจะใช้ชื่อประมาณ:
+
+```text
+transactionId_userEmail_originalFileName
+```
+
 ## หมายเหตุ
 
 อย่าเปลี่ยนชื่อหัวตารางเอง ถ้าต้องเพิ่ม column ให้เพิ่มท้ายตารางเท่านั้น เพื่อไม่ให้ code อ่านผิด
+
+ถ้าระบบเคยสร้าง Sheet ก่อนเพิ่ม column ใหม่แล้ว code ล่าสุดจะเติม header ที่ขาดให้เองอัตโนมัติ
