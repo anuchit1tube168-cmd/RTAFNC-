@@ -2,6 +2,9 @@ const APP = {
   name: 'RTAFNC Expense Tracker',
   orgName: 'วิทยาลัยพยาบาลทหารอากาศ',
   propertySpreadsheetId: 'RTAFNC_EXPENSE_SPREADSHEET_ID',
+  propertyEvidenceFolderId: 'RTAFNC_EXPENSE_EVIDENCE_FOLDER_ID',
+  evidenceMaxBytes: 5 * 1024 * 1024,
+  evidencePublicLink: false,
   sheets: {
     users: 'Users',
     transactions: 'Transactions',
@@ -10,7 +13,7 @@ const APP = {
   },
   headers: {
     Users: ['email', 'displayName', 'role', 'department', 'active', 'createdAt', 'updatedAt'],
-    Transactions: ['id', 'type', 'category', 'amount', 'date', 'note', 'status', 'createdByEmail', 'approvedByEmail', 'createdAt', 'updatedAt'],
+    Transactions: ['id', 'type', 'category', 'amount', 'date', 'note', 'evidenceName', 'evidenceUrl', 'status', 'createdByEmail', 'approvedByEmail', 'createdAt', 'updatedAt'],
     Settings: ['key', 'value'],
     AuditLogs: ['timestamp', 'action', 'targetSheet', 'targetId', 'actorEmail', 'detail']
   },
@@ -71,6 +74,8 @@ function createTransaction_(payload, user) {
 
   const now = new Date();
   const id = Utilities.getUuid();
+  const evidence = payload.evidence ? saveEvidence_(payload.evidence, id, profile.email) : { name: '', url: '' };
+
   const row = {
     id,
     type,
@@ -78,6 +83,8 @@ function createTransaction_(payload, user) {
     amount,
     date: String(payload.date || Utilities.formatDate(now, Session.getScriptTimeZone(), 'yyyy-MM-dd')),
     note: String(payload.note || '').trim(),
+    evidenceName: evidence.name,
+    evidenceUrl: evidence.url,
     status: profile.role === 'admin' ? 'approved' : 'pending',
     createdByEmail: profile.email,
     approvedByEmail: profile.role === 'admin' ? profile.email : '',
@@ -85,7 +92,7 @@ function createTransaction_(payload, user) {
     updatedAt: now
   };
   appendObject_(sheet_(APP.sheets.transactions), APP.headers.Transactions, row);
-  audit_('createTransaction', APP.sheets.transactions, id, profile.email, row.status);
+  audit_('createTransaction', APP.sheets.transactions, id, profile.email, row.status + (evidence.url ? ' with evidence' : ''));
   return bootstrap_(user);
 }
 
@@ -118,7 +125,7 @@ function deleteTransaction_(payload, user) {
   const index = data.findIndex(item => item.id === id);
   if (index < 0) throw new Error('ไม่พบรายการ');
   sh.deleteRow(index + 2);
-  audit_('deleteTransaction', APP.sheets.transactions, id, profile.email, '');
+  audit_('deleteTransaction', APP.sheets.transactions, id, profile.email, 'row deleted; evidence file not deleted');
   return bootstrap_(user);
 }
 
@@ -143,6 +150,51 @@ function listTransactions_(profile) {
   return visible
     .sort((a, b) => String(b.date).localeCompare(String(a.date)))
     .slice(0, 300);
+}
+
+function saveEvidence_(evidence, transactionId, actorEmail) {
+  if (!evidence || !evidence.dataUrl) return { name: '', url: '' };
+  const rawName = sanitizeFilename_(evidence.name || 'evidence');
+  const dataUrl = String(evidence.dataUrl || '');
+  const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) throw new Error('รูปแบบไฟล์หลักฐานไม่ถูกต้อง');
+
+  const contentType = match[1];
+  const base64 = match[2];
+  const bytes = Utilities.base64Decode(base64);
+  if (bytes.length > APP.evidenceMaxBytes) throw new Error('ไฟล์หลักฐานต้องไม่เกิน 5MB');
+
+  const safeActor = sanitizeFilename_(actorEmail || 'user');
+  const fileName = transactionId + '_' + safeActor + '_' + rawName;
+  const blob = Utilities.newBlob(bytes, contentType, fileName);
+  const folder = evidenceFolder_();
+  const file = folder.createFile(blob);
+
+  if (APP.evidencePublicLink) {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  }
+
+  return { name: rawName, url: file.getUrl() };
+}
+
+function evidenceFolder_() {
+  const props = PropertiesService.getScriptProperties();
+  let id = props.getProperty(APP.propertyEvidenceFolderId);
+  if (id) return DriveApp.getFolderById(id);
+
+  const parent = DriveApp.getFileById(spreadsheet_().getId()).getParents().hasNext()
+    ? DriveApp.getFileById(spreadsheet_().getId()).getParents().next()
+    : DriveApp.getRootFolder();
+  const folder = parent.createFolder(APP.name + ' Evidence');
+  props.setProperty(APP.propertyEvidenceFolderId, folder.getId());
+  return folder;
+}
+
+function sanitizeFilename_(value) {
+  return String(value || '')
+    .replace(/[\\/:*?"<>|#%{}~&]/g, '_')
+    .replace(/\s+/g, '_')
+    .slice(0, 120) || 'file';
 }
 
 function ensureSetup_() {
@@ -173,6 +225,13 @@ function ensureSheet_(ss, name, headers) {
   if (sh.getLastRow() === 0) {
     sh.getRange(1, 1, 1, headers.length).setValues([headers]);
     sh.setFrozenRows(1);
+    return sh;
+  }
+
+  const currentHeaders = sh.getRange(1, 1, 1, Math.max(1, sh.getLastColumn())).getValues()[0].map(String);
+  const missing = headers.filter(header => currentHeaders.indexOf(header) === -1);
+  if (missing.length) {
+    sh.getRange(1, currentHeaders.length + 1, 1, missing.length).setValues([missing]);
   }
   return sh;
 }
@@ -259,7 +318,9 @@ function readObjects_(sh) {
 }
 
 function appendObject_(sh, headers, obj) {
-  sh.appendRow(headers.map(header => obj[header] === undefined ? '' : obj[header]));
+  ensureSheet_(spreadsheet_(), sh.getName(), headers);
+  const currentHeaders = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(String);
+  sh.appendRow(currentHeaders.map(header => obj[header] === undefined ? '' : obj[header]));
 }
 
 function setByHeader_(sh, rowNumber, headerName, value) {
