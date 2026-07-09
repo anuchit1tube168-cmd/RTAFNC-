@@ -2,7 +2,7 @@
 
 ## เป้าหมาย
 
-Deploy ระบบโดยไม่ใช้ Firebase และไม่ใช้ Vercel ขึ้นเป็นเว็บผ่าน Google Apps Script โดยตรง
+Deploy ระบบโดยไม่ใช้ Firebase และไม่ใช้ Vercel ขึ้นเป็นเว็บผ่าน Google Apps Script โดยตรง พร้อม Google Sheet Database และ Google Drive Evidence Folder
 
 ## ขั้นตอน
 
@@ -48,7 +48,13 @@ Show appsscript.json manifest file in editor
 doGet
 ```
 
-กด Run เพื่อให้ระบบขอสิทธิ์ Google Sheet / Drive / Email
+กด Run เพื่อให้ระบบขอสิทธิ์:
+
+- Google Sheets
+- Google Drive
+- Email ของผู้ใช้
+
+ระบบต้องใช้ Drive scope เพราะมีการอัปโหลดไฟล์หลักฐานไปเก็บใน Google Drive
 
 ### 5. Deploy เป็น Web App
 
@@ -58,19 +64,26 @@ doGet
 Deploy > New deployment > Web app
 ```
 
-ตั้งค่าแนะนำ:
+ตั้งค่าแนะนำแบบควบคุมสิทธิ์ง่าย:
 
 ```text
 Description: v1 no-firebase
-Execute as: User accessing the web app
+Execute as: Me
 Who has access: Anyone with Google account
 ```
+
+เหตุผล: ถ้า Execute as: Me ไฟล์หลักฐานจะถูกสร้างใน Drive ของเจ้าของระบบ ทำให้จัดการ folder และแชร์สิทธิ์ให้ admin ได้ง่ายกว่า
 
 ถ้าเป็น Google Workspace ขององค์กร ให้เลือกเฉพาะคนในโดเมนองค์กรได้
 
 ### 6. เปิด URL
 
-กด Deploy แล้วเปิด URL ที่ได้ ระบบจะสร้าง Google Sheet Database อัตโนมัติใน Drive ของเจ้าของ Script
+กด Deploy แล้วเปิด URL ที่ได้ ระบบจะสร้างสิ่งต่อไปนี้อัตโนมัติ:
+
+```text
+RTAFNC Expense Tracker Database
+RTAFNC Expense Tracker Evidence
+```
 
 ### 7. Admin คนแรก
 
@@ -89,10 +102,12 @@ viewer
 ## ทดสอบขั้นต่ำ
 
 - Login ด้วยบัญชีแรก แล้วดูว่าเป็น admin
-- เพิ่มรายการรายจ่าย
-- เปิดหน้า Report
-- Export CSV
+- เพิ่มรายการรายจ่ายพร้อมแนบรูปภาพหรือ PDF ไม่เกิน 5MB
 - เปิด Sheet ตรวจว่าข้อมูลเข้า `Transactions`
+- เปิด Drive Folder ตรวจว่าไฟล์เข้า `RTAFNC Expense Tracker Evidence`
+- เปิด link หลักฐานในตาราง
+- เปิดหน้า Report
+- Export CSV แล้วตรวจว่ามี `evidenceUrl`
 - Login ด้วยบัญชีที่สอง แล้วตรวจว่าเห็นเฉพาะรายการตัวเอง
 - Admin อนุมัติรายการของ staff ได้
 
@@ -109,6 +124,22 @@ viewer
 ```text
 RTAFNC Expense Tracker Database
 ```
+
+### ไม่เห็น Folder หลักฐาน
+
+ระบบจะสร้างเมื่อมีการบันทึกรายการพร้อมไฟล์ครั้งแรก ชื่อประมาณ:
+
+```text
+RTAFNC Expense Tracker Evidence
+```
+
+### Admin เปิดหลักฐานของ staff ไม่ได้
+
+แนวทางแก้:
+
+1. Deploy แบบ `Execute as: Me`
+2. แชร์ folder `RTAFNC Expense Tracker Evidence` ให้ admin
+3. หรือปรับ `APP.evidencePublicLink = true` ใน `Code.gs` ถ้าต้องการให้เปิดผ่าน link ได้ทันที
 
 ### แก้ Code แล้วเว็บไม่เปลี่ยน
 
