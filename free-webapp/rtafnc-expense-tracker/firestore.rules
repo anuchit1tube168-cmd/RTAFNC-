@@ -9,8 +9,12 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid));
     }
 
+    function isActiveUser() {
+      return signedIn() && userDoc().data.active == true;
+    }
+
     function hasRole(role) {
-      return signedIn() && userDoc().data.role == role && userDoc().data.active == true;
+      return isActiveUser() && userDoc().data.role == role;
     }
 
     function isAdmin() {
@@ -25,32 +29,57 @@ service cloud.firestore {
       return hasRole('viewer');
     }
 
+    function txKeysAreValid() {
+      return request.resource.data.keys().hasOnly([
+        'type', 'category', 'amount', 'date', 'note', 'status',
+        'createdBy', 'createdByEmail', 'approvedBy', 'approvedByEmail',
+        'approvedAt', 'createdAt', 'updatedAt'
+      ]);
+    }
+
+    function txPayloadIsValid() {
+      return txKeysAreValid()
+        && request.resource.data.amount is number
+        && request.resource.data.amount >= 0
+        && request.resource.data.type in ['income', 'expense']
+        && request.resource.data.status in ['pending', 'approved', 'rejected']
+        && request.resource.data.createdBy == request.auth.uid;
+    }
+
     match /users/{userId} {
       allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
-      allow create: if signedIn() && request.auth.uid == userId;
-      allow update: if isAdmin() || (signedIn() && request.auth.uid == userId && request.resource.data.role == resource.data.role);
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == 'staff'
+        && request.resource.data.active == true;
+      allow update: if isAdmin() || (
+        signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.active == resource.data.active
+      );
       allow delete: if isAdmin();
     }
 
     match /transactions/{transactionId} {
       allow read: if isAdmin() || isViewer() || (isStaff() && resource.data.createdBy == request.auth.uid);
-      allow create: if signedIn()
-        && request.resource.data.createdBy == request.auth.uid
-        && request.resource.data.amount is number
-        && request.resource.data.amount >= 0
-        && request.resource.data.type in ['income', 'expense'];
-      allow update: if isAdmin() || (isStaff() && resource.data.createdBy == request.auth.uid);
+      allow create: if txPayloadIsValid() && (
+        (isAdmin() && request.resource.data.status == 'approved') ||
+        (isStaff() && request.resource.data.status == 'pending')
+      );
+      allow update: if isAdmin();
       allow delete: if isAdmin();
     }
 
     match /settings/{settingId} {
-      allow read: if signedIn();
+      allow read: if isActiveUser();
       allow write: if isAdmin();
     }
 
     match /auditLogs/{logId} {
       allow read: if isAdmin();
-      allow create: if signedIn();
+      allow create: if isActiveUser()
+        && request.resource.data.actorUid == request.auth.uid;
       allow update, delete: if false;
     }
   }
