@@ -1,0 +1,101 @@
+# RTAFNC Expense Tracker - No Firebase Edition
+
+เวอร์ชันนี้ตัด Firebase ออกทั้งหมด ใช้เฉพาะเครื่องมือฟรีของ Google ที่เหมาะกับองค์กร:
+
+- Google Apps Script เป็นตัว WebApp และ Backend
+- Google Sheets เป็นฐานข้อมูล
+- Google Account Login ผ่านสิทธิ์ของ Apps Script Web App
+- GitHub ใช้เก็บ source code / version
+- ไม่ต้องใช้ Firebase Auth
+- ไม่ต้องใช้ Firestore
+- ไม่ต้องใช้ Vercel
+- ไม่ต้องติดตั้งโปรแกรมบนเครื่องผู้ใช้
+
+## เหมาะกับกรณีไหน
+
+เหมาะกับระบบภายในองค์กรที่ต้องการเริ่มเร็ว ต้นทุนต่ำ และอยากให้ข้อมูลอยู่ใน Google Drive / Google Sheets เช่น:
+
+- ระบบบันทึกรายรับรายจ่าย
+- ระบบบันทึกความดี
+- ระบบติดตามงาน
+- ระบบลาออนไลน์ฉบับเริ่มต้น
+- ระบบเบิกวัสดุ
+- ระบบกิจการนักเรียน
+
+## ไฟล์หลัก
+
+```text
+free-webapp/rtafnc-expense-gas/
+├── Code.gs
+├── Index.html
+├── appsscript.json
+├── README.md
+└── docs/
+```
+
+## ฟังก์ชันที่ทำแล้ว
+
+- เปิดเป็น WebApp ผ่าน Google Apps Script
+- Auto-create Google Sheet Database ครั้งแรก
+- Login ด้วย Google Account จาก Apps Script
+- สร้าง user คนแรกเป็น admin อัตโนมัติ
+- user คนถัดไปเป็น staff อัตโนมัติ
+- role: admin / staff / viewer
+- Dashboard สรุปรายรับ รายจ่าย คงเหลือ และรายการรออนุมัติ
+- Form บันทึกรายการ
+- Table ค้นหาและกรองรายการ
+- Admin อนุมัติ / ไม่อนุมัติ / ลบรายการ
+- Export CSV ภาษาไทย
+- Report พร้อม Print / Save PDF ผ่าน browser
+- Settings สำหรับแก้ชื่อองค์กร ปีงบประมาณ และหมวดหมู่
+- Audit log ลง Google Sheet
+- Responsive รองรับมือถือ
+
+## Sheet ที่ระบบสร้าง
+
+```text
+Users
+Transactions
+Settings
+AuditLogs
+```
+
+## Deploy แบบง่าย
+
+1. เปิด Google Apps Script
+2. สร้าง Project ใหม่
+3. เพิ่มไฟล์ `Code.gs`
+4. เพิ่มไฟล์ HTML ชื่อ `Index`
+5. วางโค้ดจาก repo นี้
+6. Project Settings > เปิด Show appsscript.json แล้ววาง manifest
+7. กด Deploy > New deployment > Web app
+8. Execute as: User accessing the web app หรือ Me ตามนโยบายหน่วยงาน
+9. Who has access: Anyone with Google account หรือเฉพาะโดเมนองค์กร
+10. เปิด URL ที่ได้
+
+## หมายเหตุเรื่อง Login
+
+ถ้าต้องการให้ระบบอ่านอีเมลผู้ใช้ได้ชัดเจนที่สุด ควรใช้ Google Workspace/โดเมนองค์กร และตั้งค่า WebApp ให้ผู้ใช้ต้อง login ก่อน
+
+ถ้า Deploy แบบเปิดสาธารณะเกินไป Apps Script อาจไม่คืนค่าอีเมลผู้ใช้ ระบบจะเตือนว่าไม่พบอีเมล
+
+## ข้อดีเมื่อเทียบกับ Firebase
+
+- ข้อมูลง่ายต่อการตรวจสอบ เพราะอยู่ใน Google Sheet
+- ผู้ดูแลที่ไม่ใช่โปรแกรมเมอร์เปิดดูข้อมูลได้ทันที
+- ไม่ต้องตั้ง Firestore Rules
+- ไม่ต้องตั้ง Firebase config
+- ไม่ต้องกลัว billing จาก Firebase/Cloud
+- เหมาะกับระบบ MVP ภายในองค์กร
+
+## ข้อจำกัด
+
+- ไม่เหมาะกับผู้ใช้พร้อมกันจำนวนมากมาก ๆ
+- Apps Script มี quota รายวัน
+- Sheet ไม่ใช่ฐานข้อมูลจริงสำหรับงานหนัก
+- การกำหนดสิทธิ์ขั้นสูงสู้ Firebase ไม่ได้
+- ถ้าโตแล้วค่อยย้ายไป Firebase/Supabase/Cloud SQL ในเฟส 2
+
+## ทางที่แนะนำตอนนี้
+
+สำหรับงาน วพอ. ที่ต้องเริ่มใช้จริงเร็ว ให้ใช้เวอร์ชันนี้ก่อน เพราะข้อมูลอยู่ใน Google Drive/Sheet ตรวจง่าย แก้ง่าย และไม่ต้องมีค่าใช้จ่าย
