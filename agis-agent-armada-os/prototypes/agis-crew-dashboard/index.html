@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AGIS Crew Dashboard Prototype</title>
+  <style>
+    :root{
+      --bg:#071326; --bg2:#0b1d34; --panel:#0e2238; --panel2:#122943;
+      --line:#2c4a68; --gold:#d6a744; --gold2:#f2c766; --teal:#27d3c4;
+      --text:#e9f2ff; --muted:#8ea8c7; --danger:#ff6b6b; --ok:#4ade80;
+      --warn:#f59e0b; --purple:#a78bfa; --shadow:0 18px 55px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:radial-gradient(circle at 20% 0%,#17324d 0,#071326 42%,#030815 100%);color:var(--text);min-height:100vh}
+    .app{display:grid;grid-template-columns:240px 1fr 360px;gap:16px;min-height:100vh;padding:16px}
+    .sidebar,.panel,.card,.detail,.command{background:linear-gradient(180deg,rgba(18,41,67,.92),rgba(7,19,38,.88));border:1px solid rgba(214,167,68,.22);box-shadow:var(--shadow);border-radius:18px}
+    .sidebar{padding:18px;display:flex;flex-direction:column;gap:18px;position:sticky;top:16px;height:calc(100vh - 32px)}
+    .brand{display:flex;gap:12px;align-items:center;padding-bottom:16px;border-bottom:1px solid rgba(214,167,68,.18)}
+    .logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--gold2),#9b6a1b);display:grid;place-items:center;color:#071326;font-weight:900;font-size:24px}
+    h1,h2,h3,p{margin:0}.brand h1{font-size:20px;letter-spacing:.5px}.brand p{font-size:12px;color:var(--muted)}
+    .nav{display:flex;flex-direction:column;gap:8px}.nav button{all:unset;display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;color:var(--muted);cursor:pointer}.nav button.active,.nav button:hover{background:rgba(214,167,68,.12);color:var(--gold2);outline:1px solid rgba(214,167,68,.18)}
+    .quote{margin-top:auto;font-style:italic;color:#a9bdd5;font-size:13px;line-height:1.5;padding:14px;border-top:1px solid rgba(214,167,68,.18)}
+    main{display:flex;flex-direction:column;gap:14px}.topbar{display:flex;justify-content:space-between;gap:14px;align-items:center}.title h2{font-size:26px}.title p{color:var(--muted);font-size:13px}.status{display:flex;gap:10px;align-items:center;color:var(--ok);font-size:13px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);padding:10px 12px;border-radius:14px}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kpi{padding:14px;border-radius:16px;background:rgba(14,34,56,.72);border:1px solid rgba(44,74,104,.8)}.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.kpi strong{display:block;margin-top:6px;font-size:28px;color:var(--gold2)}
+    .pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px}.step{border:1px solid rgba(44,74,104,.8);background:rgba(255,255,255,.03);padding:12px;border-radius:14px;position:relative}.step:after{content:"→";position:absolute;right:-12px;top:50%;translate:0 -50%;color:var(--gold)}.step:last-child:after{display:none}.step b{display:block;font-size:13px}.step small{color:var(--muted)}
+    .crew-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.agent-card{padding:12px;cursor:pointer;transition:.2s transform,.2s border-color;border:1px solid rgba(44,74,104,.9);background:linear-gradient(180deg,rgba(18,41,67,.92),rgba(12,25,43,.92));border-radius:18px}.agent-card:hover{transform:translateY(-2px);border-color:var(--gold)}.agent-card.selected{border-color:var(--gold2);box-shadow:0 0 0 2px rgba(214,167,68,.18),var(--shadow)}
+    .portrait{height:104px;border-radius:14px;display:grid;place-items:center;font-size:42px;margin-bottom:10px;background:radial-gradient(circle at 35% 25%,rgba(39,211,196,.24),transparent 36%),linear-gradient(135deg,#203c5c,#0b1728);border:1px solid rgba(214,167,68,.18);position:relative;overflow:hidden}.portrait:before{content:"";position:absolute;inset:auto -20% -45% -20%;height:80%;background:radial-gradient(ellipse,rgba(214,167,68,.18),transparent 65%)}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px}.name{font-weight:800}.role{color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:99px;background:var(--ok);box-shadow:0 0 12px var(--ok)}.badge{font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(214,167,68,.14);color:var(--gold2);border:1px solid rgba(214,167,68,.26)}.bar{height:7px;border-radius:999px;background:#0a1628;margin:10px 0;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--gold2));border-radius:999px}.tags{display:flex;flex-wrap:wrap;gap:5px}.tag{font-size:10px;color:#c9d8ea;border:1px solid rgba(142,168,199,.28);border-radius:999px;padding:3px 7px;background:rgba(255,255,255,.04)}
+    .lower{display:grid;grid-template-columns:1.6fr 1fr;gap:12px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:10px;border-bottom:1px solid rgba(44,74,104,.45);text-align:left}.table th{color:var(--muted);font-weight:600}.pill{padding:4px 8px;border-radius:999px;background:rgba(39,211,196,.11);color:var(--teal);border:1px solid rgba(39,211,196,.22)}
+    aside{display:flex;flex-direction:column;gap:14px}.detail,.command{padding:14px}.detail-hero{height:170px;border-radius:16px;background:radial-gradient(circle at 40% 30%,rgba(39,211,196,.32),transparent 35%),linear-gradient(135deg,#1b3856,#09172a);display:grid;place-items:center;font-size:74px;border:1px solid rgba(214,167,68,.25);margin-bottom:12px}.skills{display:grid;gap:8px;margin-top:12px}.skill-line{display:grid;grid-template-columns:1fr 54px;gap:8px;align-items:center;color:#c8d7ea;font-size:12px}.command textarea{width:100%;height:118px;background:#08172a;border:1px solid rgba(44,74,104,.9);border-radius:14px;color:var(--text);padding:12px;resize:none}.quick{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.quick button,.primary{border:0;border-radius:12px;background:rgba(214,167,68,.14);color:var(--gold2);padding:8px 10px;cursor:pointer}.primary{width:100%;background:linear-gradient(135deg,var(--gold2),#a66f1f);color:#071326;font-weight:900;padding:13px}.feed{display:grid;gap:8px;max-height:210px;overflow:auto}.feed-item{display:flex;gap:9px;align-items:flex-start;background:rgba(255,255,255,.035);border:1px solid rgba(44,74,104,.45);padding:9px;border-radius:12px;font-size:12px}.feed-item b{color:var(--gold2)}
+    .live-mode{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px dashed rgba(214,167,68,.45);border-radius:14px;background:rgba(214,167,68,.06);color:#d7e6fa}.pulse{animation:pulse 1.6s infinite}.shimmer{position:relative;overflow:hidden}.shimmer:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);animation:shine 2.2s infinite}.warn{box-shadow:0 0 18px rgba(245,158,11,.25)}@keyframes pulse{50%{filter:brightness(1.25)}}@keyframes shine{from{translate:-100% 0}to{translate:100% 0}}
+    @media(max-width:1200px){.app{grid-template-columns:210px 1fr}.right{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr}.crew-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto}.kpis,.crew-grid,.lower,.right{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}.step:after{display:none}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="sidebar">
+      <div class="brand"><div class="logo">⚓</div><div><h1>AGIS</h1><p>Agent Armada OS</p></div></div>
+      <div class="nav">
+        <button class="active">☸ Dashboard</button><button>🧭 Crew Deck</button><button>📜 Missions</button><button>💬 Reactions</button><button>✦ Skills</button><button>🧾 Receipts</button><button>⚙ Settings</button>
+      </div>
+      <div class="quote">“The winds of data guide the fleet. AGIS charts the course.”<br><br><span style="color:var(--ok)">● v1.1 Prototype</span></div>
+    </section>
+    <main>
+      <div class="topbar"><div class="title"><h2>AGIS Crew Dashboard</h2><p>AI Agent Team Command Center / ศูนย์บัญชาการลูกเรือ AI</p></div><div class="status">● All Systems Operational</div></div>
+      <section class="kpis">
+        <div class="kpi"><span>Active Crew</span><strong id="kCrew">10/10</strong></div><div class="kpi"><span>Missions Routed</span><strong id="kMission">128</strong></div><div class="kpi"><span>Receipts</span><strong id="kReceipts">342</strong></div><div class="kpi"><span>Alerts</span><strong id="kAlerts">3</strong></div>
+      </section>
+      <section class="panel pipeline"><div class="step"><b>Requirement</b><small>Parse & understand</small></div><div class="step"><b>Routing</b><small>Match agents</small></div><div class="step"><b>Build</b><small>Execute process</small></div><div class="step"><b>QA Debug</b><small>Validate & test</small></div><div class="step"><b>Evidence</b><small>Generate receipt</small></div></section>
+      <section class="crew-grid" id="crewGrid"></section>
+      <section class="lower">
+        <div class="panel" style="padding:14px"><div class="row"><h3>Active Missions</h3><span class="badge">Live Mock Data</span></div><table class="table" id="missions"><thead><tr><th>ID</th><th>Mission</th><th>Owner</th><th>Progress</th><th>Status</th><th>ETA</th></tr></thead><tbody></tbody></table></div>
+        <div class="panel" style="padding:14px"><h3>State DB + Skill Map</h3><div class="live-mode" style="margin-top:12px"><span>DB Health</span><b style="color:var(--ok)">Optimal</b></div><div style="height:190px;display:grid;place-items:center;color:var(--teal);font-size:72px">⬡</div><p style="color:var(--muted);font-size:12px">Strategy 92 · Execution 88 · Analysis 84 · Support 76 · Defense 71 · Research 89</p></div>
+      </section>
+    </main>
+    <aside class="right">
+      <section class="detail"><div class="detail-hero" id="detailIcon">👑</div><div class="row"><div><h2 id="detailName">AGIS</h2><p id="detailRole" class="role">Captain / Orchestrator</p></div><span class="badge" id="detailStatus">focused</span></div><div class="bar"><i id="detailLoad" style="width:78%"></i></div><p id="detailMission" style="color:var(--muted);font-size:13px">Current mission: Route Boss command into Job Card</p><div class="skills" id="skillLines"></div></section>
+      <section class="command"><h3>Mission Command</h3><textarea id="cmd" placeholder="Describe the task or objective... / ใส่คำสั่ง Boss ที่นี่"></textarea><div class="quick"><button>Code Build</button><button>Data Analysis</button><button>Research</button><button>Report</button><button>QA Test</button></div><button class="primary" id="routeBtn">☸ Route Mission</button></section>
+      <section class="panel" style="padding:14px"><div class="row"><h3>Reaction Feed</h3><span class="badge">Live</span></div><div class="feed" id="feed"></div></section>
+      <section class="panel live-mode"><div><b>Crew Deck Live Mode</b><br><small>Phase 2 placeholder: PixiJS / Phaser walking deck</small></div><span class="pulse">✨</span></section>
+    </aside>
+  </div>
+  <script>
+    const agents=[
+      {name:'Fable',icon:'🧠',role:'Master Skill Architect',status:'consulting',load:65,tags:['skill audit','recovery','master'],skills:['Skill Gap Audit','System Architect','Project Recovery']},
+      {name:'AGIS',icon:'👑',role:'Captain / Orchestrator',status:'focused',load:78,tags:['orchestrator','decision','routing'],skills:['Strategy Orchestration','Agent Routing','Decision Engine']},
+      {name:'Navigator',icon:'🧭',role:'Routing Agent',status:'charting',load:58,tags:['routing','missions','fallback'],skills:['Agent Routing','Workload Balance','Fallback Route']},
+      {name:'Archaeologist',icon:'📚',role:'Knowledge Agent',status:'source-checking',load:61,tags:['drive','research','index'],skills:['Drive Index','Research','Source Evidence']},
+      {name:'Shipwright',icon:'🛠️',role:'Builder / Dev Agent',status:'building',load:72,tags:['github','apps script','lovable'],skills:['GitHub','Apps Script','Lovable UI']},
+      {name:'Doctor',icon:'🩺',role:'QA Debug Agent',status:'diagnosing',load:54,tags:['qa','debug','test'],skills:['QA Debug','Evidence Gate','Regression Test']},
+      {name:'Swordsman',icon:'⚔️',role:'Risk / Compliance Guard',status:'guarding',load:69,tags:['risk','pdpa','approval'],skills:['Risk Audit','Compliance','Approval Gate']},
+      {name:'Cook',icon:'🍳',role:'Docs / Graphic / Content',status:'writing',load:45,tags:['docs','graphic','report'],skills:['Thai Report','Brand Graphic','Prompt Pack']},
+      {name:'Sniper',icon:'🎯',role:'Marketing / Growth Agent',status:'targeting',load:66,tags:['hook','seo','affiliate'],skills:['Marketing Hook','SEO','Affiliate Analysis']},
+      {name:'Clone',icon:'🌀',role:'Scale / Backup Agent',status:'standby',load:80,tags:['clone','backup','scale'],skills:['Clone Protocol','Scale Decision','Merge Back']}
+    ];
+    const missions=[
+      ['M-24128','Q2 Sales Report Generation','Fable','72%','In Progress','32m'],['M-24127','User Behavior Analysis','Navigator','45%','In Progress','1h 12m'],['M-24126','API Integration Build','Shipwright','60%','In Progress','58m'],['M-24125','Security Audit & Fixes','Swordsman','30%','Queued','2h 30m'],['M-24124','Market Research Compilation','Archaeologist','15%','Queued','3h 5m']
+    ];
+    let selected=1;
+    function renderCrew(){const root=document.getElementById('crewGrid');root.innerHTML=agents.map((a,i)=>`<article class="agent-card ${i===selected?'selected':''} ${a.status==='building'?'shimmer':''} ${a.status==='guarding'?'warn':''}" onclick="selectAgent(${i})"><div class="portrait">${a.icon}<span style="position:absolute;right:10px;top:10px" class="dot"></span></div><div class="row"><div><div class="name">${a.name}</div><div class="role">${a.role}</div></div><span class="badge">${a.status}</span></div><div class="bar"><i style="width:${a.load}%"></i></div><div class="tags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></article>`).join('')}
+    function renderMissions(){document.querySelector('#missions tbody').innerHTML=missions.map(m=>`<tr><td>${m[0]}</td><td>${m[1]}</td><td>${m[2]}</td><td><div class="bar" style="margin:0"><i style="width:${m[3]}"></i></div></td><td><span class="pill">${m[4]}</span></td><td>${m[5]}</td></tr>`).join('')}
+    function renderFeed(){const lines=['Navigator: Charting optimal route / กำลังวางเส้นทาง','Shipwright: Preparing framework / เตรียมเครื่องมือสร้าง','Doctor: Running diagnostics / ตรวจระบบ','Swordsman: Checking risk / ตรวจความเสี่ยง','Cook: Preparing docs and visuals / เตรียมเอกสารและภาพ','Clone: Standing by / พร้อมสำรอง'];document.getElementById('feed').innerHTML=lines.map((l,i)=>`<div class="feed-item"><span>${agents[(i+2)%agents.length].icon}</span><span><b>${l.split(':')[0]}</b>: ${l.split(':').slice(1).join(':')}</span></div>`).join('')}
+    function selectAgent(i){selected=i;const a=agents[i];document.getElementById('detailIcon').textContent=a.icon;document.getElementById('detailName').textContent=a.name;document.getElementById('detailRole').textContent=a.role;document.getElementById('detailStatus').textContent=a.status;document.getElementById('detailLoad').style.width=a.load+'%';document.getElementById('detailMission').textContent='Current mission: '+(missions.find(m=>m[2]===a.name)?.[1]||'Standing by for route assignment');document.getElementById('skillLines').innerHTML=a.skills.map((s,idx)=>`<div class="skill-line"><span>${s}</span><span>Lv. ${10-idx}</span></div>`).join('');renderCrew()}
+    document.getElementById('routeBtn').onclick=()=>{const text=document.getElementById('cmd').value.trim()||'New Boss Command';const id='M-'+Math.floor(Math.random()*90000+10000);missions.unshift([id,text,'AGIS','5%','Routed','45m']);document.getElementById('kMission').textContent=Number(document.getElementById('kMission').textContent)+1;renderMissions();document.getElementById('feed').insertAdjacentHTML('afterbegin',`<div class="feed-item"><span>👑</span><span><b>AGIS</b>: Routed new mission / แตกภารกิจใหม่แล้ว — ${id}</span></div>`);document.getElementById('cmd').value=''};
+    renderCrew();renderMissions();renderFeed();selectAgent(1);
+  </script>
+</body>
+</html>
