@@ -1,0 +1,8 @@
+Trigger GitHub Pages deployment for AGIS Crew Dashboard Prototype.
+
+Purpose:
+- Force a push inside agis-agent-armada-os/prototypes/agis-crew-dashboard/**
+- Trigger .github/workflows/agis-crew-dashboard-pages.yml
+
+Expected URL after workflow success:
+https://anuchit1tube168-cmd.github.io/RTAFNC-/
