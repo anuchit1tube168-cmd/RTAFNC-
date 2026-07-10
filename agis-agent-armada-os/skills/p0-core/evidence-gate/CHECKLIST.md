@@ -1,0 +1,7 @@
+- [ ] รู้ expected receipt type ก่อนตรวจ
+- [ ] เปิด/คลิก artifact จริง ไม่ดูแค่ชื่อ
+- [ ] state_check ผ่าน (ปลายทางเปลี่ยนจริง)
+- [ ] receipt เป็นของ state ล่าสุด
+- [ ] งาน high-risk มี receipt >= 2 ชนิด
+- [ ] BLOCKED ระบุสิ่งที่ขาดชัดเจน
+- [ ] log ReceiptIndex + last_verified แล้วจึง done

@@ -1,0 +1,7 @@
+- [ ] main ผ่าน checklist repo + ไม่มี secret
+- [ ] รู้ SHA rollback ก่อน deploy
+- [ ] deploy จาก main เท่านั้น
+- [ ] deploy record ลง JobLog
+- [ ] smoke test: โหลด + 1 ฟังก์ชัน + มือถือ
+- [ ] backend endpoint ทดสอบ request จริง
+- [ ] rollback ซ้อมแล้วทำได้ใน 5 นาที
