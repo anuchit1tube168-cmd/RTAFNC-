@@ -1,0 +1,36 @@
+{
+  "name": "AGIS Loop Engine",
+  "version": "1.0.0",
+  "status": "active",
+  "entryPoint": "captain-console.html",
+  "processorMode": "live-apps-script",
+  "stages": [
+    {"order":1,"id":"intent","owner":"AGIS","exitGate":"Boss command and one goal captured"},
+    {"order":2,"id":"spec","owner":"Fable","exitGate":"Acceptance criteria and output contract defined"},
+    {"order":3,"id":"route","owner":"Navigator","exitGate":"Specialist owner and support crew assigned"},
+    {"order":4,"id":"work","owner":"Specialist","exitGate":"First usable output or work evidence produced"},
+    {"order":5,"id":"guard","owner":"Swordsman","exitGate":"Risk, privacy and release checks passed"},
+    {"order":6,"id":"validate","owner":"Doctor","exitGate":"Tests and evidence validated"},
+    {"order":7,"id":"review","owner":"AGIS","exitGate":"Final decision recorded"},
+    {"order":8,"id":"receipt","owner":"Clone","exitGate":"Receipt and backup created"}
+  ],
+  "hardRules": [
+    "No Evidence = Not Done",
+    "QA + Receipt = Done",
+    "High-risk work requires Swordsman review",
+    "Public release requires AGIS approval",
+    "Every completed mission must have a receipt"
+  ],
+  "specialistRouting": {
+    "Build":"Shipwright",
+    "Report":"Cook",
+    "Data":"Archaeologist",
+    "Marketing":"Sniper",
+    "Video":"Cook",
+    "Research":"Archaeologist"
+  },
+  "autonomyBoundary": {
+    "readyNow":["accept command","create job","route missions","track status","apply evidence gate","create receipt","write State DB"],
+    "requiresExternalExecutor":["edit arbitrary files","call private connectors","generate final documents","deploy third-party services","send messages"]
+  }
+}
