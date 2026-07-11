@@ -28,28 +28,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          show-progress: false
       - name: Extract inline application JavaScript
         run: |
-          test -f agis-agent-armada-os/apps/command-center-v3/index.html
-          test -f agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest
           python - <<'PY'
           from pathlib import Path
-          import re
-          html = Path('agis-agent-armada-os/apps/command-center-v3/index.html').read_text(encoding='utf-8')
+          import re, sys
+          path = Path('agis-agent-armada-os/apps/command-center-v3/index.html')
+          messages = []
+          html = path.read_text(encoding='utf-8') if path.exists() else ''
           required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No Evidence = Not Done']
           missing = [item for item in required if item not in html]
-          if missing:
-              raise SystemExit(f'Missing required UI contracts: {missing}')
           scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
-          if not scripts:
-              raise SystemExit('No inline application script found')
           Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
-          print('HTML contract PASS; extracted inline JavaScript')
+          messages.append(f'index_exists={path.exists()}')
+          messages.append(f'html_chars={len(html)}')
+          messages.append(f'script_blocks={len(scripts)}')
+          messages.append(f'missing_contracts={missing}')
+          Path('/tmp/extract.log').write_text('\n'.join(messages), encoding='utf-8')
+          print('\n'.join(messages))
+          if missing or not scripts:
+              sys.exit(1)
           PY
       - name: Check JavaScript syntax
         run: |
           node --check /tmp/agis-app.js > /tmp/node-check.log 2>&1 || { cat /tmp/node-check.log; exit 1; }
-          cat /tmp/node-check.log
+          echo 'JavaScript syntax PASS' | tee /tmp/node-check.log
       - name: Validate PWA manifest
         run: python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest > /dev/null
       - name: Upload validation diagnostics
@@ -57,8 +62,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: agis-command-center-v3-validation
+          if-no-files-found: warn
           path: |
             /tmp/agis-app.js
+            /tmp/extract.log
             /tmp/node-check.log
 
   deploy:
