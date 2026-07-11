@@ -1,0 +1,12 @@
+{
+  "name": "AGIS Command Center v3",
+  "version": "3.0.0",
+  "releasedAt": "2026-07-11",
+  "mergeCommit": "6aa9c2ca223ab1214a42fcef2e0e14f20db67e56",
+  "queueLimit": 40,
+  "evaluationDimensions": 40,
+  "pixelAgents": 10,
+  "mode": "local-first",
+  "processorUrl": "pending",
+  "expectedUrl": "https://anuchit1tube168-cmd.github.io/RTAFNC-/"
+}
