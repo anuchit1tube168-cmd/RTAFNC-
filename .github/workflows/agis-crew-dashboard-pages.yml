@@ -1,4 +1,4 @@
-name: Deploy AGIS Command Center v3
+name: Deploy AGIS Command Center v4
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: agis-command-center-v3-pages-${{ github.ref }}
+  group: agis-command-center-v4-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           show-progress: false
-      - name: Extract application JavaScript
+      - name: Extract and validate application contracts
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -41,6 +41,13 @@ jobs:
             'processor': root / 'processor-console.html',
             'captain': root / 'captain-console.html',
             'client': root / 'processor-client.js',
+            'captain_data': root / 'captain-console-v4-data.js',
+            'captain_ui': root / 'captain-console-v4-ui.js',
+            'captain_app': root / 'captain-console-v4.js',
+            'captain_css': root / 'captain-console-v4.css',
+            'captain_extra_css': root / 'captain-console-v4-extra.css',
+            'deck_svg': root / 'assets/agis-grand-line-deck.svg',
+            'crew_svg': root / 'assets/agis-crew-sprites.svg',
             'loop': root / 'loop-engine.json',
             'crew': root / 'crew-operations.json'
           }
@@ -49,14 +56,14 @@ jobs:
           captain_html = files['captain'].read_text(encoding='utf-8') if files['captain'].exists() else ''
           required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No evidence = Not Done']
           missing = [item for item in required if item not in html]
-          captain_required = ['AGIS Captain Console','Loop Engineering v1.0','AGIS รับงานและเริ่ม Loop','No Evidence = Not Done']
+          captain_required = ['AGIS Captain Console','Loop Engineering v1.0','AGIS รับงานและเริ่ม Loop','No Evidence = Not Done','CREW CHAT','DATA ANALYTICS','BOSS COMMAND CONSOLE']
           captain_missing = [item for item in captain_required if item not in captain_html]
           scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
           processor_scripts = re.findall(r'<script>(.*?)</script>', processor_html, re.S)
           captain_scripts = re.findall(r'<script>(.*?)</script>', captain_html, re.S)
           Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
           Path('/tmp/agis-console.js').write_text('\n'.join(processor_scripts), encoding='utf-8')
-          Path('/tmp/agis-captain.js').write_text('\n'.join(captain_scripts), encoding='utf-8')
+          Path('/tmp/agis-captain-inline.js').write_text('\n'.join(captain_scripts), encoding='utf-8')
           messages = [f'{k}_exists={v.exists()}' for k,v in files.items()]
           messages += [f'missing_contracts={missing}', f'captain_missing={captain_missing}']
           Path('/tmp/extract.log').write_text('\n'.join(messages), encoding='utf-8')
@@ -68,8 +75,11 @@ jobs:
         run: |
           node --check /tmp/agis-app.js
           node --check /tmp/agis-console.js
-          node --check /tmp/agis-captain.js
+          node --check /tmp/agis-captain-inline.js
           node --check agis-agent-armada-os/apps/command-center-v3/processor-client.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4-data.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4-ui.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4.js
           echo 'JavaScript syntax PASS' | tee /tmp/node-check.log
       - name: Validate JSON manifests and Loop Engine
         run: |
@@ -77,16 +87,27 @@ jobs:
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json > /dev/null
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/loop-engine.json > /dev/null
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/crew-operations.json > /dev/null
+      - name: Validate SVG assets
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          for path in [
+            'agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck.svg',
+            'agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprites.svg'
+          ]:
+            ET.parse(path)
+            print(f'{path}: SVG PASS')
+          PY
       - name: Upload validation diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agis-command-center-v3-validation
+          name: agis-command-center-v4-validation
           if-no-files-found: warn
           path: |
             /tmp/agis-app.js
             /tmp/agis-console.js
-            /tmp/agis-captain.js
+            /tmp/agis-captain-inline.js
             /tmp/extract.log
             /tmp/node-check.log
 
@@ -102,7 +123,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Upload AGIS Command Center v3
+      - name: Upload AGIS Command Center v4
         uses: actions/upload-pages-artifact@v3
         with:
           path: agis-agent-armada-os/apps/command-center-v3
