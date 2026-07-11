@@ -2,6 +2,10 @@ name: Deploy AGIS Command Center v3
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/**'
+      - '.github/workflows/agis-crew-dashboard-pages.yml'
   push:
     branches:
       - main
@@ -15,11 +19,40 @@ permissions:
   id-token: write
 
 concurrency:
-  group: agis-command-center-v3-pages
+  group: agis-command-center-v3-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate required files and inline JavaScript
+        run: |
+          test -f agis-agent-armada-os/apps/command-center-v3/index.html
+          test -f agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('agis-agent-armada-os/apps/command-center-v3/index.html').read_text(encoding='utf-8')
+          required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No Evidence = Not Done']
+          missing = [item for item in required if item not in html]
+          if missing:
+              raise SystemExit(f'Missing required UI contracts: {missing}')
+          scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
+          if not scripts:
+              raise SystemExit('No inline application script found')
+          Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
+          print('HTML contract PASS; extracted inline JavaScript')
+          PY
+          node --check /tmp/agis-app.js
+      - name: Validate PWA manifest
+        run: python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest > /dev/null
+
   deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
