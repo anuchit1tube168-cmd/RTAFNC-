@@ -1,0 +1,12 @@
+{
+  "name": "AGIS Command Center v3",
+  "short_name": "AGIS v3",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050b16",
+  "theme_color": "#071326",
+  "description": "AGIS mission queue, 40-dimension evaluator, evidence and output center",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
