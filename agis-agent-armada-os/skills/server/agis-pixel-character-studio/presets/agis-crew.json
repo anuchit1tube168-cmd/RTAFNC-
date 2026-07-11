@@ -1,0 +1,19 @@
+{
+  "palette": {
+    "primary": "#1f6feb",
+    "secondary": "#d6a744",
+    "ink": "#0b1220"
+  },
+  "crew": [
+    {"slug":"fable-master","name":"Fable","role":"Master Skill Architect","accessory":"book","expression":"calm","animation":"idle"},
+    {"slug":"agis-captain","name":"AGIS","role":"Captain / Orchestrator","accessory":"crown","expression":"focused","animation":"idle"},
+    {"slug":"navigator","name":"Navigator","role":"Routing Agent","accessory":"compass","expression":"calm","animation":"idle"},
+    {"slug":"archaeologist","name":"Archaeologist","role":"Knowledge Agent","accessory":"book","expression":"focused","animation":"idle"},
+    {"slug":"shipwright","name":"Shipwright","role":"Builder / Dev Agent","accessory":"hammer","expression":"focused","animation":"idle"},
+    {"slug":"doctor","name":"Doctor","role":"QA Debug Agent","accessory":"cross","expression":"calm","animation":"idle"},
+    {"slug":"swordsman","name":"Swordsman","role":"Risk / Compliance Guard","accessory":"sword","expression":"alert","animation":"idle"},
+    {"slug":"cook","name":"Cook","role":"Docs / Graphic / Content","accessory":"pan","expression":"happy","animation":"idle"},
+    {"slug":"sniper","name":"Sniper","role":"Marketing / Growth Agent","accessory":"target","expression":"focused","animation":"idle"},
+    {"slug":"clone","name":"Clone","role":"Scale / Backup Agent","accessory":"clone","expression":"calm","animation":"idle"}
+  ]
+}
