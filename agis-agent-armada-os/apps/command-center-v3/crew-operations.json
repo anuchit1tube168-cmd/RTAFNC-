@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "rule": "No Evidence = Not Done; QA + Receipt = Done",
+  "stages": [
+    {
+      "id": "setup",
+      "title": "Setup",
+      "owner": "Shipwright",
+      "support": ["AGIS", "Doctor", "Swordsman"],
+      "responsibility": "Prepare Google Sheet schema, Apps Script Processor, connectivity and deployment checks"
+    },
+    {
+      "id": "job.create",
+      "title": "Create Job",
+      "owner": "AGIS",
+      "support": ["Fable", "Archaeologist"],
+      "responsibility": "Convert the Boss command into one goal, scope, priority and acceptance criteria"
+    },
+    {
+      "id": "job.route",
+      "title": "Route Job",
+      "owner": "Navigator",
+      "support": ["AGIS", "Clone"],
+      "responsibility": "Route each mission to the correct specialist and prepare parallel execution"
+    },
+    {
+      "id": "evidence.gate",
+      "title": "Evidence Gate",
+      "owner": "Doctor",
+      "support": ["Swordsman", "Fable"],
+      "responsibility": "Validate output, evidence, acceptance criteria, safety and risk before Done"
+    },
+    {
+      "id": "receipt.create",
+      "title": "Receipt and Backup",
+      "owner": "Clone",
+      "support": ["Doctor", "AGIS"],
+      "responsibility": "Create the receipt, preserve evidence and prepare backup while AGIS approves final closure"
+    }
+  ],
+  "specialists": {
+    "Build": "Shipwright",
+    "Report": "Cook",
+    "Data": "Archaeologist",
+    "Marketing": "Sniper",
+    "Video": "Cook",
+    "Research": "Archaeologist"
+  }
+}
