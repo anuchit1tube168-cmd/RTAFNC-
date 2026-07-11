@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Validate required files and inline JavaScript
+      - name: Extract inline application JavaScript
         run: |
           test -f agis-agent-armada-os/apps/command-center-v3/index.html
           test -f agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest
@@ -46,9 +46,20 @@ jobs:
           Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
           print('HTML contract PASS; extracted inline JavaScript')
           PY
-          node --check /tmp/agis-app.js
+      - name: Check JavaScript syntax
+        run: |
+          node --check /tmp/agis-app.js > /tmp/node-check.log 2>&1 || { cat /tmp/node-check.log; exit 1; }
+          cat /tmp/node-check.log
       - name: Validate PWA manifest
         run: python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest > /dev/null
+      - name: Upload validation diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agis-command-center-v3-validation
+          path: |
+            /tmp/agis-app.js
+            /tmp/node-check.log
 
   deploy:
     if: github.event_name != 'pull_request'
