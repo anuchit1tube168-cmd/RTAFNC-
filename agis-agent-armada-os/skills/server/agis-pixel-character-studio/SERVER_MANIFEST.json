@@ -1,0 +1,49 @@
+{
+  "skillId": "SKL-SRV-001",
+  "name": "AGIS Pixel Character Studio",
+  "version": "1.0.0",
+  "status": "main-server-skill",
+  "runtime": "python3",
+  "entrypoint": "scripts/server_character_renderer.py",
+  "dependencyFile": "requirements.txt",
+  "environment": {
+    "AGIS_PIXEL_OUTPUT_ROOT": "required-in-production"
+  },
+  "owners": {
+    "creative": "Cook",
+    "technical": "Shipwright",
+    "qa": "Doctor",
+    "security": "Swordsman",
+    "routing": "AGIS"
+  },
+  "inputs": [
+    "slug",
+    "name",
+    "role",
+    "primary",
+    "secondary",
+    "skin",
+    "hair",
+    "ink",
+    "canvas",
+    "accessory",
+    "expression",
+    "animation"
+  ],
+  "outputs": [
+    "png",
+    "preview.png",
+    "idle.gif",
+    "spritesheet.png",
+    "spritesheet.json",
+    "receipt.json"
+  ],
+  "security": {
+    "network": false,
+    "subprocess": false,
+    "dynamicCode": false,
+    "externalImageInput": false,
+    "pathConfinement": true,
+    "maxPaletteColors": 16
+  }
+}
