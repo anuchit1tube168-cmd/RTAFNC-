@@ -1,4 +1,4 @@
-name: Deploy AGIS Crew Dashboard Prototype
+name: Deploy AGIS Command Center v3
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'agis-agent-armada-os/prototypes/agis-crew-dashboard/**'
+      - 'agis-agent-armada-os/apps/command-center-v3/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
 
 permissions:
@@ -15,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: agis-crew-dashboard-pages
+  group: agis-command-center-v3-pages
   cancel-in-progress: true
 
 jobs:
@@ -27,15 +27,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
-
-      - name: Upload dashboard artifact
+      - name: Upload AGIS Command Center v3
         uses: actions/upload-pages-artifact@v3
         with:
-          path: agis-agent-armada-os/prototypes/agis-crew-dashboard
-
+          path: agis-agent-armada-os/apps/command-center-v3
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
