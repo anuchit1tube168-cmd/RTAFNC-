@@ -1,14 +1,18 @@
 {
   "name": "AGIS Command Center v3",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "releasedAt": "2026-07-11",
-  "mergeCommit": "pending-processor-integration",
+  "mergeCommit": "pending-canonical-loop-engine",
   "queueLimit": 40,
   "evaluationDimensions": 40,
   "pixelAgents": 10,
-  "mode": "hybrid-local-and-processor",
+  "mode": "captain-loop-engine-with-live-processor",
   "processorUrl": "https://script.google.com/macros/s/AKfycbwKPBvaVHYUs7tJgrDNISeFUTEZnchy083BjZ9PrUd_XQyvS10GqkoYRnRREpJESqWlDQ/exec",
-  "processorStatus": "deployed-by-boss-live-browser-test-required",
-  "consolePath": "processor-console.html",
+  "processorStatus": "health-check-passed",
+  "captainStatus": "ready-to-accept-jobs",
+  "captainConsolePath": "captain-console.html",
+  "processorConsolePath": "processor-console.html",
+  "loopEnginePath": "loop-engine.json",
+  "canonicalCrew": ["Fable","AGIS","Navigator","Archaeologist","Shipwright","Doctor","Swordsman","Cook","Sniper","Clone"],
   "expectedUrl": "https://anuchit1tube168-cmd.github.io/RTAFNC-/"
 }

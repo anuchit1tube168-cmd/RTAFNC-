@@ -36,40 +36,47 @@ jobs:
           from pathlib import Path
           import re, sys
           root = Path('agis-agent-armada-os/apps/command-center-v3')
-          index = root / 'index.html'
-          console = root / 'processor-console.html'
-          client = root / 'processor-client.js'
-          messages = []
-          html = index.read_text(encoding='utf-8') if index.exists() else ''
-          console_html = console.read_text(encoding='utf-8') if console.exists() else ''
+          files = {
+            'index': root / 'index.html',
+            'processor': root / 'processor-console.html',
+            'captain': root / 'captain-console.html',
+            'client': root / 'processor-client.js',
+            'loop': root / 'loop-engine.json',
+            'crew': root / 'crew-operations.json'
+          }
+          html = files['index'].read_text(encoding='utf-8') if files['index'].exists() else ''
+          processor_html = files['processor'].read_text(encoding='utf-8') if files['processor'].exists() else ''
+          captain_html = files['captain'].read_text(encoding='utf-8') if files['captain'].exists() else ''
           required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No evidence = Not Done']
           missing = [item for item in required if item not in html]
+          captain_required = ['AGIS Captain Console','Loop Engineering v1.0','AGIS รับงานและเริ่ม Loop','No Evidence = Not Done']
+          captain_missing = [item for item in captain_required if item not in captain_html]
           scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
-          console_scripts = re.findall(r'<script>(.*?)</script>', console_html, re.S)
+          processor_scripts = re.findall(r'<script>(.*?)</script>', processor_html, re.S)
+          captain_scripts = re.findall(r'<script>(.*?)</script>', captain_html, re.S)
           Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
-          Path('/tmp/agis-console.js').write_text('\n'.join(console_scripts), encoding='utf-8')
-          messages.append(f'index_exists={index.exists()}')
-          messages.append(f'console_exists={console.exists()}')
-          messages.append(f'client_exists={client.exists()}')
-          messages.append(f'html_chars={len(html)}')
-          messages.append(f'script_blocks={len(scripts)}')
-          messages.append(f'console_script_blocks={len(console_scripts)}')
-          messages.append(f'missing_contracts={missing}')
+          Path('/tmp/agis-console.js').write_text('\n'.join(processor_scripts), encoding='utf-8')
+          Path('/tmp/agis-captain.js').write_text('\n'.join(captain_scripts), encoding='utf-8')
+          messages = [f'{k}_exists={v.exists()}' for k,v in files.items()]
+          messages += [f'missing_contracts={missing}', f'captain_missing={captain_missing}']
           Path('/tmp/extract.log').write_text('\n'.join(messages), encoding='utf-8')
           print('\n'.join(messages))
-          if missing or not scripts or not console_scripts or not client.exists():
+          if missing or captain_missing or not scripts or not processor_scripts or not captain_scripts or not all(v.exists() for v in files.values()):
               sys.exit(1)
           PY
       - name: Check JavaScript syntax
         run: |
           node --check /tmp/agis-app.js
           node --check /tmp/agis-console.js
+          node --check /tmp/agis-captain.js
           node --check agis-agent-armada-os/apps/command-center-v3/processor-client.js
           echo 'JavaScript syntax PASS' | tee /tmp/node-check.log
-      - name: Validate JSON manifests
+      - name: Validate JSON manifests and Loop Engine
         run: |
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest > /dev/null
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json > /dev/null
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/loop-engine.json > /dev/null
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/crew-operations.json > /dev/null
       - name: Upload validation diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -79,6 +86,7 @@ jobs:
           path: |
             /tmp/agis-app.js
             /tmp/agis-console.js
+            /tmp/agis-captain.js
             /tmp/extract.log
             /tmp/node-check.log
 
