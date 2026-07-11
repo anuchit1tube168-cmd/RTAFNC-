@@ -38,7 +38,7 @@ jobs:
           path = Path('agis-agent-armada-os/apps/command-center-v3/index.html')
           messages = []
           html = path.read_text(encoding='utf-8') if path.exists() else ''
-          required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No Evidence = Not Done']
+          required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No evidence = Not Done']
           missing = [item for item in required if item not in html]
           scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
           Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
