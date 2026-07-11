@@ -2,7 +2,7 @@
   "name": "AGIS Grand Line Command Deck",
   "version": "4.0.0",
   "releasedAt": "2026-07-12",
-  "mergeCommit": "pending-grand-line-v4",
+  "mergeCommit": "c85a321d6c012f6afdafb7c91f1e9f4ac1db0c7b",
   "queueLimit": 40,
   "evaluationDimensions": 40,
   "pixelAgents": 10,
