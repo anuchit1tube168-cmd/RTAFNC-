@@ -75,11 +75,14 @@ tests/                        Static contract and secret checks
 
 ## Operational skills
 
-This repository now includes reusable skills for building and auditing operating procedures.
+This repository now includes reusable skills for building, auditing and modernizing operational systems.
 
 - `skills/sop-it-operations/SKILL.md` - SOP skill for System Admin, IT Support Ticketing, incident, access control, backup/restore, patch, SLA/KPI, evidence, and audit controls.
 - `skills/sop-it-operations/README.md` - usage guide for the SOP IT Operations skill.
 - `docs/sop/sop-it-operations-index.md` - SOP catalog and operational index.
+- `skills/motionsites-rtafnc-design/SKILL.md` - MotionSites-inspired design operating skill with performance, accessibility, security and testing gates.
+- `skills/motionsites-rtafnc-design/PROMPT_PACK_TH.md` - ready-to-use prompts for AGIS, RTAFNC, OBE, supervision, Shopee, catering, educational games and real estate.
+- `skills/motionsites-rtafnc-design/PROJECT_STYLE_MAP.md` - project-to-pattern mapping, rollout priority and motion recipes.
 
 ## Security rules
 
@@ -113,5 +116,5 @@ Then open:
 
 ```text
 Student LIFF: http://localhost:5500/liff/
-Staff Admin:  http://localhost:5500/admin/
+Staff Admin: http://localhost:5500/admin/
 ```
