@@ -1,0 +1,19 @@
+{
+  "schema": "agis.character-assets.v1",
+  "generatedAt": "2026-07-12",
+  "format": "Base64-encoded AVIF text asset",
+  "dimensions": "360x450",
+  "loader": "character-assets.js",
+  "dataPath": "data/{character-id}.b64",
+  "usage": {
+    "codex": "../../ui/crew/character-codex.html",
+    "profileArt": true,
+    "productionReference": true,
+    "animationSprite": false
+  },
+  "characters": [
+    "agis", "fable", "navigator", "shipwright", "archaeologist",
+    "doctor", "swordsman", "cook", "sniper", "clone"
+  ],
+  "note": "Turnaround sheets are profile/reference art. Build fixed-frame sprite strips separately for walking, combat, and emotes."
+}
