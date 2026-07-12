@@ -1,15 +1,17 @@
-name: Deploy AGIS Command Center v5
+name: Deploy AGIS Command Center v5.1
 
 on:
   workflow_dispatch:
   pull_request:
     paths:
       - 'agis-agent-armada-os/apps/command-center-v3/**'
+      - 'agis-agent-armada-os/apps-script/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
   push:
     branches: [main]
     paths:
       - 'agis-agent-armada-os/apps/command-center-v3/**'
+      - 'agis-agent-armada-os/apps-script/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
 
 permissions:
@@ -18,7 +20,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: agis-command-center-v5-pages-${{ github.ref }}
+  group: agis-command-center-v5-1-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -33,29 +35,39 @@ jobs:
           from pathlib import Path
           import re, sys
           root = Path('agis-agent-armada-os/apps/command-center-v3')
+          processor = Path('agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs')
           files = [
             root/'index.html', root/'processor-console.html', root/'captain-console.html',
             root/'processor-client.js', root/'captain-console-v4-data.js',
-            root/'captain-console-v5.js', root/'captain-console-v5.css',
-            root/'assets/agis-grand-line-deck.svg', root/'assets/agis-crew-sprites.svg',
-            root/'loop-engine.json', root/'crew-operations.json', root/'release.json', root/'manifest.webmanifest'
+            root/'captain-console-v5.js', root/'captain-console-v5-sync.js',
+            root/'captain-console-v5.css', root/'assets/agis-grand-line-deck.svg',
+            root/'assets/agis-crew-sprites.svg', root/'loop-engine.json',
+            root/'crew-operations.json', root/'release.json', root/'manifest.webmanifest',
+            processor
           ]
           missing_files=[str(x) for x in files if not x.exists()]
           captain=(root/'captain-console.html').read_text(encoding='utf-8')
-          required=['AGIS Grand Line Command Deck v5','LOOP ENGINEERING v5','BOSS COMMAND','DATA ANALYTICS','CREW CHAT','MISSION CONTROL','EVIDENCE GATE','OUTPUT & EXPORT','Save to Google Drive','Deploy as Web','No Evidence = Not Done']
+          required=['AGIS Grand Line Command Deck v5.1','LOOP ENGINEERING v5','BOSS COMMAND','DATA ANALYTICS','CREW CHAT','MISSION CONTROL','EVIDENCE GATE','OUTPUT & EXPORT','Save to Google Drive','Deploy as Web','No Evidence = Not Done','captain-console-v5-sync.js']
           missing_contracts=[x for x in required if x not in captain]
+          processor_text=processor.read_text(encoding='utf-8') if processor.exists() else ''
+          processor_required=['2.0.0','output.save','output.list','chat.append','chat.list','OUTPUT_FOLDER_ID']
+          missing_processor=[x for x in processor_required if x not in processor_text]
           inline='\n'.join(re.findall(r'<script>(.*?)</script>',captain,re.S))
           Path('/tmp/agis-captain-inline.js').write_text(inline,encoding='utf-8')
+          Path('/tmp/agis-processor-v2.js').write_text(processor_text,encoding='utf-8')
           print('missing_files=',missing_files)
           print('missing_contracts=',missing_contracts)
-          if missing_files or missing_contracts or not inline: sys.exit(1)
+          print('missing_processor=',missing_processor)
+          if missing_files or missing_contracts or missing_processor or not inline: sys.exit(1)
           PY
       - name: Check JavaScript syntax
         run: |
           node --check /tmp/agis-captain-inline.js
+          node --check /tmp/agis-processor-v2.js
           node --check agis-agent-armada-os/apps/command-center-v3/processor-client.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4-data.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js
       - name: Validate JSON and SVG assets
         run: |
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest >/dev/null
@@ -72,9 +84,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agis-command-center-v5-validation
+          name: agis-command-center-v5-1-validation
           if-no-files-found: warn
-          path: /tmp/agis-captain-inline.js
+          path: |
+            /tmp/agis-captain-inline.js
+            /tmp/agis-processor-v2.js
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -86,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      - name: Upload AGIS Command Center v5
+      - name: Upload AGIS Command Center v5.1
         uses: actions/upload-pages-artifact@v3
         with:
           path: agis-agent-armada-os/apps/command-center-v3
