@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#061725">
-  <meta name="description" content="AGIS Grand Line Command Deck v5 — responsive captain console, loop engine, analytics, evidence, receipts and export.">
-  <title>AGIS Grand Line Command Deck v5</title>
+  <meta name="description" content="AGIS Grand Line Command Deck v5.1 — responsive captain console, shared chat, Drive outputs, analytics, evidence and receipts.">
+  <title>AGIS Grand Line Command Deck v5.1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg">
   <link rel="stylesheet" href="captain-console-v5.css">
@@ -13,7 +13,7 @@
 <body>
 <div class="app">
   <header class="topbar frame">
-    <div class="brand"><div class="emblem">☸</div><div><h1>AGIS Grand Line Command Deck v5</h1><p>Boss สั่งครั้งเดียว • Captain จัดเส้นทาง • Loop Engine ทำงาน</p></div></div>
+    <div class="brand"><div class="emblem">☸</div><div><h1>AGIS Grand Line Command Deck v5.1</h1><p>Boss สั่งครั้งเดียว • Captain จัดเส้นทาง • Loop Engine ทำงาน</p></div></div>
     <div class="top-metrics">
       <div class="metric-chip ok"><span>SYSTEM STATUS</span><b id="systemStatus">CONNECTING</b></div>
       <div class="metric-chip"><span>AGENTS ONLINE</span><b id="agentCount">10 / 10</b></div>
@@ -78,7 +78,7 @@
         </section>
 
         <section class="frame chat-panel" id="chatSection">
-          <div class="panel-head"><div><span class="eyebrow">CREW CHAT</span><b>ช่องสื่อสารทีม</b></div><span class="live"><i></i> LIVE</span></div>
+          <div class="panel-head"><div><span class="eyebrow">CREW CHAT</span><b>ช่องสื่อสารทีม • Sync ข้ามเครื่องเมื่อ Processor v2</b></div><span class="live"><i></i> LIVE</span></div>
           <div id="chatLog" class="chat-log" aria-live="polite"></div>
           <form id="chatForm" class="chat-form"><select id="chatTarget"><option value="ALL">ALL CREW</option></select><input id="chatInput" placeholder="พิมพ์ข้อความ..."><button class="btn btn-primary">➤</button></form>
         </section>
@@ -131,12 +131,13 @@
   <dialog id="missionDialog"><form method="dialog" class="dialog-card"><div class="dialog-head"><div><span class="eyebrow">MISSION CONTROL</span><h2 style="margin:3px 0;color:var(--gold)">Update Mission & Receipt</h2></div><button class="icon-btn" value="cancel">✕</button></div><label>Mission ID<input id="missionId"></label><div class="form-grid"><label>Status<select id="missionStatus"><option>Working</option><option>Review</option><option>Done</option></select></label><label style="grid-column:span 2">Evidence URL<input id="missionEvidence" type="url" placeholder="https://..."></label></div><div class="button-row"><button type="button" class="btn btn-secondary" id="updateMission">Doctor ตรวจ Evidence Gate</button><button type="button" class="btn btn-primary" id="createReceipt">Clone สร้าง Receipt</button></div><label>สรุปผล<textarea id="receiptSummary" placeholder="สรุปผลการทดสอบและหลักฐาน"></textarea></label><pre id="dialogLog" class="dialog-log"></pre></form></dialog>
 
   <div id="toast" class="toast"></div>
-  <footer style="text-align:center;color:#6f8799;font-size:9px;padding:8px">Responsive Desktop + Mobile • Completed work can be deployed as a website or exported as files for Google Drive • No Evidence = Not Done</footer>
+  <footer style="text-align:center;color:#6f8799;font-size:9px;padding:8px">Responsive Desktop + Mobile • Completed work can be deployed as a website or saved as a Drive package • No Evidence = Not Done</footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="processor-client.js"></script>
 <script src="captain-console-v4-data.js"></script>
 <script src="captain-console-v5.js"></script>
-<script>window.AGIS_DECK_VERSION='5.0.0';</script>
+<script src="captain-console-v5-sync.js"></script>
+<script>window.AGIS_DECK_VERSION='5.1.0';</script>
 </body>
 </html>
