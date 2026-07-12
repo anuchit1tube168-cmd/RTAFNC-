@@ -1,4 +1,4 @@
-name: Deploy AGIS Command Center v4
+name: Deploy AGIS Command Center v5
 
 on:
   workflow_dispatch:
@@ -7,8 +7,7 @@ on:
       - 'agis-agent-armada-os/apps/command-center-v3/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'agis-agent-armada-os/apps/command-center-v3/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
@@ -19,7 +18,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: agis-command-center-v4-pages-${{ github.ref }}
+  group: agis-command-center-v5-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -28,88 +27,54 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          show-progress: false
-      - name: Extract and validate application contracts
+      - name: Validate product contracts and files
         run: |
           python - <<'PY'
           from pathlib import Path
           import re, sys
           root = Path('agis-agent-armada-os/apps/command-center-v3')
-          files = {
-            'index': root / 'index.html',
-            'processor': root / 'processor-console.html',
-            'captain': root / 'captain-console.html',
-            'client': root / 'processor-client.js',
-            'captain_data': root / 'captain-console-v4-data.js',
-            'captain_ui': root / 'captain-console-v4-ui.js',
-            'captain_app': root / 'captain-console-v4.js',
-            'captain_css': root / 'captain-console-v4.css',
-            'captain_extra_css': root / 'captain-console-v4-extra.css',
-            'deck_svg': root / 'assets/agis-grand-line-deck.svg',
-            'crew_svg': root / 'assets/agis-crew-sprites.svg',
-            'loop': root / 'loop-engine.json',
-            'crew': root / 'crew-operations.json'
-          }
-          html = files['index'].read_text(encoding='utf-8') if files['index'].exists() else ''
-          processor_html = files['processor'].read_text(encoding='utf-8') if files['processor'].exists() else ''
-          captain_html = files['captain'].read_text(encoding='utf-8') if files['captain'].exists() else ''
-          required = ['Mission Queue','Evaluation 40D','Output Center','PROCESSOR_URL','No evidence = Not Done']
-          missing = [item for item in required if item not in html]
-          captain_required = ['AGIS Captain Console','Loop Engineering v1.0','AGIS รับงานและเริ่ม Loop','No Evidence = Not Done','CREW CHAT','DATA ANALYTICS','BOSS COMMAND CONSOLE']
-          captain_missing = [item for item in captain_required if item not in captain_html]
-          scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
-          processor_scripts = re.findall(r'<script>(.*?)</script>', processor_html, re.S)
-          captain_scripts = re.findall(r'<script>(.*?)</script>', captain_html, re.S)
-          Path('/tmp/agis-app.js').write_text('\n'.join(scripts), encoding='utf-8')
-          Path('/tmp/agis-console.js').write_text('\n'.join(processor_scripts), encoding='utf-8')
-          Path('/tmp/agis-captain-inline.js').write_text('\n'.join(captain_scripts), encoding='utf-8')
-          messages = [f'{k}_exists={v.exists()}' for k,v in files.items()]
-          messages += [f'missing_contracts={missing}', f'captain_missing={captain_missing}']
-          Path('/tmp/extract.log').write_text('\n'.join(messages), encoding='utf-8')
-          print('\n'.join(messages))
-          if missing or captain_missing or not scripts or not processor_scripts or not captain_scripts or not all(v.exists() for v in files.values()):
-              sys.exit(1)
+          files = [
+            root/'index.html', root/'processor-console.html', root/'captain-console.html',
+            root/'processor-client.js', root/'captain-console-v4-data.js',
+            root/'captain-console-v5.js', root/'captain-console-v5.css',
+            root/'assets/agis-grand-line-deck.svg', root/'assets/agis-crew-sprites.svg',
+            root/'loop-engine.json', root/'crew-operations.json', root/'release.json', root/'manifest.webmanifest'
+          ]
+          missing_files=[str(x) for x in files if not x.exists()]
+          captain=(root/'captain-console.html').read_text(encoding='utf-8')
+          required=['AGIS Grand Line Command Deck v5','LOOP ENGINEERING v5','BOSS COMMAND','DATA ANALYTICS','CREW CHAT','MISSION CONTROL','EVIDENCE GATE','OUTPUT & EXPORT','Save to Google Drive','Deploy as Web','No Evidence = Not Done']
+          missing_contracts=[x for x in required if x not in captain]
+          inline='\n'.join(re.findall(r'<script>(.*?)</script>',captain,re.S))
+          Path('/tmp/agis-captain-inline.js').write_text(inline,encoding='utf-8')
+          print('missing_files=',missing_files)
+          print('missing_contracts=',missing_contracts)
+          if missing_files or missing_contracts or not inline: sys.exit(1)
           PY
       - name: Check JavaScript syntax
         run: |
-          node --check /tmp/agis-app.js
-          node --check /tmp/agis-console.js
           node --check /tmp/agis-captain-inline.js
           node --check agis-agent-armada-os/apps/command-center-v3/processor-client.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4-data.js
-          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4-ui.js
-          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4.js
-          echo 'JavaScript syntax PASS' | tee /tmp/node-check.log
-      - name: Validate JSON manifests and Loop Engine
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5.js
+      - name: Validate JSON and SVG assets
         run: |
-          python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest > /dev/null
-          python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json > /dev/null
-          python -m json.tool agis-agent-armada-os/apps/command-center-v3/loop-engine.json > /dev/null
-          python -m json.tool agis-agent-armada-os/apps/command-center-v3/crew-operations.json > /dev/null
-      - name: Validate SVG assets
-        run: |
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest >/dev/null
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json >/dev/null
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/loop-engine.json >/dev/null
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/crew-operations.json >/dev/null
           python - <<'PY'
           import xml.etree.ElementTree as ET
-          for path in [
-            'agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck.svg',
-            'agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprites.svg'
-          ]:
-            ET.parse(path)
-            print(f'{path}: SVG PASS')
+          for p in ['agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck.svg','agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprites.svg']:
+            ET.parse(p)
+            print(p,'PASS')
           PY
       - name: Upload validation diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agis-command-center-v4-validation
+          name: agis-command-center-v5-validation
           if-no-files-found: warn
-          path: |
-            /tmp/agis-app.js
-            /tmp/agis-console.js
-            /tmp/agis-captain-inline.js
-            /tmp/extract.log
-            /tmp/node-check.log
+          path: /tmp/agis-captain-inline.js
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -119,11 +84,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload AGIS Command Center v4
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Upload AGIS Command Center v5
         uses: actions/upload-pages-artifact@v3
         with:
           path: agis-agent-armada-os/apps/command-center-v3

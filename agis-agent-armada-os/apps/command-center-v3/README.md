@@ -1,87 +1,66 @@
-# AGIS Grand Line Command Deck v4 — Captain + Loop Engine + Analytics + Crew Chat
+# AGIS Grand Line Command Deck v5
 
 เว็บแอปแบบ Hybrid Local-first + Google Apps Script Processor สำหรับ AGIS Agent Armada OS
 
-## จุดเข้าใช้งานหลัก
-- `captain-console.html` — หน้า Command Deck หลัก รับคำสั่งจาก Boss, Crew Roster, Live Deck, Analytics และ Crew Chat
-- `processor-console.html` — Console สำหรับทดสอบ Processor รายคำสั่ง
+## จุดเข้าใช้งาน
+- `captain-console.html` — หน้าใช้งานหลักแบบ Responsive Desktop + Mobile
+- `processor-console.html` — ทดสอบ Processor รายคำสั่ง
 - `index.html` — Mission Queue, Pixel Crew, 40D Evaluation และ Output Center
 
-## Product Design v4
-หน้า Captain ถูกออกแบบใหม่ให้เหมือนศูนย์บัญชาการบนเรือ แต่ยังใช้งานง่ายในงานจริง:
-- Boss Command Console กรอกคำสั่ง, One Piece, Template, Priority, Risk และ Evidence URL
-- Interactive Crew Roster เลือกลูกเรือแล้วดู Role, Workload, Abilities และ Current Mission
-- Live Operations Deck แสดงสถานี Command, Spec, Route, Build, Research, QA, Guard และ Output
-- Selected Crew Panel พร้อม Quick Action: ส่งข้อความ, มอบหมายงาน และเพิ่ม Priority
-- Mission Control Dialog สำหรับ Evidence Gate และ Receipt
-- Responsive Desktop / Tablet / Mobile
-- PWA cache สำหรับไฟล์ UI, SVG scene และ Crew sprites
+## Product Design v5
+หน้า Captain ถูกสร้างใหม่ให้ใกล้เคียงตัวอย่างศูนย์บัญชาการบนเรือ:
+- Crew Roster 10 ตัวละคร พร้อมสถานะและ Workload
+- Loop Engineering 8 ขั้น
+- Live Operations Deck แบบคลิกเลือกสถานี
+- Boss Command กรอกคำสั่ง, Final Goal, Template, Priority, Risk และ Evidence URL
+- Mission Control ด้านขวา
+- Evidence Gate แบบ 5 จุดตรวจ
+- Receipt Preview
+- Output & Export
+- Responsive Desktop / Tablet / Mobile พร้อม Bottom Quick Actions
 
 ## Data Analytics
-ข้อมูลจาก `dashboard.state` ถูกนำมาคำนวณและแสดงแบบใช้งานได้ทันที:
+ข้อมูลจาก `dashboard.state` แสดงเป็น:
 - Active Missions
-- Evidence Verified
 - Agents Online
 - Route Efficiency
-- Mission Flow chart
-- System Health
-- Latest Missions
-- Workload ของตัวละครจากจำนวน Mission ที่รับผิดชอบ
+- Evidence Gate Pass Rate
+- Mission Progress Overview
 
 ## Crew Chat
-- Boss ส่งข้อความถึง All Crew หรือ Agent รายตัว
-- ระบบเพิ่มข้อความอัตโนมัติตามสถานะ Loop
-- เก็บประวัติ Chat ใน LocalStorage
-- Chat ใช้ประกอบการติดตามงาน แต่ไม่ถือเป็น Evidence จนกว่าจะมี URL หลักฐาน
+- ส่งถึง All Crew หรือราย Agent
+- ระบบเพิ่มข้อความตามขั้น Loop
+- เก็บ Chat ใน LocalStorage
+- Chat ไม่ถือเป็น Evidence จนกว่าจะมี URL หลักฐาน
 
 ## Loop Engineering
-ลำดับทำงานจริง:
-
-`Intent → Spec → Route → Work → Guard → Validate → Review → Receipt`
+`Intent → Spec → Route → Work → Guard → Validate → Review → Output`
 
 เจ้าของแต่ละช่วง:
 - Intent — AGIS
 - Spec — Fable
 - Route — Navigator
-- Work — Specialist ตามประเภทงาน
+- Work — Specialist
 - Guard — Swordsman
 - Validate — Doctor
 - Review — AGIS
-- Receipt / Backup — Clone
+- Output / Receipt — Clone + Cook
 
 กฎบังคับ:
 - `No Evidence = Not Done`
 - `QA + Receipt = Done`
-- งานเสี่ยงสูงต้องผ่าน Swordsman
-- งานเผยแพร่จริงต้องผ่าน AGIS
 
-## Canonical Crew
-1. Fable — Master Skill Architect
-2. AGIS — Captain / Orchestrator
-3. Navigator — Routing Agent
-4. Archaeologist — Knowledge / Research
-5. Shipwright — Builder / Dev
-6. Doctor — QA / Debug
-7. Swordsman — Risk / Compliance
-8. Cook — Docs / Graphic / Content
-9. Sniper — Marketing / Growth
-10. Clone — Scale / Backup
-
-## ความสามารถหลัก
-- AGIS Captain รับคำสั่ง สร้าง Job และ Route Mission
-- Mission Queue สูงสุด 40 ภารกิจ
-- Auto-routing เข้าลูกเรือ 10 ตัว
-- Evidence Gate และ Receipt
-- Google Apps Script Processor เขียน State DB
-- ตัวประเมิน 40 มิติ
-- ดาวน์โหลด JSON, CSV, Markdown, HTML, Receipt JSON, PNG, SVG และ Print/PDF
-- Import/Export ข้อมูลสำรอง
-- LocalStorage ใช้งานได้แม้ Processor ไม่พร้อม
+## Output & Export
+พร้อมใช้งานจาก Browser:
+- Deploy as Web — ดาวน์โหลด Standalone HTML
+- Export ZIP — รวม `index.html`, `mission.json`, `README.txt`
+- Export PDF — Print/PDF ของ Browser
+- Export JSON — ข้อมูล Job/Mission/Dashboard
+- Receipt File — JSON พร้อม SHA-256
+- Save to Google Drive — เรียก `output.save` เมื่อ Processor รองรับ; Processor v1 จะเตรียมไฟล์และเปิด Google Drive ให้แทน
 
 ## Live Processor
-Apps Script Processor URL ถูกติดตั้งใน `processor-client.js` และ Health Check ผ่านแล้ว
-
-รองรับ:
+รองรับปัจจุบัน:
 - `setup`
 - `job.create`
 - `job.route`
@@ -89,28 +68,12 @@ Apps Script Processor URL ถูกติดตั้งใน `processor-client
 - `receipt.create`
 - `dashboard.state`
 
-## ขอบเขตความพร้อม
-พร้อมแล้ว:
-- รับคำสั่ง
-- สร้าง Job
-- Route Mission
-- ติดตามสถานะ
-- Analytics Dashboard
-- Crew Chat แบบ Local
-- Evidence Gate
-- Receipt
-- เขียน State DB
+`output.save` ถูกเตรียม Forward Compatibility ในหน้าเว็บ แต่ต้องอัปเกรด Apps Script Processor เป็น v2 เพื่อบันทึกไฟล์เข้า Drive อัตโนมัติ
 
-งานที่ยังต้องมี Executor ภายนอกเพื่อทำอัตโนมัติเต็มรูปแบบ:
-- แก้ไฟล์โครงการจริง
-- เรียก private connectors
-- สร้างเอกสารหรือไฟล์ปลายทาง
-- Deploy ระบบภายนอก
-- ส่งอีเมลหรือข้อความออกนอกระบบ
+## Canonical Crew
+Fable, AGIS, Navigator, Archaeologist, Shipwright, Doctor, Swordsman, Cook, Sniper, Clone
 
 ## Deploy
-GitHub Pages workflow:
-`.github/workflows/agis-crew-dashboard-pages.yml`
+Workflow: `.github/workflows/agis-crew-dashboard-pages.yml`
 
-Live path:
-`https://anuchit1tube168-cmd.github.io/RTAFNC-/captain-console.html`
+Live path: `https://anuchit1tube168-cmd.github.io/RTAFNC-/captain-console.html`

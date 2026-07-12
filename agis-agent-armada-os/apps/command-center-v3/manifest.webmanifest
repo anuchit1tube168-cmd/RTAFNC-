@@ -1,11 +1,11 @@
 {
-  "name": "AGIS Command Center v3",
-  "short_name": "AGIS v3",
-  "start_url": "./",
+  "name": "AGIS Grand Line Command Deck v5",
+  "short_name": "AGIS Deck",
+  "start_url": "./captain-console.html",
   "display": "standalone",
-  "background_color": "#050b16",
-  "theme_color": "#071326",
-  "description": "AGIS mission queue, 40-dimension evaluator, evidence and output center",
+  "background_color": "#03101b",
+  "theme_color": "#061725",
+  "description": "Responsive AGIS Captain Console with Loop Engine, analytics, evidence gate, receipts and export",
   "icons": [
     {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
