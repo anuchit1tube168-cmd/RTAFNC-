@@ -21,6 +21,13 @@ agis-agent-armada-os/
 ├─ MATCH_ROUTING.md
 ├─ project/
 ├─ skills/_shared/
+├─ assets/characters/
+│  ├─ character-assets.js
+│  ├─ manifest.json
+│  └─ data/*.b64
+├─ ui/crew/
+│  ├─ crew-dashboard.html
+│  └─ character-codex.html
 └─ agents/
    ├─ 01_captain_orchestrator/
    ├─ 02_navigator_router/
@@ -33,6 +40,31 @@ agis-agent-armada-os/
    ├─ 09_storyteller_log/
    └─ 10_governance_helmsman/
 ```
+
+## Character Codex
+
+เปิดหน้าใช้งานตัวละคร 10 ตัวที่ `ui/crew/character-codex.html`
+
+- แสดง Turnaround Sheet: Front / 3/4 Front / Side / Back / 3/4 Back
+- ค้นหาและกรองตามสายงาน Command / Research / Build / QA / Operations
+- เปิดภาพต้นฉบับแต่ละตัวได้จากหน้า Codex
+- Shared loader อยู่ที่ `assets/characters/character-assets.js`
+- Manifest สำหรับระบบอยู่ที่ `assets/characters/manifest.json`
+- ภาพเว็บถูกบีบอัดเป็น AVIF และเก็บแบบ Base64 text ที่ `assets/characters/data/*.b64`
+
+ตัวอย่างโหลดภาพในหน้าเว็บ:
+
+```html
+<script src="../../assets/characters/character-assets.js"></script>
+<img id="agis-profile" alt="AGIS profile">
+<script>
+  loadAgisCharacterAsset('agis').then(src => {
+    document.getElementById('agis-profile').src = src;
+  });
+</script>
+```
+
+> Turnaround Sheet พร้อมใช้เป็น Character Profile และ Production Reference แล้ว ส่วนการเดิน/ต่อสู้ต้องสร้าง animation sprite strip แยก โดยกำหนดขนาดเฟรมและ anchor point ให้คงที่
 
 ## Use Every Time Boss Gives Work
 

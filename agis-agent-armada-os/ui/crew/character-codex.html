@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AGIS Character Codex</title>
+<style>
+:root{--bg:#050713;--panel:#08142b;--panel2:#101e40;--ink:#eef6ff;--muted:#9eb5d8;--gold:#ffd36d;--cyan:#36d9ff;--line:#9ac8ff30}
+*{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--ink);font-family:Inter,"Noto Sans Thai","Segoe UI",system-ui,sans-serif;background:radial-gradient(circle at 12% 0,#36d9ff26,transparent 28%),radial-gradient(circle at 92% 0,#9b6dff26,transparent 30%),linear-gradient(180deg,#050713,#08142b 56%,#050b18)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(#fff0 0),linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:auto,32px 32px,32px 32px;mask-image:linear-gradient(#000,transparent 92%)}
+.app{width:min(1480px,96vw);margin:auto;padding:18px 0 46px} .top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:24px;background:#071128e8;box-shadow:0 18px 70px #0008;position:sticky;top:10px;z-index:20;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:13px} .logo{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--gold),var(--cyan),#9b6dff);box-shadow:0 0 28px #36d9ff55} h1{margin:0;font-size:clamp(23px,3vw,37px)} .sub{margin:3px 0 0;color:var(--muted);font-size:13px}
+a,button,input{font:inherit} a{color:inherit} .back{text-decoration:none;border:1px solid #fff2;border-radius:14px;padding:10px 13px;background:#fff1;font-weight:850} .back:hover{border-color:#36d9ff88;background:#36d9ff1a}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0} input{flex:1;min-width:230px;border:1px solid var(--line);border-radius:15px;background:#0005;color:var(--ink);padding:12px 14px;outline:none} input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #36d9ff20}
+.filters{display:flex;gap:7px;flex-wrap:wrap} .filter{border:1px solid #fff2;border-radius:99px;background:#fff1;color:var(--muted);padding:9px 12px;cursor:pointer;font-weight:800} .filter.active{color:var(--ink);border-color:var(--cyan);background:#36d9ff1c}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px} .metric{border:1px solid var(--line);border-radius:18px;background:#071128d9;padding:13px} .metric b{display:block;font-size:25px;color:var(--gold)} .metric small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px} .card{--c:var(--cyan);border:1px solid color-mix(in srgb,var(--c) 34%,transparent);border-radius:22px;background:linear-gradient(180deg,#101e40e8,#071128e8);overflow:hidden;box-shadow:0 18px 48px #0006;transition:.2s;cursor:pointer} .card:hover{transform:translateY(-5px);box-shadow:0 22px 60px #0008,0 0 28px color-mix(in srgb,var(--c) 20%,transparent)}
+.poster{aspect-ratio:4/5;background:#f3efe8;overflow:hidden} .poster img{display:block;width:100%;height:100%;object-fit:cover} .info{padding:12px} .name{display:flex;justify-content:space-between;gap:8px;align-items:center} .name h2{font-size:18px;margin:0;color:var(--c)} .badge{font-size:10px;padding:5px 7px;border-radius:99px;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);color:var(--c)} .role{margin:5px 0;color:var(--ink);font-weight:780;font-size:12px} .role-th,.tagline{color:var(--muted);font-size:11px;line-height:1.45} .tagline{margin:8px 0 0}
+.empty{grid-column:1/-1;text-align:center;padding:60px;border:1px dashed var(--line);border-radius:22px;color:var(--muted)}
+.dialog{border:none;padding:0;background:transparent;width:min(1050px,95vw);max-height:94vh} .dialog::backdrop{background:#02050bd9;backdrop-filter:blur(8px)} .modal{border:1px solid var(--line);border-radius:24px;background:#071128;overflow:hidden;box-shadow:0 30px 100px #000} .modal-head{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px solid var(--line)} .modal-head h2{margin:0} .close{border:1px solid #fff2;border-radius:12px;background:#fff1;color:var(--ink);padding:8px 11px;cursor:pointer} .modal-body{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;padding:14px;max-height:80vh;overflow:auto} .modal-art{background:#f3efe8;border-radius:16px;overflow:hidden} .modal-art img{display:block;width:100%;height:auto} .meta{border:1px solid var(--line);border-radius:16px;background:#0003;padding:14px;align-self:start} .meta p{color:var(--muted);line-height:1.55} .asset-path{word-break:break-all;border:1px solid #fff2;border-radius:12px;background:#0005;padding:9px;font:12px ui-monospace,monospace;color:#bfefff} .open{display:block;text-align:center;text-decoration:none;margin-top:10px;border:1px solid var(--cyan);border-radius:12px;padding:10px;background:#36d9ff1a;font-weight:850}
+footer{margin-top:18px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}} @media(max-width:760px){.top{position:relative;top:0;align-items:flex-start}.summary{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:repeat(2,1fr)}.modal-body{grid-template-columns:1fr}} @media(max-width:480px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div class="brand"><div class="logo">⚙️</div><div><h1>AGIS Character Codex</h1><p class="sub">Turnaround assets · 10 crew · พร้อมใช้เป็น Character Profile และ Production Reference</p></div></div><a class="back" href="crew-dashboard.html">← Crew Dashboard</a></header>
+<div class="toolbar"><input id="search" type="search" placeholder="ค้นหาชื่อตัวละคร บทบาท หรือความสามารถ…" aria-label="ค้นหาตัวละคร"><div class="filters" id="filters"></div></div>
+<section class="summary"><div class="metric"><b>10</b><small>Character Sheets</small></div><div class="metric"><b>5</b><small>Views per Character</small></div><div class="metric"><b>360×450</b><small>Web Profile Asset</small></div><div class="metric"><b>AVIF</b><small>Base64 text · GitHub-safe</small></div></section>
+<section class="grid" id="grid"></section>
+<footer>AGIS Agent Armada OS · Original character asset pipeline · Turnaround → Sprite Slice → Animation → Game Runtime</footer>
+</main>
+<dialog class="dialog" id="dialog"><article class="modal"><header class="modal-head"><h2 id="modalTitle">Character</h2><button class="close" onclick="dialog.close()">ปิด ✕</button></header><div class="modal-body"><div class="modal-art"><img id="modalImg" alt=""></div><aside class="meta"><h3 id="modalRole"></h3><p id="modalThai"></p><p id="modalTagline"></p><div class="asset-path" id="modalPath"></div><a class="open" id="modalOpen" target="_blank" rel="noopener">เปิดแผ่นต้นฉบับ</a></aside></div></article></dialog>
+<script src="../../assets/characters/character-assets.js"></script>
+<script>
+const characters=window.AGIS_CHARACTERS;
+const groups={all:'ทั้งหมด',command:'Command',research:'Research',build:'Build',qa:'QA',operations:'Operations'};
+let active='all'; const $=id=>document.getElementById(id);
+function renderFilters(){$('filters').innerHTML=Object.entries(groups).map(([k,v])=>`<button class="filter ${k===active?'active':''}" onclick="setGroup('${k}')">${v}</button>`).join('')}
+function setGroup(g){active=g;renderFilters();render()}
+async function hydrateImages(){for(const img of document.querySelectorAll('img[data-character]')){if(img.dataset.loaded)continue;img.dataset.loaded='1';try{img.src=await loadAgisCharacterAsset(img.dataset.character)}catch(e){img.alt='โหลดภาพไม่สำเร็จ'}}}
+function render(){const q=$('search').value.trim().toLowerCase();const list=characters.filter(c=>(active==='all'||c.group===active)&&[c.name,c.role,c.roleTh,c.tagline].join(' ').toLowerCase().includes(q));$('grid').innerHTML=list.length?list.map(c=>`<article class="card" style="--c:${c.color}" onclick="openCharacter('${c.id}')"><div class="poster"><img loading="lazy" data-character="${c.id}" alt="${c.name} turnaround sheet"></div><div class="info"><div class="name"><h2>${c.name}</h2><span class="badge">${groups[c.group]}</span></div><p class="role">${c.role}</p><div class="role-th">${c.roleTh}</div><p class="tagline">${c.tagline}</p></div></article>`).join(''):'<div class="empty">ไม่พบตัวละครตามคำค้น</div>';hydrateImages()}
+async function openCharacter(id){const c=characters.find(x=>x.id===id);if(!c)return;$('modalTitle').textContent=c.name;$('modalRole').textContent=c.role;$('modalThai').textContent=c.roleTh;$('modalTagline').textContent=c.tagline;$('modalPath').textContent=`assets/characters/data/${id}.b64`;$('modalImg').alt=c.name+' turnaround sheet';$('modalImg').src=await loadAgisCharacterAsset(id);$('modalOpen').href=$('modalImg').src;dialog.showModal()}
+$('search').addEventListener('input',render);renderFilters();render();
+</script>
+</body>
+</html>
