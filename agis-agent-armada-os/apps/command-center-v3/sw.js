@@ -1,10 +1,13 @@
-const CACHE = 'agis-command-center-v6-1-live-movement-20260714';
+const CACHE = 'agis-command-center-v6-2-processor-center-20260714';
 const CORE_ASSETS = [
   './',
   'index.html',
   'manifest.webmanifest',
   'icon.svg',
   'processor-console.html',
+  'processor-setup.html',
+  'processor-setup.css',
+  'processor-setup.js',
   'processor-client.js',
   'captain-console.html',
   'captain-console-v5.css',
