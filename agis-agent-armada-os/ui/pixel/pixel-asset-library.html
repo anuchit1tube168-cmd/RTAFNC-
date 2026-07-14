@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGIS Pixel Asset Library</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --navy: #061426;
+      --panel: #0b1c31;
+      --panel-2: #102640;
+      --gold: #d9a94e;
+      --gold-soft: #8b6a31;
+      --cyan: #39d9ff;
+      --text: #edf5ff;
+      --muted: #91a8bf;
+      --ok: #5fe39a;
+      --danger: #ff7f87;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -15%, rgba(32, 115, 183, .28), transparent 38%),
+        linear-gradient(180deg, #07172a, #030b15 72%);
+    }
+
+    .shell {
+      width: min(1480px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      padding: 26px;
+      border: 1px solid var(--gold-soft);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(16, 38, 64, .95), rgba(5, 17, 32, .95));
+      box-shadow: 0 20px 70px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(217, 169, 78, .08);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--cyan);
+      letter-spacing: .18em;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 4rem);
+      color: #f4ce7c;
+      line-height: 1;
+    }
+
+    header p {
+      max-width: 760px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border: 1px solid rgba(95, 227, 154, .35);
+      border-radius: 999px;
+      color: var(--ok);
+      background: rgba(95, 227, 154, .08);
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .card {
+      overflow: hidden;
+      border: 1px solid rgba(217, 169, 78, .42);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(15, 37, 62, .97), rgba(6, 18, 33, .97));
+      box-shadow: 0 16px 50px rgba(0, 0, 0, .28);
+    }
+
+    .preview {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        linear-gradient(45deg, rgba(255,255,255,.025) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.025) 75%),
+        linear-gradient(45deg, rgba(255,255,255,.025) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.025) 75%),
+        #04101f;
+      background-position: 0 0, 12px 12px;
+      background-size: 24px 24px;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    .preview img.loaded { opacity: 1; }
+
+    .loader {
+      position: absolute;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .content { padding: 20px; }
+
+    .tag {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: var(--cyan);
+      background: rgba(57, 217, 255, .09);
+      border: 1px solid rgba(57, 217, 255, .22);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 12px 0 8px;
+      color: #f5d994;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button {
+      border: 1px solid rgba(217, 169, 78, .5);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text);
+      background: #132c49;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    button.primary {
+      color: #07111c;
+      border-color: #f2c66a;
+      background: linear-gradient(180deg, #f2c66a, #c98d2d);
+    }
+
+    button:hover { filter: brightness(1.08); }
+    button:disabled { opacity: .45; cursor: wait; }
+
+    .note {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--gold);
+      border-radius: 10px;
+      color: var(--muted);
+      background: rgba(217, 169, 78, .07);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 880px) {
+      header { align-items: flex-start; flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <p class="eyebrow">AGIS Agent Armada OS</p>
+        <h1>Pixel Asset Library</h1>
+        <p>คลัง Master Reference สำหรับตัวละคร อุปกรณ์ Tileset ฉาก และแผนที่โลก พร้อมโหลดเป็น AVIF และนำไปตัด Sprite ต่อใน Game Pipeline</p>
+      </div>
+      <div class="status" id="global-status">กำลังโหลด 0 / 4</div>
+    </header>
+
+    <section class="grid" id="asset-grid" aria-label="AGIS pixel assets"></section>
+
+    <aside class="note">
+      ภาพชุดนี้เป็น Preview Atlas ขนาด 800×600 จากต้นฉบับ 1448×1086 ควรแยก Sprite ด้วย Grid คงที่ กำหนด Pivot ให้ตรงกัน และใช้ Nearest Neighbor เมื่อนำไปขยายในเกม
+    </aside>
+  </main>
+
+  <script src="../../assets/pixel/pixel-assets.js"></script>
+  <script>
+    const descriptions = {
+      characters: "10 Hero พร้อมมุม Front / Side / Back และ Action สำหรับกำหนด Character Identity",
+      equipment: "อุปกรณ์เฉพาะอาชีพทั้ง 10 สาย และ Generic Props สำหรับฉากหรือ Inventory",
+      tileset: "Floor, Wall, Door, Environment Props, Effect Tiles และห้องเฉพาะสายงาน",
+      worldMap: "Overworld, Hub, Mission Map และ Tactical Minimap สำหรับวางโครงสร้างโลกเกม"
+    };
+
+    const grid = document.getElementById("asset-grid");
+    const globalStatus = document.getElementById("global-status");
+    let loadedCount = 0;
+
+    function renderCard(key, asset) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="preview">
+          <span class="loader" id="loader-${key}">กำลังประกอบไฟล์…</span>
+          <img id="image-${key}" alt="${asset.title}">
+        </div>
+        <div class="content">
+          <span class="tag">${asset.category}</span>
+          <h2>${asset.title}</h2>
+          <div class="meta">${descriptions[key]}<br>Preview ${asset.width}×${asset.height} · Source ${asset.sourceWidth}×${asset.sourceHeight}</div>
+          <div class="actions">
+            <button class="primary" id="open-${key}" disabled>เปิดภาพเต็ม</button>
+            <button id="download-${key}" disabled>ดาวน์โหลด AVIF</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+      hydrateCard(key, asset);
+    }
+
+    async function hydrateCard(key, asset) {
+      const image = document.getElementById(`image-${key}`);
+      const loader = document.getElementById(`loader-${key}`);
+      const openButton = document.getElementById(`open-${key}`);
+      const downloadButton = document.getElementById(`download-${key}`);
+
+      try {
+        const src = await loadAgisPixelAsset(key);
+        image.src = src;
+        image.onload = () => {
+          image.classList.add("loaded");
+          loader.remove();
+        };
+        openButton.disabled = false;
+        downloadButton.disabled = false;
+        openButton.addEventListener("click", () => window.open(src, "_blank", "noopener"));
+        downloadButton.addEventListener("click", () => downloadAgisPixelAsset(key));
+        loadedCount += 1;
+        globalStatus.textContent = `พร้อมใช้งาน ${loadedCount} / 4`;
+      } catch (error) {
+        loader.textContent = `โหลดไม่สำเร็จ: ${error.message}`;
+        loader.style.color = "var(--danger)";
+        globalStatus.textContent = "พบข้อผิดพลาดในการโหลด";
+        globalStatus.style.color = "var(--danger)";
+      }
+    }
+
+    Object.entries(AGIS_PIXEL_ASSETS).forEach(([key, asset]) => renderCard(key, asset));
+  </script>
+</body>
+</html>

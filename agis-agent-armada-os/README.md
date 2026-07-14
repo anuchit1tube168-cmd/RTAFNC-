@@ -21,13 +21,22 @@ agis-agent-armada-os/
 ├─ MATCH_ROUTING.md
 ├─ project/
 ├─ skills/_shared/
-├─ assets/characters/
-│  ├─ character-assets.js
-│  ├─ manifest.json
-│  └─ data/*.b64
-├─ ui/crew/
-│  ├─ crew-dashboard.html
-│  └─ character-codex.html
+├─ assets/
+│  ├─ characters/
+│  │  ├─ character-assets.js
+│  │  ├─ manifest.json
+│  │  └─ data/*.b64
+│  └─ pixel/
+│     ├─ pixel-assets.js
+│     ├─ manifest.json
+│     ├─ README.md
+│     └─ data/*.b64
+├─ ui/
+│  ├─ crew/
+│  │  ├─ crew-dashboard.html
+│  │  └─ character-codex.html
+│  └─ pixel/
+│     └─ pixel-asset-library.html
 └─ agents/
    ├─ 01_captain_orchestrator/
    ├─ 02_navigator_router/
@@ -65,6 +74,21 @@ agis-agent-armada-os/
 ```
 
 > Turnaround Sheet พร้อมใช้เป็น Character Profile และ Production Reference แล้ว ส่วนการเดิน/ต่อสู้ต้องสร้าง animation sprite strip แยก โดยกำหนดขนาดเฟรมและ anchor point ให้คงที่
+
+## Pixel Asset Library
+
+เปิดคลังภาพ Pixel Art ที่ `ui/pixel/pixel-asset-library.html`
+
+ชุดที่นำเข้าแล้ว:
+
+- Pixel Character Sprite Sheet — 10 Hero แบบ Front / Side / Back / Action
+- Equipment & Props — อุปกรณ์ประจำอาชีพและ Generic Props
+- Tileset & Environment — พื้น ผนัง ประตู ฉาก ห้องเฉพาะสายงาน และ Effect Tiles
+- AGIS World Map — Overworld, Hub, Mission Map และ Tactical Minimap
+
+ระบบประกอบภาพจาก Base64 หลายส่วนผ่าน `assets/pixel/pixel-assets.js` และดาวน์โหลดเป็น AVIF ได้จากหน้า Library โดยตรง รายละเอียดการใช้และคำสั่งประกอบไฟล์อยู่ที่ `assets/pixel/README.md`
+
+> ภาพ Pixel ชุดนี้เป็น Master Reference และ Preview Atlas การนำเข้า Game Engine ควรตัด Sprite เป็น Grid คงที่ กำหนด Pivot/Anchor และใช้ Nearest Neighbor
 
 ## Use Every Time Boss Gives Work
 
