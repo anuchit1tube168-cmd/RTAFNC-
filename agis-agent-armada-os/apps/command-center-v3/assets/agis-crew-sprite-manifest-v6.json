@@ -1,0 +1,18 @@
+{
+  "version": "6.0.0",
+  "atlas": "assets/agis-crew-sprite-atlas-v6.svg",
+  "frame": {"width": 64, "height": 64, "columns": 4, "rows": 10},
+  "states": {"idle": [0,1], "work": [2,3], "alert": [2,3], "celebrate": [0,1,2,3]},
+  "crew": [
+    {"name":"AGIS","row":0,"station":"Command","x":50,"y":52},
+    {"name":"Fable","row":1,"station":"Spec","x":25,"y":38},
+    {"name":"Navigator","row":2,"station":"Route","x":75,"y":38},
+    {"name":"Shipwright","row":3,"station":"Build","x":43,"y":65},
+    {"name":"Archaeologist","row":4,"station":"Research","x":18,"y":72},
+    {"name":"Doctor","row":5,"station":"QA","x":82,"y":62},
+    {"name":"Swordsman","row":6,"station":"Guard","x":58,"y":34},
+    {"name":"Cook","row":7,"station":"Output","x":76,"y":77},
+    {"name":"Sniper","row":8,"station":"Precision","x":18,"y":52},
+    {"name":"Clone","row":9,"station":"Receipt","x":58,"y":76}
+  ]
+}
