@@ -3,7 +3,7 @@
   "version": "6.2.0",
   "releasedAt": "2026-07-14",
   "mergeCommit": "c06de09b7ae6ecd1e1e7693b59b7f087e76471ac",
-  "processorCenterCommit": "51b694f5c2c7d6b9184a3e6ce7f24a65e14867ca",
+  "processorCenterCommit": "4c9de62881505907c32dd1d439e60f5622605f32",
   "releaseStatus": "processor-v2-deployment-center-ready",
   "queueLimit": 40,
   "evaluationDimensions": 40,
@@ -23,7 +23,7 @@
   "captainStatus": "ready-to-accept-jobs",
   "pixelLibraryStatus": "canvas-source-of-truth-no-image-url-required",
   "spriteRuntimeStatus": "live-state-driven-movement-integrated",
-  "validationStatus": "processor-center-ci-pending",
+  "validationStatus": "passed-pr-34-all-four-workflows",
   "features": [
     "desktop and mobile responsive command deck",
     "interactive crew roster",
