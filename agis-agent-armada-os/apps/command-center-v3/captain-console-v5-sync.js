@@ -11,7 +11,7 @@ const notify=message=>{const el=$('#toast');if(!el)return;el.textContent=message
 
 function missionPayload(){
   return {
-    app:'AGIS Grand Line Command Deck v5.2',
+    app:'AGIS Grand Line Command Deck v6',
     exportedAt:new Date().toISOString(),
     jobId:currentJob(),
     missionId:currentMission(),
@@ -21,7 +21,8 @@ function missionPayload(){
     priority:$('#priority')?.value||'',
     risk:$('#risk')?.value||'',
     evidence:currentEvidence(),
-    pageUrl:location.href
+    pageUrl:location.href,
+    pixelRuntime:'6.0.0'
   };
 }
 
@@ -35,7 +36,7 @@ async function savePackageToDrive(){
   const files=[
     {fileName:'index.html',mimeType:'text/html',content:standaloneHtml(data)},
     {fileName:'mission.json',mimeType:'application/json',content:JSON.stringify(data,null,2)},
-    {fileName:'README.txt',mimeType:'text/plain',content:`AGIS Grand Line Command Deck v5.2\nJob: ${data.jobId}\nMission: ${data.missionId}\nOpen index.html to view this output.`}
+    {fileName:'README.txt',mimeType:'text/plain',content:`AGIS Grand Line Command Deck v6\nJob: ${data.jobId}\nMission: ${data.missionId}\nPixel Runtime: ${data.pixelRuntime}\nOpen index.html to view this output.`}
   ];
   if(data.receiptId)files.push({fileName:'receipt.json',mimeType:'application/json',content:JSON.stringify({receiptId:data.receiptId,jobId:data.jobId,missionId:data.missionId,evidence:data.evidence,createdAt:new Date().toISOString()},null,2)});
   const btn=$('#saveDrive');if(btn){btn.disabled=true;btn.innerHTML='<span>⏳</span>Saving...'}
@@ -84,6 +85,23 @@ function installPixelLibraryLink(){
   outputGrid.appendChild(button);
 }
 
+function installPixelRuntime(){
+  if(!document.getElementById('agisPixelRuntimeCss')){
+    const link=document.createElement('link');
+    link.id='agisPixelRuntimeCss';
+    link.rel='stylesheet';
+    link.href='captain-console-v6.css';
+    document.head.appendChild(link);
+  }
+  if(!document.getElementById('agisPixelRuntimeScript')){
+    const script=document.createElement('script');
+    script.id='agisPixelRuntimeScript';
+    script.src='captain-console-v6.js';
+    script.defer=true;
+    document.body.appendChild(script);
+  }
+}
+
 function bind(){
   const drive=$('#saveDrive');if(drive)drive.onclick=savePackageToDrive;
   const form=$('#chatForm');
@@ -92,6 +110,7 @@ function bind(){
     if(message)appendSharedChat('Boss',$('#chatTarget')?.value||'ALL',message,'boss');
   },true);
   installPixelLibraryLink();
+  installPixelRuntime();
   setInterval(syncChat,15000);
   setTimeout(syncChat,2500);
 }
