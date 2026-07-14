@@ -1,11 +1,11 @@
 {
-  "name": "AGIS Grand Line Command Deck v5",
-  "short_name": "AGIS Deck",
-  "start_url": "./captain-console.html",
+  "name": "AGIS Fleet Operating System v7",
+  "short_name": "AGIS OS",
+  "start_url": "./active-operations.html",
   "display": "standalone",
   "background_color": "#03101b",
   "theme_color": "#061725",
-  "description": "Responsive AGIS Captain Console with Loop Engine, analytics, evidence gate, receipts and export",
+  "description": "Professional work operating system with state-driven RPG-like motion, Processor routing, evidence gates, receipts and exports",
   "icons": [
     {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
