@@ -1,4 +1,4 @@
-const CACHE = 'agis-command-center-v5-2-pixel-library-20260714';
+const CACHE = 'agis-command-center-v5-3-canvas-pixel-studio-20260714';
 const CORE_ASSETS = [
   './',
   'index.html',
@@ -12,6 +12,7 @@ const CORE_ASSETS = [
   'captain-console-v5.js',
   'captain-console-v5-sync.js',
   'pixel-library.html',
+  'pixel-character-engine.js',
   'assets/pixel/pixel-assets.js',
   'assets/pixel/manifest.json',
   'assets/agis-grand-line-deck.svg',
@@ -36,11 +37,9 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-
       return fetch(event.request).then(response => {
         const requestUrl = new URL(event.request.url);
         if (response.ok && requestUrl.origin === self.location.origin) {
