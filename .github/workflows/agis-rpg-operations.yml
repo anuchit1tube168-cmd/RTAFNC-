@@ -1,0 +1,80 @@
+name: Validate AGIS RPG Operations Hub
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/release.json'
+      - 'agis-agent-armada-os/apps/command-center-v3/README.md'
+      - '.github/workflows/agis-rpg-operations.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/release.json'
+      - 'agis-agent-armada-os/apps/command-center-v3/README.md'
+      - '.github/workflows/agis-rpg-operations.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate RPG product contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, sys
+          root = Path('agis-agent-armada-os/apps/command-center-v3')
+          page = root / 'rpg-operations.html'
+          required_files = [
+            page,
+            root / 'processor-client.js',
+            root / 'captain-console-v4-data.js',
+            root / 'release.json',
+            root / 'sw.js'
+          ]
+          missing_files = [str(p) for p in required_files if not p.exists()]
+          html = page.read_text(encoding='utf-8') if page.exists() else ''
+          required = [
+            'AGIS Legends Operations Hub v6',
+            'COMMAND TOWN',
+            'GAME WORKFLOW → AGIS WORKFLOW',
+            '10 SYSTEM MODULES',
+            'Auto Operations',
+            'Idle Rewards',
+            'Agent & Loadout',
+            'Asset Inventory',
+            'Quest System',
+            'Skill Forge',
+            'Crew Guild',
+            'Boss Challenge',
+            'Patch Update',
+            'TECH STACK ของ AGIS',
+            'CREATE QUEST',
+            'job.create',
+            'job.route',
+            'No Evidence = Not Done'
+          ]
+          missing = [item for item in required if item not in html]
+          inline = '\n'.join(re.findall(r'<script>(.*?)</script>', html, re.S))
+          Path('/tmp/agis-rpg-inline.js').write_text(inline, encoding='utf-8')
+          print('missing_files=', missing_files)
+          print('missing_contracts=', missing)
+          if missing_files or missing or not inline:
+            sys.exit(1)
+          PY
+      - name: Check JavaScript syntax
+        run: node --check /tmp/agis-rpg-inline.js
+      - name: Validate release JSON
+        run: python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json >/dev/null
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agis-rpg-operations-v6-validation
+          if-no-files-found: warn
+          path: /tmp/agis-rpg-inline.js
