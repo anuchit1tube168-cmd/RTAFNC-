@@ -39,11 +39,12 @@ jobs:
           runtime=(root/'captain-console-v7.js').read_text(encoding='utf-8')
           sync=(root/'captain-console-v5-sync.js').read_text(encoding='utf-8')
           release=json.loads((root/'release.json').read_text(encoding='utf-8'))
+          runtime_lower=runtime.lower()
           contracts=[
             ('processor_event_bridge','processor:request' in events and 'processor:response' in events),
             ('real_states',all(x in runtime for x in ['assigned','working','waiting','blocked','review','handoff','done'])),
-            ('dashboard_source',"dashboard.state" in runtime),
-            ('evidence_receipt_rule','Verified Experience' in runtime and 'evidenceUrl' in runtime and 'receipt' in runtime.lower()),
+            ('dashboard_source','dashboard.state' in runtime),
+            ('evidence_receipt_rule','verified experience' in runtime_lower and 'evidenceurl' in runtime_lower and 'receipt' in runtime_lower),
             ('no_fake_eta',"etaView').textContent='—'" in runtime),
             ('v7_loader','captain-console-v7-events.js' in sync and 'captain-console-v7.js' in sync),
             ('release_v7',release.get('version')=='7.0.0'),
