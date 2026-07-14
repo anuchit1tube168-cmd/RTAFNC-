@@ -1,4 +1,4 @@
-const CACHE = 'agis-command-center-v6-real-pixel-runtime-20260714';
+const CACHE = 'agis-command-center-v6-1-live-movement-20260714';
 const CORE_ASSETS = [
   './',
   'index.html',
