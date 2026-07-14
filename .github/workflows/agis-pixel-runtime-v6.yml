@@ -1,4 +1,4 @@
-name: Validate AGIS Pixel Runtime v6
+name: Validate AGIS Pixel Runtime v6.1
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate required files and contracts
+      - name: Validate required files and runtime contracts
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -43,11 +43,18 @@ jobs:
           missing=[str(p) for p in files if not p.exists()]
           js=(root/'captain-console-v6.js').read_text(encoding='utf-8')
           css=(root/'captain-console-v6.css').read_text(encoding='utf-8')
-          required_js=['AGIXPixelRuntime','pixel-actor-layer','agis-crew-sprite-atlas-v6.svg','sprite manifest']
-          required_css=['agisSpriteIdle','agisActorIdle','pixel-actor','REAL SPRITES']
+          required_js=[
+            'AGIXPixelRuntime','pixel-actor-layer','agis-crew-sprite-atlas-v6.svg',
+            'sprite manifest','runSpriteQA','active_owner_visible','moveActor','actor-emote'
+          ]
+          required_css=[
+            'agisSpriteIdle','agisActorIdle','agisActorWalk','agisEmotePop',
+            'pixel-actor','REAL SPRITES + LIVE MOVEMENT'
+          ]
           missing_contracts=[x for x in required_js if x not in js]+[x for x in required_css if x not in css]
           manifest=json.loads((root/'assets/agis-crew-sprite-manifest-v6.json').read_text(encoding='utf-8'))
           if len(manifest.get('crew',[]))!=10: missing_contracts.append('10 crew manifest')
+          if len({c['station'] for c in manifest.get('crew',[])})<8: missing_contracts.append('station mapping')
           ET.parse(root/'assets/agis-crew-sprite-atlas-v6.svg')
           ET.parse(root/'assets/agis-grand-line-deck-v6.svg')
           print('missing=',missing)
@@ -58,7 +65,7 @@ jobs:
         run: |
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v6.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js
-      - name: Validate sprite dimensions
+      - name: Validate sprite dimensions and crew routes
         run: |
           python - <<'PY'
           import json
@@ -67,5 +74,6 @@ jobs:
           m=json.loads(p.read_text())
           assert m['frame']=={'width':64,'height':64,'columns':4,'rows':10}
           assert [c['row'] for c in m['crew']]==list(range(10))
-          print('Sprite manifest PASS: 10 crew x 4 frames')
+          assert all(0 < c['x'] < 100 and 0 < c['y'] < 100 for c in m['crew'])
+          print('Sprite runtime PASS: 10 crew x 4 frames + deck routes')
           PY
