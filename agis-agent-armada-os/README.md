@@ -31,6 +31,10 @@ agis-agent-armada-os/
 │     ├─ manifest.json
 │     ├─ README.md
 │     └─ data/*.b64
+├─ apps/command-center-v3/
+│  ├─ captain-console.html
+│  ├─ pixel-library.html
+│  └─ release.json
 ├─ ui/
 │  ├─ crew/
 │  │  ├─ crew-dashboard.html
@@ -89,6 +93,16 @@ agis-agent-armada-os/
 ระบบประกอบภาพจาก Base64 หลายส่วนผ่าน `assets/pixel/pixel-assets.js` และดาวน์โหลดเป็น AVIF ได้จากหน้า Library โดยตรง รายละเอียดการใช้และคำสั่งประกอบไฟล์อยู่ที่ `assets/pixel/README.md`
 
 > ภาพ Pixel ชุดนี้เป็น Master Reference และ Preview Atlas การนำเข้า Game Engine ควรตัด Sprite เป็น Grid คงที่ กำหนด Pivot/Anchor และใช้ Nearest Neighbor
+
+## GitHub Pages Deployment
+
+Workflow `.github/workflows/agis-crew-dashboard-pages.yml` จะรวม Command Center และ `assets/pixel/` เป็นเว็บไซต์เดียวก่อน Deploy
+
+- Command Deck: `https://anuchit1tube168-cmd.github.io/RTAFNC-/captain-console.html`
+- Pixel Asset Library: `https://anuchit1tube168-cmd.github.io/RTAFNC-/pixel-library.html`
+- Release metadata: `https://anuchit1tube168-cmd.github.io/RTAFNC-/release.json`
+
+หน้า Command Deck เพิ่มปุ่ม `Pixel Asset Library` ในส่วน Output & Export และ Service Worker จะเก็บ Pixel chunks แบบ runtime cache หลังเปิดใช้งานครั้งแรก
 
 ## Use Every Time Boss Gives Work
 
