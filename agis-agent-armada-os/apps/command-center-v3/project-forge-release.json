@@ -1,0 +1,11 @@
+{
+  "name": "AGIS Project Forge",
+  "version": "6.0.0",
+  "releasedAt": "2026-07-14",
+  "status": "validation-pending",
+  "path": "project-forge.html",
+  "workflowStages": 9,
+  "projectSystems": 10,
+  "exports": ["markdown", "json", "html", "zip", "pdf", "google-drive"],
+  "rules": ["No Evidence = Not Done", "QA + Receipt = Done"]
+}
