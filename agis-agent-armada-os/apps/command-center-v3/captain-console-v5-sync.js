@@ -11,7 +11,7 @@ const notify=message=>{const el=$('#toast');if(!el)return;el.textContent=message
 
 function missionPayload(){
   return {
-    app:'AGIS Grand Line Command Deck v5',
+    app:'AGIS Grand Line Command Deck v5.2',
     exportedAt:new Date().toISOString(),
     jobId:currentJob(),
     missionId:currentMission(),
@@ -35,7 +35,7 @@ async function savePackageToDrive(){
   const files=[
     {fileName:'index.html',mimeType:'text/html',content:standaloneHtml(data)},
     {fileName:'mission.json',mimeType:'application/json',content:JSON.stringify(data,null,2)},
-    {fileName:'README.txt',mimeType:'text/plain',content:`AGIS Grand Line Command Deck v5\nJob: ${data.jobId}\nMission: ${data.missionId}\nOpen index.html to view this output.`}
+    {fileName:'README.txt',mimeType:'text/plain',content:`AGIS Grand Line Command Deck v5.2\nJob: ${data.jobId}\nMission: ${data.missionId}\nOpen index.html to view this output.`}
   ];
   if(data.receiptId)files.push({fileName:'receipt.json',mimeType:'application/json',content:JSON.stringify({receiptId:data.receiptId,jobId:data.jobId,missionId:data.missionId,evidence:data.evidence,createdAt:new Date().toISOString()},null,2)});
   const btn=$('#saveDrive');if(btn){btn.disabled=true;btn.innerHTML='<span>⏳</span>Saving...'}
@@ -72,6 +72,18 @@ async function syncChat(){
   }catch(error){console.debug('chat.list unavailable',error)}
 }
 
+function installPixelLibraryLink(){
+  const outputGrid=$('#outputSection .output-grid');
+  if(!outputGrid||$('#openPixelLibrary'))return;
+  const button=document.createElement('button');
+  button.type='button';
+  button.id='openPixelLibrary';
+  button.className='output-btn';
+  button.innerHTML='<span>▦</span>Pixel Asset Library';
+  button.addEventListener('click',()=>{location.href='pixel-library.html'});
+  outputGrid.appendChild(button);
+}
+
 function bind(){
   const drive=$('#saveDrive');if(drive)drive.onclick=savePackageToDrive;
   const form=$('#chatForm');
@@ -79,6 +91,7 @@ function bind(){
     const input=$('#chatInput');const message=(input?.value||'').trim();
     if(message)appendSharedChat('Boss',$('#chatTarget')?.value||'ALL',message,'boss');
   },true);
+  installPixelLibraryLink();
   setInterval(syncChat,15000);
   setTimeout(syncChat,2500);
 }
