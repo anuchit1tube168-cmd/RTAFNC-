@@ -1,0 +1,62 @@
+name: Validate AGIS Processor v2 Center
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/processor-setup.*'
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - 'agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs'
+      - '.github/workflows/agis-processor-v2-center.yml'
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/processor-setup.*'
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - 'agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs'
+      - '.github/workflows/agis-processor-v2-center.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate files and UI contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sys
+          root=Path('agis-agent-armada-os/apps/command-center-v3')
+          files=[root/'processor-setup.html',root/'processor-setup.css',root/'processor-setup.js',Path('agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs')]
+          missing=[str(p) for p in files if not p.exists()]
+          html=(root/'processor-setup.html').read_text(encoding='utf-8')
+          js=(root/'processor-setup.js').read_text(encoding='utf-8')
+          gs=Path('agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs').read_text(encoding='utf-8')
+          required_html=['Processor v2 Deployment Center','Copy Code.gs v2','Run Full Smoke Test','OUTPUT_FOLDER_ID','SPREADSHEET_ID']
+          required_js=['output.save','output.list','chat.append','chat.list','AGIS-Processor-v2-Smoke']
+          required_gs=["const AGIS_VERSION = '2.0.0'",'function saveOutput','function appendChat','function listChat']
+          missing_contracts=[x for x in required_html if x not in html]+[x for x in required_js if x not in js]+[x for x in required_gs if x not in gs]
+          print('missing=',missing)
+          print('missing_contracts=',missing_contracts)
+          if missing or missing_contracts: sys.exit(1)
+          PY
+      - name: Check JavaScript syntax
+        run: |
+          node --check agis-agent-armada-os/apps/command-center-v3/processor-setup.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js
+      - name: Validate Apps Script surface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          code=Path('agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs').read_text()
+          actions=['setup','job.create','job.route','mission.update','receipt.create','dashboard.state','output.save','output.list','chat.append','chat.list']
+          for action in actions:
+            assert action in code, action
+          assert code.count('{')==code.count('}'), 'brace mismatch'
+          print('Processor v2 action surface PASS')
+          PY
