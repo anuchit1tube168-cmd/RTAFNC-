@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071020">
+  <meta name="description" content="AGIS Project Forge v6 — game-inspired project workflow, crew, quests, assets, upgrades and releases.">
+  <title>AGIS Project Forge v6</title>
+  <link rel="icon" href="icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="project-forge.css">
+</head>
+<body>
+<div class="forge-app">
+  <header class="forge-top frame">
+    <div class="forge-brand">
+      <div class="forge-mark">⚔</div>
+      <div><h1>AGIS Project Forge v6</h1><p>เปลี่ยนงานกองโตให้เป็น Quest • Crew • Asset • Release ที่ตรวจสอบได้</p></div>
+    </div>
+    <div class="forge-actions">
+      <a class="btn ghost" href="captain-console.html">☸ Captain Deck</a>
+      <button class="btn ghost" id="newProjectBtn">＋ New Project</button>
+      <button class="btn primary" id="syncCaptainBtn">ส่งเข้า Captain</button>
+    </div>
+  </header>
+
+  <section class="frame forge-status">
+    <div><span>PROJECT</span><b id="statusProject">ยังไม่ได้ตั้งชื่อ</b></div>
+    <div><span>MODE</span><b id="statusMode">Project Workflow</b></div>
+    <div><span>PROGRESS</span><b id="statusProgress">0%</b></div>
+    <div><span>PROCESSOR</span><b id="statusProcessor">CONNECTING</b></div>
+    <div><span>VERSION</span><b id="statusVersion">0.1.0</b></div>
+  </section>
+
+  <main class="forge-layout">
+    <aside class="frame project-card">
+      <div class="panel-title"><div><span class="eyebrow">PROJECT PROFILE</span><h2>ตั้งค่าโครงการ</h2></div><button class="icon-btn" id="editProjectBtn">✎</button></div>
+      <form id="projectForm">
+        <label>ชื่อโครงการ<input id="projectName" required placeholder="เช่น ระบบนิเทศการสอน วพอ."></label>
+        <label>One Piece / ผลลัพธ์สุดท้าย<textarea id="projectGoal" required placeholder="URL ใช้งานจริง + ไฟล์ + คู่มือ + Test Receipt"></textarea></label>
+        <div class="two-col">
+          <label>Project Type<select id="projectType"><option>WebApp</option><option>Data Dashboard</option><option>Document / SOP</option><option>AI Agent System</option><option>Game Prototype</option><option>Research</option></select></label>
+          <label>Priority<select id="projectPriority"><option>Critical</option><option selected>High</option><option>Medium</option><option>Low</option></select></label>
+        </div>
+        <div class="two-col">
+          <label>Engine<select id="projectEngine"><option>HTML/CSS/JS + PWA</option><option>Google Apps Script</option><option>Lovable / React</option><option>Unity 6 / C#</option><option>Python Tooling</option></select></label>
+          <label>Platform<select id="projectPlatform"><option>Web + Mobile</option><option>Google Workspace</option><option>Desktop</option><option>Android / iOS</option><option>Cross Platform</option></select></label>
+        </div>
+        <button class="btn primary full" type="submit">บันทึก Project Profile</button>
+      </form>
+      <div class="stack-box">
+        <span class="eyebrow">TECH STACK หลัก</span>
+        <div id="stackList" class="tag-list"></div>
+      </div>
+      <div class="crew-summary"><span class="eyebrow">CREW ASSIGNMENT</span><div id="crewMini" class="crew-mini"></div></div>
+    </aside>
+
+    <section class="forge-center">
+      <section class="frame workflow-panel">
+        <div class="panel-title"><div><span class="eyebrow">PROJECT WORKFLOW</span><h2>9 ขั้นจากไอเดียสู่ Release</h2></div><span class="online"><i></i>AUTO LOOP</span></div>
+        <div id="workflowSteps" class="workflow-steps"></div>
+      </section>
+
+      <section class="frame world-panel">
+        <div class="world-head"><div><span class="eyebrow">FLEET HARBOR / TOWN HUB</span><h2 id="worldTitle">ศูนย์บัญชาการโครงการ</h2></div><div class="xp"><span>FLEET XP</span><b id="fleetXp">0</b></div></div>
+        <div class="world-scene">
+          <img src="assets/agis-grand-line-deck.svg" alt="AGIS Fleet Harbor">
+          <button class="world-node n1" data-module="command"><b>1</b><span>Town Hub</span><small>Command Center</small></button>
+          <button class="world-node n2" data-module="auto"><b>2</b><span>Auto Loop</span><small>งานอัตโนมัติ</small></button>
+          <button class="world-node n3" data-module="reward"><b>3</b><span>Idle Rewards</span><small>XP + Receipt</small></button>
+          <button class="world-node n4" data-module="crew"><b>4</b><span>Crew Loadout</span><small>Skill + Tools</small></button>
+          <button class="world-node n5" data-module="inventory"><b>5</b><span>Inventory</span><small>Assets + Files</small></button>
+          <button class="world-node n6" data-module="quest"><b>6</b><span>Quest System</span><small>Missions</small></button>
+          <button class="world-node n7" data-module="forge"><b>7</b><span>Forge</span><small>Upgrade Skills</small></button>
+          <button class="world-node n8" data-module="guild"><b>8</b><span>Guild</span><small>Team Chat</small></button>
+          <button class="world-node n9" data-module="boss"><b>9</b><span>Boss Challenge</span><small>Critical Gate</small></button>
+          <button class="world-node n10" data-module="patch"><b>10</b><span>Patch Update</span><small>Release Notes</small></button>
+          <div id="worldBubble" class="world-bubble">AGIS พร้อมแตกงานเป็น Quest แล้วครับ Boss</div>
+        </div>
+      </section>
+
+      <section class="module-grid" id="moduleGrid">
+        <article class="frame module-card" data-module-card="command"><span class="module-no">01</span><h3>Town Hub</h3><p>หน้าเริ่มต้นสำหรับ Project Profile, Tech Stack, Crew และสถานะ Release</p><button class="mini-btn" data-focus="projectName">เปิด Project Profile</button></article>
+        <article class="frame module-card" data-module-card="auto"><span class="module-no">02</span><h3>Auto Loop</h3><p>สร้าง Job และ Route Mission ผ่าน Apps Script Processor</p><button class="mini-btn" id="runAutoLoop">เริ่ม Auto Loop</button></article>
+        <article class="frame module-card" data-module-card="reward"><span class="module-no">03</span><h3>Idle Rewards</h3><p>คำนวณ XP จาก Mission, Evidence และ Receipt ที่ผ่านแล้ว</p><button class="mini-btn" id="claimReward">รับรางวัล</button></article>
+        <article class="frame module-card" data-module-card="crew"><span class="module-no">04</span><h3>Crew & Equipment</h3><p>เลือก Agent, Skill และ Tool Loadout ให้เหมาะกับงาน</p><button class="mini-btn" id="openCrewLoadout">จัด Loadout</button></article>
+        <article class="frame module-card" data-module-card="inventory"><span class="module-no">05</span><h3>Asset Inventory</h3><p>เก็บไฟล์ เอกสาร รูปภาพ URL และหลักฐานของโครงการ</p><button class="mini-btn" id="addAssetBtn">เพิ่ม Asset</button></article>
+        <article class="frame module-card" data-module-card="quest"><span class="module-no">06</span><h3>Quest System</h3><p>Mission backlog พร้อม Owner, Status, Evidence และ XP</p><button class="mini-btn" id="generateQuests">Generate Quests</button></article>
+        <article class="frame module-card" data-module-card="forge"><span class="module-no">07</span><h3>Forge & Upgrade</h3><p>ยกระดับ Skill, Template, Prompt และ Workflow version</p><button class="mini-btn" id="upgradeForge">Upgrade</button></article>
+        <article class="frame module-card" data-module-card="guild"><span class="module-no">08</span><h3>Community & Guild</h3><p>บันทึกการคุย การตัดสินใจ Blocker และ Handoff ของทีม</p><button class="mini-btn" id="openGuild">เปิด Crew Chat</button></article>
+        <article class="frame module-card" data-module-card="boss"><span class="module-no">09</span><h3>Boss Challenge</h3><p>โหมดงาน Critical ต้องผ่าน Guard, QA, Review และ Receipt</p><button class="mini-btn danger" id="startBossChallenge">เริ่ม Boss Challenge</button></article>
+        <article class="frame module-card" data-module-card="patch"><span class="module-no">10</span><h3>Patch Update</h3><p>สร้าง Release Note, Version และรายการเปลี่ยนแปลง</p><button class="mini-btn" id="createPatch">สร้าง Patch Note</button></article>
+      </section>
+    </section>
+
+    <aside class="forge-right">
+      <section class="frame side-card">
+        <div class="panel-title"><div><span class="eyebrow">QUEST BOARD</span><h2>Mission Backlog</h2></div><b id="questCount">0</b></div>
+        <div id="questList" class="quest-list"></div>
+      </section>
+      <section class="frame side-card">
+        <div class="panel-title"><div><span class="eyebrow">ASSET INVENTORY</span><h2>Files & Evidence</h2></div><b id="assetCount">0</b></div>
+        <div id="assetList" class="asset-list"></div>
+      </section>
+      <section class="frame side-card">
+        <div class="panel-title"><div><span class="eyebrow">BOSS CHALLENGE</span><h2>Production Gate</h2></div><b id="bossStatus">Standby</b></div>
+        <div id="gateList" class="gate-list"></div>
+        <div class="progress"><i id="bossBar"></i></div>
+      </section>
+      <section class="frame side-card">
+        <div class="panel-title"><div><span class="eyebrow">EXPORT & RELEASE</span><h2>ส่งมอบงาน</h2></div></div>
+        <div class="export-grid">
+          <button class="export-btn" id="exportGdd">📝<span>GDD / SPEC.md</span></button>
+          <button class="export-btn" id="exportJson">{ }<span>Project JSON</span></button>
+          <button class="export-btn" id="exportHtml">🌐<span>Standalone Web</span></button>
+          <button class="export-btn" id="exportZip">🗜<span>Project ZIP</span></button>
+          <button class="export-btn drive" id="saveDrive">△<span>Google Drive</span></button>
+          <button class="export-btn" id="printReport">📄<span>Print / PDF</span></button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <section class="frame forge-bottom">
+    <div class="guild-panel"><div class="panel-title"><div><span class="eyebrow">GUILD LOG</span><h2>Crew Chat & Decisions</h2></div><span class="online"><i></i>LIVE</span></div><div id="guildLog" class="guild-log"></div><form id="guildForm"><select id="guildTarget"><option>ALL CREW</option></select><input id="guildInput" placeholder="พิมพ์ข้อความ การตัดสินใจ หรือ Blocker..."><button class="btn primary">ส่ง</button></form></div>
+    <div class="patch-panel"><div class="panel-title"><div><span class="eyebrow">PATCH NOTES</span><h2>Version History</h2></div></div><div id="patchList" class="patch-list"></div></div>
+  </section>
+
+  <dialog id="assetDialog"><form method="dialog" class="dialog-card"><div class="panel-title"><div><span class="eyebrow">ADD ASSET</span><h2>เพิ่มไฟล์หรือหลักฐาน</h2></div><button class="icon-btn" value="cancel">✕</button></div><label>ชื่อ Asset<input id="assetName"></label><div class="two-col"><label>ประเภท<select id="assetType"><option>Document</option><option>Image</option><option>Spreadsheet</option><option>Code</option><option>Evidence</option><option>Link</option></select></label><label>Status<select id="assetStatus"><option>Ready</option><option>Draft</option><option>Review</option><option>Missing</option></select></label></div><label>URL / Path<input id="assetUrl" placeholder="https://drive.google.com/... หรือ path ใน repo"></label><button type="button" class="btn primary full" id="saveAsset">บันทึก Asset</button></form></dialog>
+
+  <dialog id="crewDialog"><form method="dialog" class="dialog-card"><div class="panel-title"><div><span class="eyebrow">CREW LOADOUT</span><h2>เลือกทีมและอุปกรณ์</h2></div><button class="icon-btn" value="cancel">✕</button></div><div id="crewLoadout" class="crew-loadout"></div><button type="button" class="btn primary full" id="saveCrewLoadout">บันทึก Loadout</button></form></dialog>
+
+  <div id="forgeToast" class="toast"></div>
+  <footer>AGIS Project Forge v6 • Original project workflow inspired by RPG progression • No Evidence = Not Done • QA + Receipt = Done</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="processor-client.js"></script>
+<script src="captain-console-v4-data.js"></script>
+<script src="project-forge.js"></script>
+</body>
+</html>
