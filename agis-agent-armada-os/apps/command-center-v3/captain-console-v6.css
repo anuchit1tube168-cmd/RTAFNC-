@@ -1,0 +1,20 @@
+/* AGIS Pixel Runtime v6 — REAL SPRITES */
+.avatar.pixel-sprite{background-image:url('assets/agis-crew-sprite-atlas-v6.svg')!important;background-repeat:no-repeat!important;background-position-x:0;background-position-y:var(--sprite-y,0)!important;background-size:var(--sprite-w,256px) var(--sprite-h,640px)!important;image-rendering:pixelated!important;animation:agisSpriteIdle 1.25s steps(4,end) infinite!important;box-shadow:0 0 0 1px #e8b44f55,0 5px 15px #0009!important}
+@keyframes agisSpriteIdle{to{background-position-x:var(--sprite-end,-256px)}}
+.pixel-actor-layer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.pixel-actor{position:absolute;width:76px;height:88px;transform:translate(-50%,-50%);border:0;background:transparent;padding:0;color:#fff;pointer-events:auto;transition:left .7s cubic-bezier(.2,.8,.2,1),top .7s cubic-bezier(.2,.8,.2,1),filter .2s,transform .2s;filter:drop-shadow(0 8px 5px #0009)}
+.pixel-actor:hover{transform:translate(-50%,-50%) scale(1.08);z-index:8}
+.pixel-actor .actor-sprite{display:block;width:64px;height:64px;margin:auto;background-image:url('assets/agis-crew-sprite-atlas-v6.svg');background-repeat:no-repeat;background-size:256px 640px;background-position:0 var(--actor-y,0);image-rendering:pixelated;animation:agisActorIdle 1.3s steps(4,end) infinite}
+@keyframes agisActorIdle{to{background-position-x:-256px}}
+.pixel-actor .actor-label{display:inline-block;max-width:92px;margin-top:-3px;padding:2px 6px;border:1px solid #d7a54788;border-radius:5px;background:#04101dde;color:#f5cb73;font-size:8px;font-weight:850;white-space:nowrap;box-shadow:0 3px 10px #0008}
+.pixel-actor[data-state="working"] .actor-sprite{animation-duration:.65s;filter:drop-shadow(0 0 7px #35cfd0)}
+.pixel-actor[data-state="working"] .actor-label{border-color:#35cfd0;color:#8af5ef}
+.pixel-actor[data-state="alert"] .actor-sprite{animation-duration:.45s;filter:drop-shadow(0 0 8px #ff667c)}
+.pixel-actor[data-state="done"] .actor-sprite{animation-duration:.4s;filter:drop-shadow(0 0 9px #43d97b)}
+.pixel-actor.selected{transform:translate(-50%,-50%) scale(1.13);z-index:9}.pixel-actor.selected .actor-label{background:#5c3b13ee;border-color:#ffd36c;color:#fff1c3}
+.deck-scene.pixel-runtime-ready>img{content:url('assets/agis-grand-line-deck-v6.svg');filter:saturate(1.08) contrast(1.06) brightness(.92)}
+.deck-scene.pixel-runtime-ready .deck-station{opacity:.12;z-index:5;transition:.2s}.deck-scene.pixel-runtime-ready .deck-station:hover,.deck-scene.pixel-runtime-ready .deck-station.active{opacity:.92}.deck-scene.pixel-runtime-ready .speech{z-index:10}.deck-scene.pixel-runtime-ready .deck-progress{z-index:11}
+.pixel-runtime-badge{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 7px;border:1px solid #43d97b66;border-radius:99px;background:#0b2a1bcc;color:#7df0a6;font-size:8px}.pixel-runtime-badge:before{content:'◆';color:#43d97b}
+@media(max-width:1000px){.pixel-actor{transform:translate(-50%,-50%) scale(.9)}.pixel-actor.selected{transform:translate(-50%,-50%) scale(1.02)}}
+@media(max-width:760px){.pixel-actor{width:58px;height:68px;transform:translate(-50%,-50%) scale(.78)}.pixel-actor.selected{transform:translate(-50%,-50%) scale(.92)}.pixel-actor .actor-label{font-size:7px;padding:1px 4px}.deck-scene.pixel-runtime-ready .deck-station{display:none}}
+@media(prefers-reduced-motion:reduce){.avatar.pixel-sprite,.pixel-actor .actor-sprite{animation:none!important}.pixel-actor{transition:none}}
