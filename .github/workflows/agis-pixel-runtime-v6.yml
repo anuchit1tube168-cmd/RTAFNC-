@@ -1,0 +1,71 @@
+name: Validate AGIS Pixel Runtime v6
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v6.*'
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprite-*'
+      - 'agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck-v6.svg'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - '.github/workflows/agis-pixel-runtime-v6.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v6.*'
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprite-*'
+      - 'agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck-v6.svg'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - '.github/workflows/agis-pixel-runtime-v6.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate required files and contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, sys, xml.etree.ElementTree as ET
+          root=Path('agis-agent-armada-os/apps/command-center-v3')
+          files=[
+            root/'captain-console-v6.css', root/'captain-console-v6.js',
+            root/'assets/agis-crew-sprite-atlas-v6.svg',
+            root/'assets/agis-crew-sprite-manifest-v6.json',
+            root/'assets/agis-grand-line-deck-v6.svg'
+          ]
+          missing=[str(p) for p in files if not p.exists()]
+          js=(root/'captain-console-v6.js').read_text(encoding='utf-8')
+          css=(root/'captain-console-v6.css').read_text(encoding='utf-8')
+          required_js=['AGIXPixelRuntime','pixel-actor-layer','agis-crew-sprite-atlas-v6.svg','sprite manifest']
+          required_css=['agisSpriteIdle','agisActorIdle','pixel-actor','REAL SPRITES']
+          missing_contracts=[x for x in required_js if x not in js]+[x for x in required_css if x not in css]
+          manifest=json.loads((root/'assets/agis-crew-sprite-manifest-v6.json').read_text(encoding='utf-8'))
+          if len(manifest.get('crew',[]))!=10: missing_contracts.append('10 crew manifest')
+          ET.parse(root/'assets/agis-crew-sprite-atlas-v6.svg')
+          ET.parse(root/'assets/agis-grand-line-deck-v6.svg')
+          print('missing=',missing)
+          print('missing_contracts=',missing_contracts)
+          if missing or missing_contracts: sys.exit(1)
+          PY
+      - name: Check JavaScript syntax
+        run: |
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v6.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js
+      - name: Validate sprite dimensions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprite-manifest-v6.json')
+          m=json.loads(p.read_text())
+          assert m['frame']=={'width':64,'height':64,'columns':4,'rows':10}
+          assert [c['row'] for c in m['crew']]==list(range(10))
+          print('Sprite manifest PASS: 10 crew x 4 frames')
+          PY
