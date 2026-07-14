@@ -1,0 +1,68 @@
+name: Validate AGIS Active Operations v7
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v7*'
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/release.json'
+      - 'agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - '.github/workflows/agis-active-operations-v7.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v7*'
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/release.json'
+      - 'agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - '.github/workflows/agis-active-operations-v7.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate v7 files and contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, sys
+          root=Path('agis-agent-armada-os/apps/command-center-v3')
+          files=[root/'captain-console-v7-events.js',root/'captain-console-v7.js',root/'captain-console-v7.css',root/'active-operations.html',root/'captain-console-v5-sync.js',root/'release.json',root/'manifest.webmanifest',root/'sw.js']
+          missing=[str(x) for x in files if not x.exists()]
+          events=(root/'captain-console-v7-events.js').read_text(encoding='utf-8')
+          runtime=(root/'captain-console-v7.js').read_text(encoding='utf-8')
+          sync=(root/'captain-console-v5-sync.js').read_text(encoding='utf-8')
+          release=json.loads((root/'release.json').read_text(encoding='utf-8'))
+          contracts=[
+            ('processor_event_bridge','processor:request' in events and 'processor:response' in events),
+            ('real_states',all(x in runtime for x in ['assigned','working','waiting','blocked','review','handoff','done'])),
+            ('dashboard_source',"dashboard.state" in runtime),
+            ('evidence_receipt_rule','Verified Experience' in runtime and 'evidenceUrl' in runtime and 'receipt' in runtime.lower()),
+            ('no_fake_eta',"etaView').textContent='—'" in runtime),
+            ('v7_loader','captain-console-v7-events.js' in sync and 'captain-console-v7.js' in sync),
+            ('release_v7',release.get('version')=='7.0.0'),
+            ('rpg_is_interaction_only',release.get('mode')=='professional-work-os-with-rpg-interaction-layer')
+          ]
+          failed=[name for name,ok in contracts if not ok]
+          print('missing=',missing)
+          print('contracts=',contracts)
+          if missing or failed: sys.exit(1)
+          PY
+      - name: Check JavaScript syntax
+        run: |
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v7-events.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v7.js
+          node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js
+      - name: Validate JSON and offline cache
+        run: |
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json >/dev/null
+          python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest >/dev/null
+          grep -q 'captain-console-v7.js' agis-agent-armada-os/apps/command-center-v3/sw.js
+          grep -q 'active-operations.html' agis-agent-armada-os/apps/command-center-v3/sw.js
+          echo 'AGIS Active Operations v7 validation PASS'
