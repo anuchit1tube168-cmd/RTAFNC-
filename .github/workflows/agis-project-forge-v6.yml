@@ -1,0 +1,48 @@
+name: Validate AGIS Project Forge v6
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/project-forge*'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - '.github/workflows/agis-project-forge-v6.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/project-forge*'
+      - 'agis-agent-armada-os/apps/command-center-v3/sw.js'
+      - '.github/workflows/agis-project-forge-v6.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate files and product contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sys
+          root=Path('agis-agent-armada-os/apps/command-center-v3')
+          files=[root/'project-forge.html',root/'project-forge.css',root/'project-forge.js',root/'project-forge-core.js',root/'project-forge-ui.js',root/'project-forge-app.js']
+          missing=[str(x) for x in files if not x.exists()]
+          html=(root/'project-forge.html').read_text(encoding='utf-8')
+          required=['AGIS Project Forge v6','PROJECT WORKFLOW','Town Hub','Auto Loop','Idle Rewards','Crew & Equipment','Asset Inventory','Quest System','Forge & Upgrade','Community & Guild','Boss Challenge','Patch Update','GDD / SPEC.md','Google Drive']
+          contracts=[x for x in required if x not in html]
+          print('missing_files=',missing)
+          print('missing_contracts=',contracts)
+          if missing or contracts: sys.exit(1)
+          PY
+      - name: Check JavaScript syntax
+        run: |
+          node --check agis-agent-armada-os/apps/command-center-v3/project-forge.js
+          node --check agis-agent-armada-os/apps/command-center-v3/project-forge-core.js
+          node --check agis-agent-armada-os/apps/command-center-v3/project-forge-ui.js
+          node --check agis-agent-armada-os/apps/command-center-v3/project-forge-app.js
+      - name: Validate responsive and offline contracts
+        run: |
+          grep -q '@media(max-width:600px)' agis-agent-armada-os/apps/command-center-v3/project-forge.css
+          grep -q 'project-forge.html' agis-agent-armada-os/apps/command-center-v3/sw.js
+          grep -q 'No Evidence = Not Done' agis-agent-armada-os/apps/command-center-v3/project-forge.html
+          echo 'Project Forge v6 validation PASS'
