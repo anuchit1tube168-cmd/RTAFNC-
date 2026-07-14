@@ -1,0 +1,27 @@
+{
+  "name": "rtafnc-teaching-supervision",
+  "display_name": "RTAFNC Teaching Supervision",
+  "version": "1.0.0",
+  "language": "th-TH",
+  "entrypoint": "SKILL.md",
+  "agent_instructions": "AGENTS.md",
+  "wiki": "LLM_WIKI.md",
+  "qa": "CHECKLIST.md",
+  "status": "production-blueprint",
+  "repository_target": "anuchit1tube168-cmd/RTAFNC-",
+  "recommended_path": "docs/skills/rtafnc-teaching-supervision/",
+  "triggers": [
+    "ระบบนิเทศการสอน",
+    "นิเทศการสอน วพอ",
+    "PA4",
+    "rtafnc supervision mode"
+  ],
+  "companions": [
+    "LLM_WIKI.md",
+    "CHECKLIST.md",
+    "TEST_PLAN.md",
+    "EXAMPLES.md",
+    "AGENT_INJECTION.md",
+    "RECEIPT_TEMPLATE.md"
+  ]
+}
