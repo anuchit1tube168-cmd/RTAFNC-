@@ -1,39 +1,46 @@
-# AGIS Grand Line Command Deck v5
+# AGIS Grand Line Command Deck v6.3
 
 เว็บแอปแบบ Hybrid Local-first + Google Apps Script Processor สำหรับ AGIS Agent Armada OS
 
 ## จุดเข้าใช้งาน
-- `captain-console.html` — หน้าใช้งานหลักแบบ Responsive Desktop + Mobile
+- `captain-console.html` — หน้า Captain หลักแบบ Responsive Desktop + Mobile
+- `rpg-operations.html` — RPG Operations Hub แปลงระบบเกมเป็นระบบบริหารงาน Agent
+- `processor-setup.html` — ศูนย์ติดตั้งและทดสอบ Processor v2
 - `processor-console.html` — ทดสอบ Processor รายคำสั่ง
-- `index.html` — Mission Queue, Pixel Crew, 40D Evaluation และ Output Center
+- `pixel-library.html` — Pixel Character Studio และ Sprite QA
+- `index.html` — Mission Queue, 40D Evaluation และ Output Center
 
-## Product Design v5
-หน้า Captain ถูกสร้างใหม่ให้ใกล้เคียงตัวอย่างศูนย์บัญชาการบนเรือ:
-- Crew Roster 10 ตัวละคร พร้อมสถานะและ Workload
-- Loop Engineering 8 ขั้น
-- Live Operations Deck แบบคลิกเลือกสถานี
-- Boss Command กรอกคำสั่ง, Final Goal, Template, Priority, Risk และ Evidence URL
-- Mission Control ด้านขวา
-- Evidence Gate แบบ 5 จุดตรวจ
-- Receipt Preview
-- Output & Export
-- Responsive Desktop / Tablet / Mobile พร้อม Bottom Quick Actions
+## RPG Operations Hub v6.3
+ถอดแนวคิดจาก RPG Workflow มาเป็นโมดูลทำงานของ AGIS โดยไม่สร้างเกมจริง:
 
-## Data Analytics
-ข้อมูลจาก `dashboard.state` แสดงเป็น:
-- Active Missions
-- Agents Online
-- Route Efficiency
-- Evidence Gate Pass Rate
-- Mission Progress Overview
+1. Command Town — ศูนย์รวมงานและสถานะ
+2. Auto Operations — Captain รับคำสั่งและ Navigator Route งาน
+3. Idle Rewards — XP, งานสำเร็จ และ Receipt สะสม
+4. Agent & Loadout — Skill, Tool, Workload และ Mission ของ Agent
+5. Asset Inventory — Template, SOP, Dataset, Evidence และ Output
+6. Quest System — Jobs, Missions, Priority, Owner และ Evidence Gate
+7. Skill Forge — อัปเกรด Skill MD และเกณฑ์ QA
+8. Crew Guild — Chat, Collaboration, Handoff และ Human Approval
+9. Boss Challenge — งาน Critical / High Risk
+10. Patch Update — Version, CI Status, Known Issues และ Release Notes
 
-## Crew Chat
-- ส่งถึง All Crew หรือราย Agent
-- ระบบเพิ่มข้อความตามขั้น Loop
-- เก็บ Chat ใน LocalStorage
-- Chat ไม่ถือเป็น Evidence จนกว่าจะมี URL หลักฐาน
+หน้า RPG Hub เชื่อม Processor จริงเพื่ออ่าน `dashboard.state` และสั่ง `job.create` + `job.route`
 
-## Loop Engineering
+Live path:
+`https://anuchit1tube168-cmd.github.io/RTAFNC-/rpg-operations.html`
+
+## Product Workflow
+`Think → Concept → Design Doc → Review → Architecture → Build → Test & Loop`
+
+## Tech Stack
+- UI/Engine: HTML5, CSS Grid, JavaScript, SVG/Canvas
+- Backend: Google Apps Script Processor v2
+- State: Google Sheets State DB + LocalStorage
+- Asset Pipeline: Pixel Character Engine + SVG Sprite Atlas
+- Deploy: GitHub Pages + PWA Cache
+- Output: Drive `output.save`, HTML, ZIP, PDF, JSON และ Receipt
+
+## Captain Loop
 `Intent → Spec → Route → Work → Guard → Validate → Review → Output`
 
 เจ้าของแต่ละช่วง:
@@ -50,25 +57,17 @@
 - `No Evidence = Not Done`
 - `QA + Receipt = Done`
 
-## Output & Export
-พร้อมใช้งานจาก Browser:
-- Deploy as Web — ดาวน์โหลด Standalone HTML
-- Export ZIP — รวม `index.html`, `mission.json`, `README.txt`
-- Export PDF — Print/PDF ของ Browser
-- Export JSON — ข้อมูล Job/Mission/Dashboard
-- Receipt File — JSON พร้อม SHA-256
-- Save to Google Drive — เรียก `output.save` เมื่อ Processor รองรับ; Processor v1 จะเตรียมไฟล์และเปิด Google Drive ให้แทน
-
-## Live Processor
-รองรับปัจจุบัน:
+## Processor v2 Actions
 - `setup`
 - `job.create`
 - `job.route`
 - `mission.update`
 - `receipt.create`
 - `dashboard.state`
-
-`output.save` ถูกเตรียม Forward Compatibility ในหน้าเว็บ แต่ต้องอัปเกรด Apps Script Processor เป็น v2 เพื่อบันทึกไฟล์เข้า Drive อัตโนมัติ
+- `output.save`
+- `output.list`
+- `chat.append`
+- `chat.list`
 
 ## Canonical Crew
 Fable, AGIS, Navigator, Archaeologist, Shipwright, Doctor, Swordsman, Cook, Sniper, Clone
@@ -76,4 +75,5 @@ Fable, AGIS, Navigator, Archaeologist, Shipwright, Doctor, Swordsman, Cook, Snip
 ## Deploy
 Workflow: `.github/workflows/agis-crew-dashboard-pages.yml`
 
-Live path: `https://anuchit1tube168-cmd.github.io/RTAFNC-/captain-console.html`
+Captain:
+`https://anuchit1tube168-cmd.github.io/RTAFNC-/captain-console.html`
