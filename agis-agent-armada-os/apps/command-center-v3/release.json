@@ -1,18 +1,21 @@
 {
   "name": "AGIS Grand Line Command Deck",
-  "version": "5.1.0",
-  "releasedAt": "2026-07-12",
-  "mergeCommit": "b0c95e82c87d43509c34ad1e0159768ab2d0422d",
+  "version": "5.2.0",
+  "releasedAt": "2026-07-14",
+  "mergeCommit": "pending-pr-merge",
   "queueLimit": 40,
   "evaluationDimensions": 40,
   "pixelAgents": 10,
-  "mode": "responsive-captain-loop-engine-drive-sync-shared-chat",
+  "mode": "responsive-captain-loop-engine-drive-sync-shared-chat-pixel-asset-library",
+  "captainEngineVersion": "5.1.0",
   "processorVersion": "2.0.0",
   "processorUrl": "https://script.google.com/macros/s/AKfycbwKPBvaVHYUs7tJgrDNISeFUTEZnchy083BjZ9PrUd_XQyvS10GqkoYRnRREpJESqWlDQ/exec",
   "processorStatus": "code-ready-awaiting-owner-deploy",
   "outputFolderId": "1RhkFs7BRb1A9MBL7CumaTdtc1uNXX2w9",
   "outputFolderUrl": "https://drive.google.com/drive/folders/1RhkFs7BRb1A9MBL7CumaTdtc1uNXX2w9",
   "captainStatus": "ready-to-accept-jobs",
+  "pixelLibraryStatus": "deployed-with-github-pages-bundle",
+  "pixelLibraryVersion": "1.1.0",
   "features": [
     "desktop and mobile responsive command deck",
     "interactive crew roster",
@@ -26,7 +29,20 @@
     "deployable standalone HTML output",
     "ZIP JSON PDF and receipt export",
     "one-click Google Drive package after Processor v2 deployment",
-    "Outputs and Chat State DB sheets"
+    "Outputs and Chat State DB sheets",
+    "public pixel asset library",
+    "pixel character sprite sheet for ten heroes",
+    "role-specific equipment and reusable props",
+    "tileset and environment atlas",
+    "overworld hub mission and tactical maps",
+    "AVIF asset download from the browser",
+    "runtime cache for pixel asset chunks"
+  ],
+  "pixelAssetCategories": [
+    "characters",
+    "equipment-props",
+    "tileset-environment",
+    "world-map"
   ],
   "processorActions": [
     "setup",
@@ -42,7 +58,10 @@
   ],
   "captainConsolePath": "captain-console.html",
   "captainConsoleUrl": "https://anuchit1tube168-cmd.github.io/RTAFNC-/captain-console.html",
+  "pixelLibraryPath": "pixel-library.html",
+  "pixelLibraryUrl": "https://anuchit1tube168-cmd.github.io/RTAFNC-/pixel-library.html",
+  "pixelManifestPath": "assets/pixel/manifest.json",
   "processorCodePath": "agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs",
-  "canonicalCrew": ["Fable","AGIS","Navigator","Archaeologist","Shipwright","Doctor","Swordsman","Cook","Sniper","Clone"],
+  "canonicalCrew": ["Fable", "AGIS", "Navigator", "Archaeologist", "Shipwright", "Doctor", "Swordsman", "Cook", "Sniper", "Clone"],
   "expectedUrl": "https://anuchit1tube168-cmd.github.io/RTAFNC-/"
 }
