@@ -1,4 +1,4 @@
-name: Deploy AGIS Command Center v5.2
+name: Deploy AGIS Command Center v5.3
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
       - 'agis-agent-armada-os/apps/command-center-v3/**'
       - 'agis-agent-armada-os/apps-script/**'
       - 'agis-agent-armada-os/assets/pixel/**'
+      - 'agis-agent-armada-os/skills/server/agis-pixel-character-studio/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
   push:
     branches: [main]
@@ -14,6 +15,7 @@ on:
       - 'agis-agent-armada-os/apps/command-center-v3/**'
       - 'agis-agent-armada-os/apps-script/**'
       - 'agis-agent-armada-os/assets/pixel/**'
+      - 'agis-agent-armada-os/skills/server/agis-pixel-character-studio/**'
       - '.github/workflows/agis-crew-dashboard-pages.yml'
 
 permissions:
@@ -22,7 +24,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: agis-command-center-v5-2-pages-${{ github.ref }}
+  group: agis-command-center-v5-3-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -40,34 +42,49 @@ jobs:
 
           root = Path('agis-agent-armada-os/apps/command-center-v3')
           pixel = Path('agis-agent-armada-os/assets/pixel')
+          skill = Path('agis-agent-armada-os/skills/server/agis-pixel-character-studio/SKILL.md')
           processor = Path('agis-agent-armada-os/apps-script/AGIS_Processor_v2_Code.gs')
           files = [
             root/'index.html', root/'processor-console.html', root/'captain-console.html',
-            root/'pixel-library.html', root/'processor-client.js', root/'captain-console-v4-data.js',
+            root/'pixel-library.html', root/'pixel-character-engine.js',
+            root/'processor-client.js', root/'captain-console-v4-data.js',
             root/'captain-console-v5.js', root/'captain-console-v5-sync.js',
             root/'captain-console-v5.css', root/'assets/agis-grand-line-deck.svg',
             root/'assets/agis-crew-sprites.svg', root/'loop-engine.json',
             root/'crew-operations.json', root/'release.json', root/'manifest.webmanifest',
-            pixel/'pixel-assets.js', pixel/'manifest.json', pixel/'README.md', processor
+            pixel/'pixel-assets.js', pixel/'manifest.json', pixel/'README.md', skill, processor
           ]
           missing_files = [str(item) for item in files if not item.exists()]
           pixel_parts = sorted((pixel/'data').glob('*.b64')) if (pixel/'data').exists() else []
 
           captain = (root/'captain-console.html').read_text(encoding='utf-8')
-          required = [
+          captain_required = [
             'AGIS Grand Line Command Deck v5.1', 'LOOP ENGINEERING v5', 'BOSS COMMAND',
             'DATA ANALYTICS', 'CREW CHAT', 'MISSION CONTROL', 'EVIDENCE GATE',
             'OUTPUT & EXPORT', 'Save to Google Drive', 'Deploy as Web',
             'No Evidence = Not Done', 'captain-console-v5-sync.js'
           ]
-          missing_contracts = [item for item in required if item not in captain]
+          missing_captain = [item for item in captain_required if item not in captain]
 
           library = (root/'pixel-library.html').read_text(encoding='utf-8')
           library_required = [
-            'Pixel Asset Library', 'assets/pixel/pixel-assets.js',
-            'loadAgisPixelAsset', 'downloadAgisPixelAsset', 'Nearest Neighbor'
+            'AGIS Pixel Character Studio', 'pixel-character-engine.js', '10 / 10 READY',
+            'ดาวน์โหลด PNG', 'ดาวน์โหลด Sprite Sheet', 'Canvas Pixel Engine'
           ]
           missing_library = [item for item in library_required if item not in library]
+
+          engine = (root/'pixel-character-engine.js').read_text(encoding='utf-8')
+          engine_required = [
+            "version:'1.1.0'", 'AGIS_PIXEL_STUDIO', 'downloadSpriteSheet',
+            "id:'agis'", "id:'fable'", "id:'navigator'", "id:'archaeologist'",
+            "id:'shipwright'", "id:'doctor'", "id:'swordsman'", "id:'cook'",
+            "id:'sniper'", "id:'clone'"
+          ]
+          missing_engine = [item for item in engine_required if item not in engine]
+
+          skill_text = skill.read_text(encoding='utf-8') if skill.exists() else ''
+          skill_required = ['version: 1.1.0', 'Web Delivery Contract', 'Canvas renderer is the source of truth', '10/10 visible characters']
+          missing_skill = [item for item in skill_required if item not in skill_text]
 
           processor_text = processor.read_text(encoding='utf-8') if processor.exists() else ''
           processor_required = ['2.0.0', 'output.save', 'output.list', 'chat.append', 'chat.list', 'OUTPUT_FOLDER_ID']
@@ -80,12 +97,15 @@ jobs:
           Path('/tmp/agis-processor-v2.js').write_text(processor_text, encoding='utf-8')
 
           print('missing_files=', missing_files)
-          print('missing_contracts=', missing_contracts)
+          print('missing_captain=', missing_captain)
           print('missing_library=', missing_library)
+          print('missing_engine=', missing_engine)
+          print('missing_skill=', missing_skill)
           print('missing_processor=', missing_processor)
           print('pixel_parts=', len(pixel_parts))
 
-          if missing_files or missing_contracts or missing_library or missing_processor or not inline or not library_inline or len(pixel_parts) < 11:
+          failures = missing_files + missing_captain + missing_library + missing_engine + missing_skill + missing_processor
+          if failures or not inline or not library_inline or len(pixel_parts) < 11:
             sys.exit(1)
           PY
 
@@ -94,13 +114,14 @@ jobs:
           node --check /tmp/agis-captain-inline.js
           node --check /tmp/agis-pixel-library-inline.js
           node --check /tmp/agis-processor-v2.js
+          node --check agis-agent-armada-os/apps/command-center-v3/pixel-character-engine.js
           node --check agis-agent-armada-os/apps/command-center-v3/processor-client.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v4-data.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5.js
           node --check agis-agent-armada-os/apps/command-center-v3/captain-console-v5-sync.js
           node --check agis-agent-armada-os/assets/pixel/pixel-assets.js
 
-      - name: Validate JSON SVG and pixel assets
+      - name: Validate JSON SVG and optional legacy pixel assets
         run: |
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest >/dev/null
           python -m json.tool agis-agent-armada-os/apps/command-center-v3/release.json >/dev/null
@@ -114,7 +135,7 @@ jobs:
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
-          report = []
+          report = ['Canvas pixel engine is the public source of truth.']
           for path in [
             'agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck.svg',
             'agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprites.svg'
@@ -130,17 +151,13 @@ jobs:
             try:
               data = base64.b64decode(payload, validate=False)
             except Exception as error:
-              raise SystemExit(f'{key}: Base64 decode failed: {error}')
-
-            if len(data) < 1024:
-              raise SystemExit(f'{key}: decoded payload is unexpectedly small ({len(data)} bytes)')
-            if data[4:8] != b'ftyp' or b'avif' not in data[8:32]:
-              raise SystemExit(f'{key}: decoded payload is not an AVIF container')
-
+              report.append(f'{key}: OPTIONAL LEGACY ASSET DECODE ERROR {error}')
+              continue
             digest = hashlib.sha256(data).hexdigest()
             expected = asset.get('sha256', '')
-            hash_state = 'HASH MATCH' if digest == expected else f'HASH DRIFT expected={expected}'
-            report.append(f'{key}: AVIF PASS bytes={len(data)} sha256={digest} {hash_state}')
+            container = 'AVIF' if len(data) >= 32 and data[4:8] == b'ftyp' and b'avif' in data[8:32] else 'UNKNOWN'
+            state = 'HASH MATCH' if digest == expected else f'HASH DRIFT expected={expected}'
+            report.append(f'{key}: OPTIONAL {container} bytes={len(data)} sha256={digest} {state}')
 
           Path('/tmp/agis-pixel-validation.txt').write_text('\n'.join(report) + '\n', encoding='utf-8')
           print('\n'.join(report))
@@ -150,7 +167,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agis-command-center-v5-2-validation
+          name: agis-command-center-v5-3-validation
           if-no-files-found: warn
           path: |
             /tmp/agis-captain-inline.js
@@ -168,13 +185,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      - name: Stage AGIS Command Center v5.2
+      - name: Stage AGIS Command Center v5.3
         run: |
           rm -rf dist/agis-pages
           mkdir -p dist/agis-pages/assets/pixel
           cp -R agis-agent-armada-os/apps/command-center-v3/. dist/agis-pages/
           cp -R agis-agent-armada-os/assets/pixel/. dist/agis-pages/assets/pixel/
-      - name: Upload AGIS Command Center v5.2
+      - name: Upload AGIS Command Center v5.3
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist/agis-pages
