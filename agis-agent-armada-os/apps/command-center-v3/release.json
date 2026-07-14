@@ -2,7 +2,7 @@
   "name": "AGIS Grand Line Command Deck",
   "version": "6.0.0",
   "releasedAt": "2026-07-14",
-  "mergeCommit": "pending-pixel-runtime-v6",
+  "mergeCommit": "cd0f3ad184a45797faf1f898121f4fcbe2194e3b",
   "releaseStatus": "real-pixel-sprite-runtime-ready",
   "queueLimit": 40,
   "evaluationDimensions": 40,
@@ -20,7 +20,7 @@
   "captainStatus": "ready-to-accept-jobs",
   "pixelLibraryStatus": "canvas-source-of-truth-no-image-url-required",
   "spriteRuntimeStatus": "integrated-into-roster-selected-crew-chat-and-live-deck",
-  "validationStatus": "pending-pr-v6",
+  "validationStatus": "passed-pr-32-all-four-workflows",
   "features": [
     "desktop and mobile responsive command deck",
     "interactive crew roster",
