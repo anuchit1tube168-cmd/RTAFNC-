@@ -1,4 +1,4 @@
-const CACHE = 'agis-command-center-v6-3-rpg-operations-20260714';
+const CACHE = 'agis-active-operations-v7-20260714';
 const CORE_ASSETS = [
   './',
   'index.html',
@@ -11,11 +11,13 @@ const CORE_ASSETS = [
   'processor-client.js',
   'captain-console.html',
   'captain-console-v5.css',
-  'captain-console-v6.css',
+  'captain-console-v7.css',
   'captain-console-v4-data.js',
   'captain-console-v5.js',
   'captain-console-v5-sync.js',
-  'captain-console-v6.js',
+  'captain-console-v7-events.js',
+  'captain-console-v7.js',
+  'active-operations.html',
   'rpg-operations.html',
   'pixel-library.html',
   'pixel-character-engine.js',
