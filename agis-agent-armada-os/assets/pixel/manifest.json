@@ -1,0 +1,64 @@
+{
+  "name": "AGIS Pixel Game Asset Library",
+  "version": "1.0.0",
+  "generatedAt": "2026-07-14",
+  "visualStyle": "dark navy, brass and gold fantasy-steampunk pixel art with role-based glow accents",
+  "sourceResolution": {
+    "width": 1448,
+    "height": 1086
+  },
+  "webPreview": {
+    "format": "AVIF",
+    "width": 800,
+    "height": 600,
+    "storage": "chunked Base64 text",
+    "loader": "pixel-assets.js"
+  },
+  "assets": {
+    "characters": {
+      "title": "Pixel Character Sprite Sheet",
+      "description": "Ten AGIS heroes with front, side, back and signature action poses.",
+      "sha256": "e1033727802b94a6380d7f43e2f36a228b78c2f7f85e5df8ac3bd655915f84b6",
+      "parts": [
+        "data/characters-preview.part-00.b64",
+        "data/characters-preview.part-01.b64"
+      ]
+    },
+    "equipment": {
+      "title": "Equipment & Props Sheet",
+      "description": "Role-specific equipment for all ten heroes plus reusable generic props.",
+      "sha256": "d96412376d8f39e06ede3d8855636f2b8ae24a9c0f7c34df7683aae19cd78e81",
+      "parts": [
+        "data/equipment-props-preview.part-00.b64",
+        "data/equipment-props-preview.part-01.b64",
+        "data/equipment-props-preview.part-02.b64"
+      ]
+    },
+    "tileset": {
+      "title": "Tileset & Environment Sheet",
+      "description": "Top-down floors, walls, doors, props, VFX tiles and ten themed rooms.",
+      "sha256": "664072d522642c6f7aee0391eb695ec599be16d6bdece1156bd3c15e6eae6281",
+      "parts": [
+        "data/tileset-environment-preview.part-00.b64",
+        "data/tileset-environment-preview.part-01.b64"
+      ]
+    },
+    "worldMap": {
+      "title": "AGIS World Map Sheet",
+      "description": "Overworld, hub, mission and tactical minimap references for the AGIS realms.",
+      "sha256": "d3a42b8e3f571552ba9461151847bf7788713835d7c17cd5f879bc08a2bc10a5",
+      "parts": [
+        "data/world-map-preview.part-00.b64",
+        "data/world-map-preview.part-01a.b64",
+        "data/world-map-preview.part-01b.b64",
+        "data/world-map-preview.part-01c.b64"
+      ]
+    }
+  },
+  "productionNotes": [
+    "These sheets are visual references and preview atlases, not final animation-ready sprite strips.",
+    "Slice final assets into fixed grid cells and define a stable pivot or anchor point before game integration.",
+    "Use nearest-neighbor scaling and disable image smoothing for crisp pixel rendering.",
+    "Review small generated labels before using them as authoritative in-game text."
+  ]
+}
