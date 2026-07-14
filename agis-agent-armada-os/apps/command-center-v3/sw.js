@@ -1,4 +1,4 @@
-const CACHE = 'agis-command-center-v5-3-canvas-pixel-studio-20260714';
+const CACHE = 'agis-command-center-v6-real-pixel-runtime-20260714';
 const CORE_ASSETS = [
   './',
   'index.html',
@@ -8,15 +8,20 @@ const CORE_ASSETS = [
   'processor-client.js',
   'captain-console.html',
   'captain-console-v5.css',
+  'captain-console-v6.css',
   'captain-console-v4-data.js',
   'captain-console-v5.js',
   'captain-console-v5-sync.js',
+  'captain-console-v6.js',
   'pixel-library.html',
   'pixel-character-engine.js',
   'assets/pixel/pixel-assets.js',
   'assets/pixel/manifest.json',
   'assets/agis-grand-line-deck.svg',
+  'assets/agis-grand-line-deck-v6.svg',
   'assets/agis-crew-sprites.svg',
+  'assets/agis-crew-sprite-atlas-v6.svg',
+  'assets/agis-crew-sprite-manifest-v6.json',
   'crew-operations.json',
   'loop-engine.json',
   'release.json'
