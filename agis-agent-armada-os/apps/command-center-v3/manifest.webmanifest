@@ -1,12 +1,17 @@
 {
-  "name": "AGIS Grand Line Command Deck v5",
-  "short_name": "AGIS Deck",
+  "name": "AGIS Armada OS v6.3",
+  "short_name": "AGIS OS",
   "start_url": "./captain-console.html",
   "display": "standalone",
   "background_color": "#03101b",
   "theme_color": "#061725",
-  "description": "Responsive AGIS Captain Console with Loop Engine, analytics, evidence gate, receipts and export",
+  "description": "AGIS Captain Console, Project Forge, Processor Center, Pixel Crew, Evidence Gate and exports",
   "icons": [
     {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ],
+  "shortcuts": [
+    {"name":"Captain Deck","short_name":"Captain","url":"./captain-console.html","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name":"Project Forge","short_name":"Forge","url":"./project-forge.html","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name":"Processor Center","short_name":"Processor","url":"./processor-setup.html","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
   ]
 }
