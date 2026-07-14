@@ -1,5 +1,5 @@
 /* AGIS Pixel Runtime v6 — REAL SPRITES */
-.avatar.pixel-sprite{background-image:url('assets/agis-crew-sprite-atlas-v6.svg')!important;background-repeat:no-repeat!important;background-position:0 var(--sprite-y,0)!important;background-size:var(--sprite-w,256px) var(--sprite-h,640px)!important;image-rendering:pixelated!important;animation:agisSpriteIdle 1.25s steps(4,end) infinite!important;box-shadow:0 0 0 1px #e8b44f55,0 5px 15px #0009!important}
+.avatar.pixel-sprite{background-image:url('assets/agis-crew-sprite-atlas-v6.svg')!important;background-repeat:no-repeat!important;background-position-x:0;background-position-y:var(--sprite-y,0)!important;background-size:var(--sprite-w,256px) var(--sprite-h,640px)!important;image-rendering:pixelated!important;animation:agisSpriteIdle 1.25s steps(4,end) infinite!important;box-shadow:0 0 0 1px #e8b44f55,0 5px 15px #0009!important}
 @keyframes agisSpriteIdle{to{background-position-x:var(--sprite-end,-256px)}}
 .pixel-actor-layer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
 .pixel-actor{position:absolute;width:76px;height:88px;transform:translate(-50%,-50%);border:0;background:transparent;padding:0;color:#fff;pointer-events:auto;transition:left .7s cubic-bezier(.2,.8,.2,1),top .7s cubic-bezier(.2,.8,.2,1),filter .2s,transform .2s;filter:drop-shadow(0 8px 5px #0009)}
