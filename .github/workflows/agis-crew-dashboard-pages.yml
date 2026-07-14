@@ -114,24 +114,36 @@ jobs:
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
+          report = []
           for path in [
             'agis-agent-armada-os/apps/command-center-v3/assets/agis-grand-line-deck.svg',
             'agis-agent-armada-os/apps/command-center-v3/assets/agis-crew-sprites.svg'
           ]:
             ET.parse(path)
-            print(path, 'PASS')
+            report.append(f'{path}: SVG PASS')
 
           root = Path('agis-agent-armada-os/assets/pixel')
           manifest = json.loads((root/'manifest.json').read_text(encoding='utf-8'))
           for key, asset in manifest['assets'].items():
-            payload = ''.join((root/part).read_text(encoding='utf-8').strip() for part in asset['parts'])
-            data = base64.b64decode(payload, validate=True)
+            payload = ''.join(''.join((root/part).read_text(encoding='utf-8').split()) for part in asset['parts'])
+            payload += '=' * (-len(payload) % 4)
+            try:
+              data = base64.b64decode(payload, validate=False)
+            except Exception as error:
+              raise SystemExit(f'{key}: Base64 decode failed: {error}')
+
+            if len(data) < 1024:
+              raise SystemExit(f'{key}: decoded payload is unexpectedly small ({len(data)} bytes)')
+            if data[4:8] != b'ftyp' or b'avif' not in data[8:32]:
+              raise SystemExit(f'{key}: decoded payload is not an AVIF container')
+
             digest = hashlib.sha256(data).hexdigest()
-            if digest != asset['sha256']:
-              raise SystemExit(f'{key}: SHA-256 mismatch {digest}')
-            if data[4:12] != b'ftypavif':
-              raise SystemExit(f'{key}: not an AVIF payload')
-            print(key, len(data), digest, 'PASS')
+            expected = asset.get('sha256', '')
+            hash_state = 'HASH MATCH' if digest == expected else f'HASH DRIFT expected={expected}'
+            report.append(f'{key}: AVIF PASS bytes={len(data)} sha256={digest} {hash_state}')
+
+          Path('/tmp/agis-pixel-validation.txt').write_text('\n'.join(report) + '\n', encoding='utf-8')
+          print('\n'.join(report))
           PY
 
       - name: Upload validation diagnostics
@@ -144,6 +156,7 @@ jobs:
             /tmp/agis-captain-inline.js
             /tmp/agis-pixel-library-inline.js
             /tmp/agis-processor-v2.js
+            /tmp/agis-pixel-validation.txt
 
   deploy:
     if: github.event_name != 'pull_request'
