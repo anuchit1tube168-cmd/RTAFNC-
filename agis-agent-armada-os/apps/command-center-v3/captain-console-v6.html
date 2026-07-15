@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071120">
+  <meta name="description" content="AGIS Fleet RPG Operations v6 — game-inspired agent command center for desktop and mobile.">
+  <title>AGIS Fleet RPG Operations v6</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <link rel="stylesheet" href="captain-console-v6.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="hero-header panel neon-frame">
+    <div class="brand-lockup">
+      <div class="brand-mark">☸</div>
+      <div>
+        <p class="kicker">AI AGENT FLEET OPERATIONS SYSTEM</p>
+        <h1>AGIS FLEET RPG OPERATIONS <span>v6</span></h1>
+        <p>เปลี่ยนงานจำนวนมากให้เป็น Quest • Crew • Evidence • Reward • Upgrade</p>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-pill ok"><span>PROCESSOR</span><b id="processorStatus">CONNECTING</b></div>
+      <div class="status-pill"><span>CREW ONLINE</span><b>10 / 10</b></div>
+      <div class="status-pill"><span>QUESTS</span><b id="questCountHeader">0</b></div>
+      <div class="status-pill"><span id="clock">--:--:--</span><b id="dateLabel">--</b></div>
+    </div>
+  </header>
+
+  <nav class="mode-nav panel" id="modeNav" aria-label="โหมดปฏิบัติการ">
+    <button class="mode-btn active" data-mode="town"><span>🏰</span><b>Command Town</b><small>ศูนย์บัญชาการ</small></button>
+    <button class="mode-btn" data-mode="auto"><span>⚔</span><b>Auto Work</b><small>ทำงานอัตโนมัติ</small></button>
+    <button class="mode-btn" data-mode="rewards"><span>🎁</span><b>Idle Rewards</b><small>รับ XP / Reward</small></button>
+    <button class="mode-btn" data-mode="crew"><span>🧙</span><b>Crew & Gear</b><small>ตัวละครและสกิล</small></button>
+    <button class="mode-btn" data-mode="inventory"><span>🎒</span><b>Inventory</b><small>หลักฐานและไฟล์</small></button>
+    <button class="mode-btn" data-mode="quests"><span>📜</span><b>Quest System</b><small>Mission Queue</small></button>
+    <button class="mode-btn" data-mode="forge"><span>⚒</span><b>Forge</b><small>อัปเกรด Agent</small></button>
+    <button class="mode-btn" data-mode="guild"><span>💬</span><b>Guild</b><small>Crew Chat</small></button>
+    <button class="mode-btn" data-mode="boss"><span>🐉</span><b>Boss Challenge</b><small>Blocker / Risk</small></button>
+    <button class="mode-btn" data-mode="patch"><span>🧩</span><b>Patch</b><small>Release & Tech</small></button>
+  </nav>
+
+  <main class="main-grid">
+    <aside class="crew-rail panel neon-frame">
+      <div class="panel-title"><div><span>CREW ROSTER</span><b>Agent Fleet</b></div><button id="refreshAll" class="icon-btn">↻</button></div>
+      <div id="crewRoster" class="crew-roster"></div>
+      <div class="rail-summary">
+        <div><small>Power</small><b id="fleetPower">0</b></div>
+        <div><small>XP</small><b id="fleetXp">0</b></div>
+        <div><small>Rewards</small><b id="rewardCount">0</b></div>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <section id="townMode" class="mode-screen active">
+        <div class="loop-panel panel neon-frame">
+          <div class="panel-title"><div><span>LOOP ENGINEERING</span><b>Intent → Spec → Route → Work → Guard → Validate → Review → Output</b></div><span class="live-dot">● LIVE</span></div>
+          <div id="loopSteps" class="loop-steps"></div>
+        </div>
+
+        <div class="town-layout">
+          <section class="town-map panel neon-frame">
+            <div class="map-toolbar"><div><span class="eyebrow">COMMAND TOWN</span><h2 id="activeQuestTitle">รอ Quest ใหม่จาก Boss</h2></div><span id="activeQuestStatus" class="tag standby">STANDBY</span></div>
+            <div class="map-scene" id="mapScene">
+              <img src="assets/agis-grand-line-deck.svg" alt="AGIS command town">
+              <button class="map-node n1" data-crew="AGIS"><b>Captain Hall</b><small>Intent</small></button>
+              <button class="map-node n2" data-crew="Fable"><b>Strategy Tower</b><small>Spec</small></button>
+              <button class="map-node n3" data-crew="Navigator"><b>Route Gate</b><small>Route</small></button>
+              <button class="map-node n4" data-crew="Shipwright"><b>Build Forge</b><small>Work</small></button>
+              <button class="map-node n5" data-crew="Archaeologist"><b>Archive</b><small>Evidence</small></button>
+              <button class="map-node n6" data-crew="Doctor"><b>QA Clinic</b><small>Validate</small></button>
+              <button class="map-node n7" data-crew="Swordsman"><b>Guard Post</b><small>Risk</small></button>
+              <button class="map-node n8" data-crew="Cook"><b>Output Kitchen</b><small>Deliver</small></button>
+              <div id="speechBubble" class="speech-bubble">AGIS พร้อมรับ Quest ครับ Boss</div>
+              <div class="quest-progress"><div><span id="stageLabel">Standby</span><b id="stagePercent">0%</b></div><div class="bar"><i id="stageBar"></i></div></div>
+            </div>
+          </section>
+
+          <section class="command-panel panel">
+            <div class="panel-title"><div><span>BOSS COMMAND</span><b>สร้าง Quest ใหม่</b></div><button id="clearCommand" class="icon-btn">⌫</button></div>
+            <form id="commandForm">
+              <label>คำสั่งจาก Boss<textarea id="command" required placeholder="ระบุงานที่ต้องการ เช่น สร้าง Dashboard พร้อมทดสอบและบันทึกหลักฐาน"></textarea></label>
+              <label>เป้าหมายสุดท้าย / Victory Condition<input id="goal" required placeholder="URL + ไฟล์ผลลัพธ์ + Evidence + Receipt"></label>
+              <div class="form-row">
+                <label>Template<select id="template"><option value="">เลือก...</option><option value="webapp">WebApp</option><option value="report">Report / SOP</option><option value="data">Data Analytics</option><option value="marketing">Marketing</option></select></label>
+                <label>Rank<select id="priority"><option>S</option><option selected>A</option><option>B</option><option>C</option></select></label>
+                <label>Risk<select id="risk"><option>High</option><option selected>Medium</option><option>Low</option></select></label>
+              </div>
+              <label>Evidence URL<input id="evidenceUrl" type="url" placeholder="https://drive.google.com/..."></label>
+              <button class="primary-btn" id="sendCommand">☸ ส่ง Quest ให้ Captain</button>
+              <div id="commandResult" class="result-box hidden"></div>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section id="autoMode" class="mode-screen">
+        <div class="screen-head"><div><span>AUTO WORK</span><h2>ระบบทำงานอัตโนมัติแบบ Evidence-first</h2></div><label class="switch"><input id="autoToggle" type="checkbox"><span></span> Auto Work</label></div>
+        <div class="feature-grid three">
+          <article class="feature-card"><span class="big-icon">⚔</span><h3>Auto Route</h3><p>Navigator แจก Mission ตาม Role และ Workload</p><b id="autoRouteMetric">0 Routed</b></article>
+          <article class="feature-card"><span class="big-icon">🛡</span><h3>Safety Stop</h3><p>หยุดอัตโนมัติเมื่อ Risk สูงหรือไม่มี Evidence</p><b id="autoStopMetric">0 Blockers</b></article>
+          <article class="feature-card"><span class="big-icon">🩺</span><h3>QA Cycle</h3><p>Doctor ตรวจ Review ก่อน AGIS อนุมัติ Output</p><b id="qaMetric">0 Reviewed</b></article>
+        </div>
+        <section class="panel automation-console"><div class="panel-title"><div><span>AUTOMATION QUEUE</span><b>จะไม่ปิด Done โดยไม่มีหลักฐาน</b></div><button id="runAutoWork" class="primary-btn small">▶ Run 1 Cycle</button></div><div id="automationQueue" class="quest-list"></div></section>
+      </section>
+
+      <section id="rewardsMode" class="mode-screen">
+        <div class="screen-head"><div><span>IDLE REWARDS</span><h2>รางวัลจากงานที่เสร็จและ Receipt ที่ผ่าน</h2></div><button id="claimRewards" class="primary-btn">🎁 Claim Rewards</button></div>
+        <div class="reward-hero panel neon-frame"><div><span>AFK / IDLE TIME</span><b id="idleTime">00:00:00</b></div><div><span>AVAILABLE XP</span><b id="availableXp">0</b></div><div><span>COINS</span><b id="availableCoins">0</b></div><div><span>SKILL POINTS</span><b id="availableSkillPoints">0</b></div></div>
+        <div id="rewardDrops" class="reward-drops"></div>
+      </section>
+
+      <section id="crewMode" class="mode-screen">
+        <div class="screen-head"><div><span>CHARACTER & EQUIPMENT</span><h2>ลูกเรือ สกิล และ Loadout</h2></div><span class="tag">10 AGENTS</span></div>
+        <div class="crew-detail-layout">
+          <section class="character-card panel neon-frame"><div id="crewPortrait" class="crew-portrait avatar" style="--i:0"></div><div><span class="eyebrow">SELECTED AGENT</span><h2 id="crewName">AGIS</h2><p id="crewRole">Captain / Orchestrator</p><div class="level-line"><span>Lv. <b id="crewLevel">30</b></span><span>Power <b id="crewPower">0</b></span></div><div class="bar gold"><i id="crewXpBar" style="width:80%"></i></div></div></section>
+          <section class="panel"><div class="panel-title"><div><span>ABILITIES</span><b>ค่าพลังการทำงาน</b></div></div><div id="abilityBars" class="ability-bars"></div></section>
+          <section class="panel"><div class="panel-title"><div><span>EQUIPMENT</span><b>Skill Loadout</b></div></div><div id="equipmentSlots" class="equipment-grid"></div></section>
+        </div>
+      </section>
+
+      <section id="inventoryMode" class="mode-screen">
+        <div class="screen-head"><div><span>INVENTORY</span><h2>หลักฐาน ไฟล์ส่งออก Receipt และ Knowledge Assets</h2></div><div class="inventory-currency"><span>🪙 <b id="coinBalance">0</b></span><span>💎 <b id="gemBalance">0</b></span></div></div>
+        <div class="inventory-toolbar"><select id="inventoryFilter"><option value="all">ทั้งหมด</option><option value="evidence">Evidence</option><option value="receipt">Receipt</option><option value="output">Output</option></select><button id="exportInventory" class="secondary-btn">Export Inventory JSON</button></div>
+        <div id="inventoryGrid" class="inventory-grid"></div>
+      </section>
+
+      <section id="questsMode" class="mode-screen">
+        <div class="screen-head"><div><span>QUEST SYSTEM</span><h2>งานทั้งหมด แยก Rank, Owner และ Evidence</h2></div><button id="refreshQuests" class="secondary-btn">↻ Refresh</button></div>
+        <div class="quest-filters"><select id="questStatusFilter"><option value="all">ทุกสถานะ</option><option value="todo">Todo</option><option value="working">Working</option><option value="review">Review</option><option value="done">Done</option></select><input id="questSearch" placeholder="ค้นหา Quest..."></div>
+        <div id="questList" class="quest-list"></div>
+      </section>
+
+      <section id="forgeMode" class="mode-screen">
+        <div class="screen-head"><div><span>FORGE & UPGRADE</span><h2>ใช้ Skill Point อัปเกรด Agent</h2></div><span>Skill Points: <b id="forgePoints">0</b></span></div>
+        <div class="forge-layout">
+          <section class="forge-preview panel neon-frame"><div id="forgeAvatar" class="avatar forge-avatar" style="--i:0"></div><h2 id="forgeName">AGIS</h2><p id="forgeRole">Captain</p><div class="bar gold"><i id="forgePowerBar" style="width:80%"></i></div></section>
+          <section class="panel"><div class="panel-title"><div><span>UPGRADE TREE</span><b>1 Point ต่อ 1 Level</b></div></div><div id="upgradeTree" class="upgrade-tree"></div></section>
+        </div>
+      </section>
+
+      <section id="guildMode" class="mode-screen">
+        <div class="screen-head"><div><span>COMMUNITY & GUILD</span><h2>Crew Chat และ System Feed</h2></div><span class="live-dot">● LIVE</span></div>
+        <div class="guild-layout"><section class="panel"><div id="guildChat" class="guild-chat"></div><form id="guildForm" class="guild-form"><select id="guildTarget"><option value="ALL">ALL CREW</option></select><input id="guildInput" placeholder="พิมพ์ข้อความ..."><button class="primary-btn small">➤</button></form></section><section class="panel"><div class="panel-title"><div><span>GUILD STATUS</span><b>ความพร้อมของกองเรือ</b></div></div><div id="guildStats" class="guild-stats"></div></section></div>
+      </section>
+
+      <section id="bossMode" class="mode-screen">
+        <div class="screen-head"><div><span>BOSS CHALLENGE</span><h2>Blocker, Risk และ Mission ที่ยังปิดไม่ได้</h2></div><span class="boss-tag">⚠ HIGH RISK</span></div>
+        <div class="boss-arena panel neon-frame"><div class="boss-visual">🐉</div><div><h2 id="bossName">Evidence Dragon</h2><p id="bossDescription">ศัตรูหลักของระบบคือ งานที่พยายามปิดโดยไม่มีหลักฐาน</p><div class="boss-health"><span>BLOCKERS</span><div class="bar danger"><i id="bossHealthBar"></i></div><b id="bossHealthText">0</b></div></div></div>
+        <div id="blockerList" class="quest-list"></div>
+      </section>
+
+      <section id="patchMode" class="mode-screen">
+        <div class="screen-head"><div><span>PATCH UPDATE</span><h2>AGIS v6 Product Upgrade</h2></div><span class="tag">2026.07</span></div>
+        <div class="patch-grid">
+          <article class="patch-card"><h3>NEW MODE</h3><p>Command Town, Auto Work, Idle Rewards, Crew, Inventory, Quest, Forge, Guild และ Boss Challenge</p></article>
+          <article class="patch-card"><h3>TECH STACK</h3><p>HTML5 + CSS3 + Vanilla JS + PWA + Apps Script + Google Sheets + GitHub Pages</p></article>
+          <article class="patch-card"><h3>OUTPUT</h3><p>Standalone HTML, ZIP, JSON, Print/PDF, Receipt JSON และ Google Drive handoff</p></article>
+          <article class="patch-card"><h3>HARD RULE</h3><p>No Evidence = Not Done • QA + Receipt = Done</p></article>
+        </div>
+        <section class="panel tech-table-wrap"><table class="tech-table"><thead><tr><th>ชั้น</th><th>เทคโนโลยี</th><th>หน้าที่</th></tr></thead><tbody><tr><td>Frontend</td><td>HTML/CSS/JavaScript/PWA</td><td>Responsive Desktop + Mobile</td></tr><tr><td>Processor</td><td>Google Apps Script</td><td>Job, Mission, Evidence, Receipt, Output</td></tr><tr><td>State DB</td><td>Google Sheets</td><td>เก็บสถานะและหลักฐาน</td></tr><tr><td>Storage</td><td>Google Drive + LocalStorage</td><td>ไฟล์งานและข้อมูล Local-first</td></tr><tr><td>Delivery</td><td>GitHub Pages</td><td>เว็บใช้งานจริง</td></tr><tr><td>Future</td><td>Processor v2 / output.save</td><td>บันทึกไฟล์เข้า Drive อัตโนมัติ</td></tr></tbody></table></section>
+      </section>
+    </section>
+
+    <aside class="right-rail">
+      <section class="panel mission-card neon-frame">
+        <div class="panel-title"><div><span>MISSION CONTROL</span><b id="missionState">Standby</b></div><button id="openMissionDialog" class="icon-btn">↗</button></div>
+        <h3 id="missionTitle">ยังไม่มี Mission</h3>
+        <div class="mission-meta"><div><small>JOB</small><b id="jobIdView">—</b></div><div><small>MISSION</small><b id="missionIdView">—</b></div><div><small>OWNER</small><b id="ownerView">AGIS</b></div><div><small>RANK</small><b id="rankView">A</b></div></div>
+        <div class="bar"><i id="missionProgressBar"></i></div>
+      </section>
+
+      <section class="panel evidence-card">
+        <div class="panel-title"><div><span>EVIDENCE GATE</span><b id="evidenceScore">0 / 5</b></div></div>
+        <div class="warning">⚠ No Evidence = Not Done</div>
+        <div id="evidenceChecklist" class="evidence-checklist"></div>
+        <button id="attachEvidence" class="secondary-btn full">↥ Attach Evidence</button>
+      </section>
+
+      <section class="panel output-card">
+        <div class="panel-title"><div><span>OUTPUT & EXPORT</span><b>เว็บ • ไฟล์ • Drive</b></div></div>
+        <div class="output-grid"><button id="deployWeb"><span>🌐</span>Deploy Web</button><button id="saveDrive"><span>△</span>Save Drive</button><button id="exportZip"><span>🗜</span>ZIP</button><button id="exportPdf"><span>📄</span>PDF</button><button id="exportJson"><span>{ }</span>JSON</button><button id="exportReceipt"><span>🧾</span>Receipt</button></div>
+      </section>
+    </aside>
+  </main>
+
+  <nav class="mobile-nav"><button data-mobile-mode="town"><span>🏰</span>Town</button><button data-mobile-mode="quests"><span>📜</span>Quest</button><button data-mobile-mode="inventory"><span>🎒</span>Bag</button><button data-mobile-mode="guild"><span>💬</span>Guild</button><button data-mobile-mode="boss"><span>🐉</span>Boss</button></nav>
+
+  <dialog id="missionDialog"><form method="dialog" class="dialog-card"><div class="dialog-head"><div><span class="eyebrow">MISSION CONTROL</span><h2>Update • Evidence • Receipt</h2></div><button value="cancel" class="icon-btn">✕</button></div><label>Mission ID<input id="missionId"></label><div class="form-row"><label>Status<select id="missionStatus"><option>Working</option><option>Review</option><option>Done</option></select></label><label style="grid-column:span 2">Evidence URL<input id="missionEvidence" type="url" placeholder="https://..."></label></div><label>สรุปผล<textarea id="receiptSummary" placeholder="ผลทดสอบและหลักฐาน"></textarea></label><div class="dialog-actions"><button type="button" id="updateMission" class="secondary-btn">Doctor Validate</button><button type="button" id="createReceipt" class="primary-btn small">Clone Receipt</button></div><pre id="dialogLog"></pre></form></dialog>
+
+  <div id="toast" class="toast"></div>
+  <footer>AGIS Fleet RPG Operations v6 • Original AGIS characters • Responsive WebApp • Evidence-first • Local-first + Live Processor</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="processor-client.js"></script>
+<script src="captain-console-v4-data.js"></script>
+<script src="captain-console-v6.js"></script>
+</body>
+</html>
