@@ -7,6 +7,8 @@ on:
       - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v6.html'
       - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.css'
       - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest'
       - '.github/workflows/agis-rpg-operations-v6.yml'
   push:
     branches: [main]
@@ -14,6 +16,8 @@ on:
       - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v6.html'
       - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.css'
       - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/manifest.webmanifest'
       - '.github/workflows/agis-rpg-operations-v6.yml'
 
 permissions:
@@ -28,7 +32,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re, sys
+          import json, sys
           root = Path('agis-agent-armada-os/apps/command-center-v3')
           files = [
             root/'captain-console-v6.html',
@@ -44,7 +48,9 @@ jobs:
             root/'processor-client.js',
             root/'captain-console-v4-data.js',
             root/'assets/agis-grand-line-deck.svg',
-            root/'assets/agis-crew-sprites.svg'
+            root/'assets/agis-crew-sprites.svg',
+            root/'active-operations.html',
+            root/'manifest.webmanifest'
           ]
           missing = [str(p) for p in files if not p.exists()]
           html = (root/'captain-console-v6.html').read_text(encoding='utf-8')
@@ -59,10 +65,14 @@ jobs:
           missing_contracts = [x for x in required if x not in html]
           imports = (root/'rpg-operations-v6.css').read_text(encoding='utf-8')
           missing_imports = [f'part{i}' for i in range(1,6) if f'rpg-operations-v6-part{i}.css' not in imports]
+          active = (root/'active-operations.html').read_text(encoding='utf-8')
+          manifest = json.loads((root/'manifest.webmanifest').read_text(encoding='utf-8'))
+          route_ok = 'captain-console-v6.html' in active and manifest.get('start_url') == './captain-console-v6.html'
           print('missing_files=', missing)
           print('missing_contracts=', missing_contracts)
           print('missing_imports=', missing_imports)
-          if missing or missing_contracts or missing_imports:
+          print('active_route_ok=', route_ok)
+          if missing or missing_contracts or missing_imports or not route_ok:
             sys.exit(1)
           PY
       - name: Check JavaScript syntax

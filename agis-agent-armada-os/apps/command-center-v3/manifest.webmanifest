@@ -1,11 +1,11 @@
 {
-  "name": "AGIS Fleet Operating System v7",
-  "short_name": "AGIS OS",
-  "start_url": "./active-operations.html",
+  "name": "AGIS Fleet RPG Operations v6",
+  "short_name": "AGIS RPG",
+  "start_url": "./captain-console-v6.html",
   "display": "standalone",
-  "background_color": "#03101b",
-  "theme_color": "#061725",
-  "description": "Professional work operating system with state-driven RPG-like motion, Processor routing, evidence gates, receipts and exports",
+  "background_color": "#030710",
+  "theme_color": "#071120",
+  "description": "Responsive fleet operations dashboard with quests, evidence, receipts and exports",
   "icons": [
     {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
