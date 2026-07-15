@@ -1,0 +1,78 @@
+name: Validate AGIS Fleet RPG Operations v6
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v6.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.css'
+      - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.js'
+      - '.github/workflows/agis-rpg-operations-v6.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'agis-agent-armada-os/apps/command-center-v3/captain-console-v6.html'
+      - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.css'
+      - 'agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6*.js'
+      - '.github/workflows/agis-rpg-operations-v6.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-v6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate files and UI contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, sys
+          root = Path('agis-agent-armada-os/apps/command-center-v3')
+          files = [
+            root/'captain-console-v6.html',
+            root/'rpg-operations-v6.css',
+            root/'rpg-operations-v6-part1.css',
+            root/'rpg-operations-v6-part2.css',
+            root/'rpg-operations-v6-part3.css',
+            root/'rpg-operations-v6-part4.css',
+            root/'rpg-operations-v6-part5.css',
+            root/'rpg-operations-v6-core.js',
+            root/'rpg-operations-v6-modes.js',
+            root/'rpg-operations-v6-app.js',
+            root/'processor-client.js',
+            root/'captain-console-v4-data.js',
+            root/'assets/agis-grand-line-deck.svg',
+            root/'assets/agis-crew-sprites.svg'
+          ]
+          missing = [str(p) for p in files if not p.exists()]
+          html = (root/'captain-console-v6.html').read_text(encoding='utf-8')
+          required = [
+            'AGIS FLEET RPG OPERATIONS', 'Command Town', 'Auto Work',
+            'Idle Rewards', 'Crew & Gear', 'Inventory', 'Quest System',
+            'Forge', 'Guild', 'Boss Challenge', 'EVIDENCE GATE',
+            'OUTPUT & EXPORT', 'No Evidence = Not Done',
+            'rpg-operations-v6-core.js', 'rpg-operations-v6-modes.js',
+            'rpg-operations-v6-app.js'
+          ]
+          missing_contracts = [x for x in required if x not in html]
+          imports = (root/'rpg-operations-v6.css').read_text(encoding='utf-8')
+          missing_imports = [f'part{i}' for i in range(1,6) if f'rpg-operations-v6-part{i}.css' not in imports]
+          print('missing_files=', missing)
+          print('missing_contracts=', missing_contracts)
+          print('missing_imports=', missing_imports)
+          if missing or missing_contracts or missing_imports:
+            sys.exit(1)
+          PY
+      - name: Check JavaScript syntax
+        run: |
+          node --check agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6-core.js
+          node --check agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6-modes.js
+          node --check agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6-app.js
+      - name: Validate responsive contracts
+        run: |
+          grep -q '@media(max-width:900px)' agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6-part4.css
+          grep -q '@media(max-width:560px)' agis-agent-armada-os/apps/command-center-v3/rpg-operations-v6-part4.css
+          grep -q 'mobile-nav' agis-agent-armada-os/apps/command-center-v3/captain-console-v6.html
+          echo 'Responsive contracts PASS'
