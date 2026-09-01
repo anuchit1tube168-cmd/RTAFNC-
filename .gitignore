@@ -8,6 +8,9 @@
 *.pfx
 service-account*.json
 google-credentials*.json
+credentials*.json
+secrets/
+private/
 
 # Supabase local secrets
 supabase/.temp/
@@ -32,6 +35,19 @@ private-data/
 student-data/
 medical-data/
 exports/
+backups/
+records/
 *.xlsx
 *.csv
 *.pdf
+**/students.json
+**/students_data.js
+**/students_photos.js
+**/teachers_data.js
+**/deeds.json
+**/deeds_data.js
+**/all_assessments.json
+**/missing_students.json
+**/line_mappings.json
+**/medical_records*.json
+**/patients*.json
