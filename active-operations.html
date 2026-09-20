@@ -80,9 +80,9 @@
         <section class="floor glass">
           <div class="world-toolbar">
             <div><span>LIVE CHARACTER FLOOR</span><b>State-driven movement</b></div>
-            <div class="world-legend"><i class="working"></i>Desk <i class="review"></i>Review <i class="blocked"></i>Blocked <i class="learning"></i>Learning</div>
+            <div class="world-legend"><i class="working"></i>Working <i class="review"></i>Review <i class="blocked"></i>Blocked <i class="learning"></i>Learning <i class="ready"></i>Ready patrol</div>
           </div>
-          <div id="agentWorld" class="agent-world" aria-label="12 Core Agents walking and working">
+          <p class="world-truth">Motion follows recorded state: READY = patrol/available, WORKING/REVIEW/LEARNING = active workstation animation, BLOCKED = waits at Blocker Bay.</p><div id="agentWorld" class="agent-world" aria-label="12 Core Agents walking and working">
             <div class="world-zone command-zone" data-zone="command"><span>COMMAND</span><small>ATLAS</small></div>
             <div class="world-zone business-zone" data-zone="business"><span>BUSINESS</span><small>ORACLE • ECHO • VECTOR</small></div>
             <div class="world-zone product-zone" data-zone="product"><span>PRODUCT</span><small>FORGE</small></div>
