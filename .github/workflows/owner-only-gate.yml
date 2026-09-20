@@ -22,24 +22,70 @@ jobs:
             echo "::error::Unauthorized actor. Only repository owner may change this repository."
             exit 1
           fi
+
       - name: Checkout repository read-only
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 1
-      - name: Block write-capable or exfiltration workflows
+
+      - name: Enforce narrow workflow capability allowlist
         shell: bash
         run: |
           set -euo pipefail
           fail=0
+
+          page_workflows='
+          .github/workflows/agis-crew-dashboard-pages.yml
+          .github/workflows/pages.yml
+          '
+          artifact_workflows='
+          .github/workflows/agis-crew-dashboard-pages.yml
+          .github/workflows/agis-rpg-operations.yml
+          .github/workflows/build-staging-sql.yml
+          '
+
+          is_listed() {
+            printf '%s\n' "$1" | grep -Fxq "$2"
+          }
+
           while IFS= read -r f; do
             [ "$f" = ".github/workflows/owner-only-gate.yml" ] && continue
-            if grep -nEi '(contents|actions|packages|deployments|pull-requests|issues|id-token):[[:space:]]*write' "$f" >/dev/null 2>&1; then
-              echo "::error file=$f::Workflow requests write permission"
+
+            tmp="$(mktemp)"
+            cp "$f" "$tmp"
+
+            # GitHub Pages deploys require only these two write-class permissions.
+            # The workflow must also visibly use the official Pages deployment actions.
+            if is_listed "$page_workflows" "$f"; then
+              if ! grep -q 'actions/configure-pages@' "$f" || ! grep -q 'actions/deploy-pages@' "$f"; then
+                echo "::error file=$f::Pages permission exception requires official configure-pages and deploy-pages actions"
+                fail=1
+              fi
+              sed -i -E '/^[[:space:]]*pages:[[:space:]]*write[[:space:]]*$/d' "$tmp"
+              sed -i -E '/^[[:space:]]*id-token:[[:space:]]*write[[:space:]]*$/d' "$tmp"
+            fi
+
+            # GitHub-hosted validation artifacts are allowed only in these explicit workflows.
+            if is_listed "$artifact_workflows" "$f"; then
+              sed -i -E '/uses:[[:space:]]*actions\/upload-artifact@v4/d' "$tmp"
+            fi
+
+            # CI may curl only the local test container. External curl remains blocked.
+            if [ "$f" = ".github/workflows/ci.yml" ]; then
+              sed -i -E '/curl[[:space:]]+--fail[[:space:]]+http:\/\/127\.0\.0\.1:18080\//d' "$tmp"
+            fi
+
+            if grep -nEi '(contents|actions|packages|deployments|pull-requests|issues|pages|id-token):[[:space:]]*write' "$tmp" >/dev/null 2>&1; then
+              echo "::error file=$f::Workflow requests non-allowlisted write permission"
               fail=1
             fi
-            if grep -nEi '(^|[[:space:]])(curl|wget|nc|scp|rsync|ssh)([[:space:]]|$)|Invoke-WebRequest|upload-artifact|repository_dispatch' "$f" >/dev/null 2>&1; then
-              echo "::error file=$f::Possible outbound data transfer or artifact collection"
+
+            if grep -nEi '(^|[[:space:]])(curl|wget|nc|scp|rsync|ssh)([[:space:]]|$)|Invoke-WebRequest|upload-artifact|repository_dispatch' "$tmp" >/dev/null 2>&1; then
+              echo "::error file=$f::Possible non-allowlisted outbound data transfer or artifact collection"
               fail=1
             fi
+
+            rm -f "$tmp"
           done < <(git ls-files '.github/workflows/*.yml' '.github/workflows/*.yaml')
+
           [ "$fail" -eq 0 ]
