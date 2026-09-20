@@ -24,11 +24,11 @@ for(const a of agents){
   if(!Array.isArray(a.equipment)||!a.equipment.length) errors.push(a.id+' missing equipment');
 }
 const html=fs.readFileSync(root+'active-operations.html','utf8');
-for(const token of ['active-operations-v2.css','active-operations-v2.js','12 Core Agents','Scout','Agent Factory','Legacy v6']){
+for(const token of ['active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix','Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList']){
   if(!html.includes(token)) errors.push('html missing '+token);
 }
 const js=fs.readFileSync(root+'active-operations-v2.js','utf8');
-for(const token of ['core-agent-roster-v2.json','agis-pirate-armada1/data/','renderOps','renderAgents','renderSignals','renderCandidate']){
+for(const token of ['core-agent-roster-v2.json','agis-pirate-armada1/data/','jobs.json','schedule.json','training.json','renderOps','renderAgents','renderWork','renderTraining','renderSignals','renderCandidate']){
   if(!js.includes(token)) errors.push('js missing '+token);
 }
 if(errors.length){
