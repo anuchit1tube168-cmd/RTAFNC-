@@ -1,0 +1,11 @@
+{
+  "application": "AGIS Active Operations",
+  "version": "2.0.0-core12",
+  "architecture": "quality-first-core-agents",
+  "agents": 12,
+  "source_of_truth": "core-agent-roster-v2.json",
+  "live_state_sync": "agis-pirate-armada1/data",
+  "production_write": false,
+  "legacy_preserved": "captain-console-v6.html",
+  "updated": "2026-09-20"
+}
