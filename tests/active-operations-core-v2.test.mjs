@@ -32,7 +32,7 @@ for(const a of agents){
 }
 
 // ROOT MIRROR CONTRACT
-for(const file of ['active-operations.html','active-operations-v2.css','active-operations-v2.js','core-agent-roster-v2.json']){
+for(const file of ['active-operations.html','active-operations-v2.css','active-operations-v2.js','core-agent-roster-v2.json','pixel-character-engine.js']){
   if(!fs.existsSync(file)) errors.push('root mirror missing '+file);
 }
 if(fs.existsSync('active-operations-v2.css') && fs.readFileSync('active-operations-v2.css','utf8')!==fs.readFileSync(root+'active-operations-v2.css','utf8')){
@@ -44,11 +44,14 @@ if(fs.existsSync('active-operations-v2.js') && fs.readFileSync('active-operation
 if(fs.existsSync('core-agent-roster-v2.json') && fs.readFileSync('core-agent-roster-v2.json','utf8')!==fs.readFileSync(root+'core-agent-roster-v2.json','utf8')){
   errors.push('root Core roster mirror drift');
 }
+if(fs.existsSync('pixel-character-engine.js') && fs.readFileSync('pixel-character-engine.js','utf8')!==fs.readFileSync(root+'pixel-character-engine.js','utf8')){
+  errors.push('root Pixel engine mirror drift');
+}
 
 const html=fs.readFileSync(root+'active-operations.html','utf8');
 for(const token of [
   'active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix',
-  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES'
+  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js'
 ]){
   if(!html.includes(token)) errors.push('html missing '+token);
 }
@@ -56,10 +59,17 @@ for(const token of [
 const js=fs.readFileSync(root+'active-operations-v2.js','utf8');
 for(const token of [
   'core-agent-roster-v2.json','agis-pirate-armada1/data/','jobs.json','schedule.json','training.json',
-  'renderOps','renderAgents','renderWork','renderTraining','renderSignals','renderCandidate',
+  'renderOps','renderAgents','renderWork','renderTraining','renderSignals','renderCandidate','renderWorld','startWorldLoop','CORE_PIXEL_SPECS','WORLD_ANCHORS',
   'Read Context Before Work','Stop / Escalation Rules'
 ]){
   if(!js.includes(token)) errors.push('js missing '+token);
+}
+
+const spriteSpecCount=(js.match(/"AG-\d{3}":\{id:/g)||[]).length;
+if(spriteSpecCount!==12) errors.push('expected 12 Core pixel specs, got '+spriteSpecCount);
+for(const token of ['walk','action','BLOCKER BAY','KNOWLEDGE LAB','READY BAY']){
+  const combined=html+'\n'+js;
+  if(!combined.includes(token)) errors.push('living office missing '+token);
 }
 
 // Runtime selector contract: remove every multi-selector prefix first, then ensure
