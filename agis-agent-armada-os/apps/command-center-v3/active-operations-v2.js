@@ -60,6 +60,8 @@ function openAgent(id){
     <div class="equip"><h3>Core Skills</h3><div class="equip-list">${(a.skills||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
     <div class="equip"><h3>Outfit</h3><p class="persona">${esc(a.outfit)}</p></div>
     <div class="equip"><h3>Equipment</h3><div class="equip-list">${(a.equipment||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
+    <div class="equip"><h3>Read Context Before Work</h3><div class="context-list">${(a.readContext||[]).map(x=>`<div><span>READ</span><b>${esc(x)}</b></div>`).join("")}</div></div>
+    <div class="equip"><h3>Stop / Escalation Rules</h3><div class="context-list stop-list">${(a.stop||[]).map(x=>`<div><span>STOP</span><b>${esc(x)}</b></div>`).join("")}</div></div>
     <div class="equip"><h3>Non-goals</h3><div class="equip-list">${(a.nonGoals||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
   `;
   $("#drawer").classList.add("open");$("#drawer").setAttribute("aria-hidden","false");
