@@ -38,3 +38,13 @@ if(errors.length){
 }
 console.log('AGIS ACTIVE OPERATIONS CORE V2 PASS');
 console.log(JSON.stringify({agents:agents.length,codenames:[...codenames]},null,2));
+
+
+/* runtime-selector-contract */
+if(js.includes('$("[data-agent]").forEach')) errors.push('multi-agent selector incorrectly uses single-element helper');
+if(js.includes('const cards=$(".learning-cards article")')) errors.push('learning card collection incorrectly uses single-element helper');
+if(!js.includes('$$("[data-agent]").forEach')) errors.push('agent multi-selector contract missing');
+if(!js.includes('const cards=$$(".learning-cards article")')) errors.push('learning card multi-selector contract missing');
+for(const token of ['Read Context Before Work','Stop / Escalation Rules']){
+  if(!js.includes(token)) errors.push('agent profile missing '+token);
+}
