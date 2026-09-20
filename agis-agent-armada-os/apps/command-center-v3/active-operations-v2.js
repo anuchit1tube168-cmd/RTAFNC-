@@ -93,7 +93,7 @@ function startWorldLoop(){
          actor.x+=dx/dist*step;actor.y+=dy/dist*step;
        }
        actor.el.style.left=actor.x+"%";actor.el.style.top=actor.y+"%";
-       const mode=moving?"walk":actor.state==="WORKING"?"action":"idle";
+       const mode=moving?"walk":["WORKING","REVIEW","LEARNING"].includes(actor.state)?"action":"idle";
        const spec=CORE_PIXEL_SPECS[actor.agent.id]||CORE_PIXEL_SPECS["AG-001"];
        window.AGIS_PIXEL_STUDIO.drawCharacter(actor.canvas,spec,{mode,frame:actor.frame++%4});
        actor.el.classList.toggle("walking",moving);
