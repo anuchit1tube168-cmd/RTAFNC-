@@ -78,6 +78,23 @@
       </div>
       <div class="ops-layout">
         <section class="floor glass">
+          <div class="world-toolbar">
+            <div><span>LIVE CHARACTER FLOOR</span><b>State-driven movement</b></div>
+            <div class="world-legend"><i class="working"></i>Desk <i class="review"></i>Review <i class="blocked"></i>Blocked <i class="learning"></i>Learning</div>
+          </div>
+          <div id="agentWorld" class="agent-world" aria-label="12 Core Agents walking and working">
+            <div class="world-zone command-zone" data-zone="command"><span>COMMAND</span><small>ATLAS</small></div>
+            <div class="world-zone business-zone" data-zone="business"><span>BUSINESS</span><small>ORACLE • ECHO • VECTOR</small></div>
+            <div class="world-zone product-zone" data-zone="product"><span>PRODUCT</span><small>FORGE</small></div>
+            <div class="world-zone intelligence-zone" data-zone="intelligence"><span>INTELLIGENCE</span><small>SCOUT</small></div>
+            <div class="world-zone engineering-zone" data-zone="engineering"><span>ENGINEERING</span><small>AETHER • MAKER • NEXUS</small></div>
+            <div class="world-zone quality-zone" data-zone="quality"><span>QUALITY / REVIEW</span><small>SENTINEL • AEGIS</small></div>
+            <div class="world-zone learning-zone" data-zone="learning"><span>KNOWLEDGE LAB</span><small>MENTOR</small></div>
+            <div class="world-zone blocker-zone" data-zone="blocked"><span>BLOCKER BAY</span><small>WAITING DEPENDENCY</small></div>
+            <div class="world-zone lounge-zone" data-zone="ready"><span>READY BAY</span><small>AVAILABLE</small></div>
+            <div id="worldCharacters" class="world-characters"></div>
+          </div>
+          <div class="office-divider"><span>DEPARTMENT STATUS CARDS</span></div>
           <div id="opsDepartments" class="ops-departments"></div>
           <div class="floor-center">
             <span>AGIS</span><b>MISSION CORE</b><small>Evidence → Action → Learning</small>
@@ -254,6 +271,7 @@
   </aside>
 </div>
 
+<script src="./pixel-character-engine.js"></script>
 <script src="./active-operations-v2.js"></script>
 </body>
 </html>
