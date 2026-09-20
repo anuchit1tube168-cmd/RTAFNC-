@@ -31,6 +31,20 @@ for(const a of agents){
   if(!Array.isArray(a.stop)||!a.stop.length) errors.push(a.id+' missing stop rules');
 }
 
+// ROOT MIRROR CONTRACT
+for(const file of ['active-operations.html','active-operations-v2.css','active-operations-v2.js','core-agent-roster-v2.json']){
+  if(!fs.existsSync(file)) errors.push('root mirror missing '+file);
+}
+if(fs.existsSync('active-operations-v2.css') && fs.readFileSync('active-operations-v2.css','utf8')!==fs.readFileSync(root+'active-operations-v2.css','utf8')){
+  errors.push('root CSS mirror drift');
+}
+if(fs.existsSync('active-operations-v2.js') && fs.readFileSync('active-operations-v2.js','utf8')!==fs.readFileSync(root+'active-operations-v2.js','utf8')){
+  errors.push('root JS mirror drift');
+}
+if(fs.existsSync('core-agent-roster-v2.json') && fs.readFileSync('core-agent-roster-v2.json','utf8')!==fs.readFileSync(root+'core-agent-roster-v2.json','utf8')){
+  errors.push('root Core roster mirror drift');
+}
+
 const html=fs.readFileSync(root+'active-operations.html','utf8');
 for(const token of [
   'active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix',
