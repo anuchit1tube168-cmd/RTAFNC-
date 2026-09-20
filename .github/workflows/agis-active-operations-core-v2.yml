@@ -1,0 +1,29 @@
+name: Validate AGIS Active Operations Core v2
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'active-operations.html'
+      - 'active-operations-v2.css'
+      - 'active-operations-v2.js'
+      - 'agis-agent-armada-os/agents/core-v2/**'
+      - 'agis-agent-armada-os/visual/CORE_AGENT_IMAGE_PROMPTS.md'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations*'
+      - 'agis-agent-armada-os/apps/command-center-v3/core-agent-roster-v2.json'
+      - 'tests/active-operations-core-v2.test.mjs'
+      - '.github/workflows/agis-active-operations-core-v2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Active Operations JavaScript
+        run: node --check agis-agent-armada-os/apps/command-center-v3/active-operations-v2.js
+      - name: Validate Core v2 data and UI contract
+        run: node tests/active-operations-core-v2.test.mjs
