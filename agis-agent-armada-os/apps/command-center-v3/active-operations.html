@@ -29,6 +29,7 @@
   <nav class="nav" id="nav">
     <button class="active" data-view="ops">Operations</button>
     <button data-view="agents">12 Core Agents</button>
+    <button data-view="work">Work Matrix</button>
     <button data-view="scout">Scout</button>
     <button data-view="rnd">R&D / Learning</button>
     <button data-view="factory">Agent Factory</button>
@@ -77,7 +78,7 @@
       </div>
       <div class="ops-layout">
         <section class="floor glass">
-          <div id="opsAgents" class="ops-agents"></div>
+          <div id="opsDepartments" class="ops-departments"></div>
           <div class="floor-center">
             <span>AGIS</span><b>MISSION CORE</b><small>Evidence → Action → Learning</small>
           </div>
@@ -116,6 +117,31 @@
         <label class="search"><input id="agentSearch" placeholder="ค้นหา Agent / skill / codename..."></label>
       </div>
       <div id="agentGrid" class="agent-grid"></div>
+    </section>
+
+
+    <section class="view" id="work">
+      <div class="section-title">
+        <div><span>WORK MATRIX</span><h2>งานจริง • Owner • Reviewer • Handoff • Blocker</h2></div>
+        <span class="quality-chip" id="workCount">0 JOBS</span>
+      </div>
+      <div class="work-layout">
+        <section class="glass work-board">
+          <div class="board-columns">
+            <div class="board-col"><div class="board-head"><span>ACTIVE</span><b id="activeJobCount">0</b></div><div id="activeJobs" class="job-stack"></div></div>
+            <div class="board-col"><div class="board-head"><span>QUEUED</span><b id="queuedJobCount">0</b></div><div id="queuedJobs" class="job-stack"></div></div>
+            <div class="board-col"><div class="board-head"><span>BLOCKED</span><b id="blockedJobCount">0</b></div><div id="blockedJobs" class="job-stack"></div></div>
+          </div>
+        </section>
+        <aside class="glass handoff-panel">
+          <div class="section-head"><span>HANDOFF CHAIN</span><b>EVIDENCE-BASED</b></div>
+          <div id="handoffList"></div>
+          <div class="schedule-box">
+            <span class="eyebrow">EXECUTION RHYTHM</span>
+            <div id="scheduleList"></div>
+          </div>
+        </aside>
+      </div>
     </section>
 
     <section class="view" id="scout">
