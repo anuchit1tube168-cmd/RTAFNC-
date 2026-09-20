@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
-const LOCAL_ROSTER="./agis-agent-armada-os/agents/core-v2/CORE_AGENT_ROSTER.json";
+const LOCAL_ROSTER="./core-agent-roster-v2.json";
 const REMOTE_BASE="https://anuchit1tube168-cmd.github.io/agis-pirate-armada1/data/";
-let DATA={roster:[],state:[],activity:[],signals:[],candidates:null};
+let DATA={roster:[],state:[],activity:[],signals:[],candidates:null,jobs:[],schedule:[],training:[]};
 
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 async function getJSON(url){const r=await fetch(url+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
@@ -18,10 +18,19 @@ function mergedAgent(a){return {...a,...stateFor(a.id),visual:{...(a.visual||{})
 function statusClass(s){return "state-"+String(s||"READY").toUpperCase()}
 function renderOps(){
   const agents=DATA.roster.map(mergedAgent);
-  $("#opsAgents").innerHTML=agents.map(a=>`<button class="ops-agent ${statusClass(a.status)}" style="--agent:${esc(a.color)}" data-agent="${a.id}">
-    <div class="agent-top"><span class="agent-icon">${esc(a.glyph)}</span><span class="agent-title"><small>${esc(a.codename)}</small><b>${esc(a.name)}</b></span></div>
-    <p>${esc(a.signature)}</p><div class="state-line"><i class="state-dot"></i><span>${esc(a.status)} • ${esc(a.currentJob||"")}</span></div>
-  </button>`).join("");
+  const order=["Command","Business","Product","Intelligence","Engineering","Quality","Learning"];
+  const groups=order.map(dept=>[dept,agents.filter(a=>a.department===dept)]).filter(([,list])=>list.length);
+  $("#opsDepartments").innerHTML=groups.map(([dept,list])=>`
+    <section class="dept-room">
+      <div class="dept-room-head"><span>${esc(dept)}</span><b>${list.length} AGENT${list.length>1?"S":""}</b></div>
+      <div class="dept-desks">${list.map(a=>`
+        <button class="ops-agent ${statusClass(a.status)}" style="--agent:${esc(a.color)}" data-agent="${a.id}">
+          <div class="agent-top"><span class="agent-icon">${esc(a.glyph)}</span><span class="agent-title"><small>${esc(a.codename)}</small><b>${esc(a.name)}</b></span></div>
+          <p>${esc(a.signature)}</p>
+          <div class="skill-mini">${(a.skills||[]).slice(0,2).map(s=>`<span>${esc(s)}</span>`).join("")}</div>
+          <div class="state-line"><i class="state-dot"></i><span>${esc(a.status)} • ${esc(a.currentJob||"")}</span></div>
+        </button>`).join("")}</div>
+    </section>`).join("");
   $$("[data-agent]").forEach(x=>x.onclick=()=>openAgent(x.dataset.agent));
   const count=s=>agents.filter(a=>a.status===s).length;
   $("#kpiAgents").textContent=agents.length;$("#kpiWorking").textContent=count("WORKING");$("#kpiReview").textContent=count("REVIEW");$("#kpiBlocked").textContent=count("BLOCKED");
@@ -51,6 +60,8 @@ function openAgent(id){
     <div class="equip"><h3>Core Skills</h3><div class="equip-list">${(a.skills||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
     <div class="equip"><h3>Outfit</h3><p class="persona">${esc(a.outfit)}</p></div>
     <div class="equip"><h3>Equipment</h3><div class="equip-list">${(a.equipment||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
+    <div class="equip"><h3>Read Context Before Work</h3><div class="context-list">${(a.readContext||[]).map(x=>`<div><span>READ</span><b>${esc(x)}</b></div>`).join("")}</div></div>
+    <div class="equip"><h3>Stop / Escalation Rules</h3><div class="context-list stop-list">${(a.stop||[]).map(x=>`<div><span>STOP</span><b>${esc(x)}</b></div>`).join("")}</div></div>
     <div class="equip"><h3>Non-goals</h3><div class="equip-list">${(a.nonGoals||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
   `;
   $("#drawer").classList.add("open");$("#drawer").setAttribute("aria-hidden","false");
@@ -62,6 +73,39 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer()});
 function renderActivity(){
   const items=DATA.activity.slice(0,14);
   $("#activityFeed").innerHTML=items.length?items.map(x=>`<div class="activity-item"><time>${esc(x.time||"—")}</time><div><b>${esc(x.agent||"AGIS")}</b><span>${esc(x.type||"EVENT")}</span><p>${esc(x.text||"")}</p></div></div>`).join(""):'<p class="persona">ยังไม่มี activity evidence</p>';
+}
+function jobCard(j){
+  const owner=j.owner||"UNASSIGNED";
+  const ownerAgents=DATA.roster.filter(a=>owner.toLowerCase().includes(a.name.toLowerCase())||owner.toLowerCase().includes(a.codename.toLowerCase()));
+  const marks=ownerAgents.map(a=>`<span class="owner-mark" style="--agent:${esc(a.color)}">${esc(a.glyph)} ${esc(a.codename)}</span>`).join("");
+  return `<article class="job-card job-${esc((j.status||"QUEUED").toLowerCase())}">
+    <div class="job-top"><span>${esc(j.id||"JOB")}</span><b>${esc(j.status||"QUEUED")}</b></div>
+    <h3>${esc(j.title||"Untitled job")}</h3>
+    <p>${esc(j.objective||"")}</p>
+    <div class="owners">${marks||`<span class="owner-mark">${esc(owner)}</span>`}</div>
+    <div class="job-meta"><small>METRIC</small><strong>${esc(j.metric||"—")}</strong></div>
+    ${j.blocker?`<div class="blocker-note"><small>BLOCKER</small><b>${esc(j.blocker)}</b></div>`:""}
+    ${j.next?`<div class="next-note"><small>NEXT</small><b>${esc(j.next)}</b></div>`:""}
+  </article>`;
+}
+function renderWork(){
+  const jobs=DATA.jobs||[];
+  const active=jobs.filter(j=>j.status==="ACTIVE"),queued=jobs.filter(j=>j.status==="QUEUED"),blocked=jobs.filter(j=>j.status==="BLOCKED");
+  $("#activeJobs").innerHTML=active.map(jobCard).join("")||'<div class="empty">No active jobs</div>';
+  $("#queuedJobs").innerHTML=queued.map(jobCard).join("")||'<div class="empty">No queued jobs</div>';
+  $("#blockedJobs").innerHTML=blocked.map(jobCard).join("")||'<div class="empty">No blocked jobs</div>';
+  $("#activeJobCount").textContent=active.length;$("#queuedJobCount").textContent=queued.length;$("#blockedJobCount").textContent=blocked.length;
+  $("#workCount").textContent=jobs.length+" JOBS";
+  const handoffs=jobs.filter(j=>j.reviewer||String(j.owner||"").includes("+")).slice(0,8);
+  $("#handoffList").innerHTML=handoffs.map(j=>`<div class="handoff-item"><span>${esc(j.id)}</span><div><b>${esc(j.owner||"")}</b><i>→</i><strong>${esc(j.reviewer||"QA / EVAL")}</strong><small>${esc(j.acceptance||j.metric||"Evidence required")}</small></div></div>`).join("")||'<div class="empty">No explicit handoff recorded</div>';
+  $("#scheduleList").innerHTML=(DATA.schedule||[]).map(s=>`<div class="schedule-item"><b>${esc(s.time)}</b><span>${esc(s.name)}</span><small>${esc(s.status)}</small></div>`).join("");
+}
+function renderTraining(){
+  const latest=(DATA.training||[]).slice(-2).reverse();
+  if(latest.length){
+    const cards=$$(".learning-cards article");
+    latest.forEach((x,i)=>{if(cards[i]){cards[i].querySelector("h3").textContent=x.lesson;cards[i].querySelector("p").textContent=x.evidence}})
+  }
 }
 function renderSignals(){
   const items=DATA.signals;
@@ -82,21 +126,24 @@ async function boot(){
  }catch(e){console.error("Local roster failed",e)}
  let synced=false;
  try{
-   const [state,act,sig,cand]=await Promise.all([
+   const [state,act,sig,cand,jobs,schedule,training]=await Promise.all([
      getJSON(REMOTE_BASE+"agents_core.json"),
      getJSON(REMOTE_BASE+"agent_activity.json"),
      getJSON(REMOTE_BASE+"scout_signals.json"),
-     getJSON(REMOTE_BASE+"agent_candidates.json")
+     getJSON(REMOTE_BASE+"agent_candidates.json"),
+     getJSON(REMOTE_BASE+"jobs.json"),
+     getJSON(REMOTE_BASE+"schedule.json"),
+     getJSON(REMOTE_BASE+"training.json")
    ]);
-   DATA.state=state.agents||[];DATA.activity=act.events||[];DATA.signals=sig.items||[];DATA.candidates=cand;synced=true;
+   DATA.state=state.agents||[];DATA.activity=act.events||[];DATA.signals=sig.items||[];DATA.candidates=cand;DATA.jobs=jobs||[];DATA.schedule=schedule||[];DATA.training=training||[];synced=true;
  }catch(e){
    DATA.state=DATA.roster.map(a=>({id:a.id,status:a.id==="AG-009"?"REVIEW":a.id==="AG-010"?"BLOCKED":"READY",currentJob:a.id==="AG-010"?"Waiting for verified Cloudflare staging access":"Awaiting approved work"}));
    DATA.activity=[{time:"LOCAL",agent:"AGIS",type:"FALLBACK",text:"Using local Core v2 roster; remote $10M state unavailable."}];
-   DATA.signals=[];DATA.candidates={latestDecision:{newAgentNeeded:false,reason:"No local candidate is justified.",route:"Use Core Agents first."}};
+   DATA.signals=[];DATA.jobs=[];DATA.schedule=[];DATA.training=[];DATA.candidates={latestDecision:{newAgentNeeded:false,reason:"No local candidate is justified.",route:"Use Core Agents first."}};
  }
  $("#syncPill").classList.add(synced?"synced":"fallback");$("#syncPill b").textContent=synced?"SYNCED":"FALLBACK";
  $("#stateSource").textContent=synced?"SYNCED":"LOCAL";$("#activitySource").textContent=synced?"SYNCED":"LOCAL";
- renderOps();renderAgents();renderActivity();renderSignals();renderCandidate();
+ renderOps();renderAgents();renderActivity();renderWork();renderTraining();renderSignals();renderCandidate();
  $("#updatedLabel").textContent="Updated "+new Date().toLocaleString("th-TH");
 }
 boot();
