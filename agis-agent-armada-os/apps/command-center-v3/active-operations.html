@@ -1,1 +1,209 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="refresh" content="0;url=captain-console-v6.html"><title>AGIS Fleet RPG Operations v6</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 50% 0,#35206b55,transparent 45%),#030710;color:#edf4ff;font-family:system-ui}.card{max-width:650px;padding:30px;border:1px solid #9f54e0;border-radius:16px;background:#0d1d33;text-align:center;box-shadow:0 20px 60px #000a}h1{color:#f0bc55}p{color:#a9bdd0}a{display:inline-block;margin-top:14px;padding:11px 16px;border-radius:9px;background:linear-gradient(#a64cff,#6033ba);color:#fff;text-decoration:none;font-weight:800}</style></head><body><main class="card"><h1>AGIS Fleet RPG Operations v6</h1><p>Command Town • Auto Work • Rewards • Crew • Inventory • Quest • Forge • Guild • Boss Challenge</p><p>กำลังเปิดระบบปฏิบัติการที่ใช้ Processor และ State DB เป็นแหล่งข้อมูลจริง</p><a href="captain-console-v6.html">เปิดระบบ RPG Operations</a></main></body></html>
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="AGIS Active Operations — Quality-first AI workforce command center">
+<title>AGIS Active Operations — Core 12</title>
+<link rel="stylesheet" href="./active-operations-v2.css">
+</head>
+<body>
+<div class="noise"></div>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brandmark"><span>AG</span></div>
+      <div>
+        <p>AGIS • ACTIVE OPERATIONS</p>
+        <h1>AI Workforce Command Center</h1>
+      </div>
+    </div>
+    <div class="topmeta">
+      <span class="sync-pill" id="syncPill"><i></i><b>SYNCING</b></span>
+      <span class="meta-pill">ON COMMAND • 4H FALLBACK</span>
+      <span class="clock" id="clock">--:--:--</span>
+    </div>
+  </header>
+
+  <nav class="nav" id="nav">
+    <button class="active" data-view="ops">Operations</button>
+    <button data-view="agents">12 Core Agents</button>
+    <button data-view="scout">Scout</button>
+    <button data-view="rnd">R&D / Learning</button>
+    <button data-view="factory">Agent Factory</button>
+    <button data-view="legacy">Legacy v6</button>
+  </nav>
+
+  <main>
+    <section class="view active" id="ops">
+      <div class="hero-grid">
+        <article class="hero-card glass">
+          <div class="hero-copy">
+            <span class="eyebrow">QUALITY-FIRST • EVIDENCE-FIRST</span>
+            <h2>12 AI specialists.<br><em>One command system.</em></h2>
+            <p>ไม่เพิ่ม Agent เพราะอยากให้ดูเยอะ — เพิ่มเมื่อ capability gap พิสูจน์แล้วเท่านั้น</p>
+            <div class="hero-actions">
+              <button class="primary" data-jump="agents">ดูทีมทั้งหมด</button>
+              <button class="secondary" data-jump="factory">ดู Agent Factory</button>
+            </div>
+          </div>
+          <div class="hero-radar" aria-hidden="true">
+            <div class="radar-ring r1"></div><div class="radar-ring r2"></div><div class="radar-ring r3"></div>
+            <div class="radar-sweep"></div>
+            <div class="core-node">✦<small>ATLAS</small></div>
+            <span class="sat s1"></span><span class="sat s2"></span><span class="sat s3"></span><span class="sat s4"></span>
+          </div>
+        </article>
+        <article class="status-card glass">
+          <div class="section-head"><span>OPERATING STATE</span><b id="stateSource">FALLBACK</b></div>
+          <div class="state-grid">
+            <div><small>Core Agents</small><strong id="kpiAgents">12</strong></div>
+            <div><small>Working</small><strong id="kpiWorking">0</strong></div>
+            <div><small>Review</small><strong id="kpiReview">0</strong></div>
+            <div><small>Blocked</small><strong id="kpiBlocked">0</strong></div>
+          </div>
+          <div class="phase">
+            <small>Current Phase</small>
+            <strong>Phase 2B — Runtime Foundation</strong>
+            <span>Staging only • Production write OFF</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="section-title">
+        <div><span>OPERATIONS FLOOR</span><h2>เห็นว่าใครทำอะไร — ไม่แกล้งทำให้ทุกคน busy</h2></div>
+        <div class="legend"><i class="working"></i>Working <i class="review"></i>Review <i class="blocked"></i>Blocked <i class="ready"></i>Ready</div>
+      </div>
+      <div class="ops-layout">
+        <section class="floor glass">
+          <div id="opsAgents" class="ops-agents"></div>
+          <div class="floor-center">
+            <span>AGIS</span><b>MISSION CORE</b><small>Evidence → Action → Learning</small>
+          </div>
+        </section>
+        <aside class="activity glass">
+          <div class="section-head"><span>ACTIVITY FEED</span><b id="activitySource">LOCAL</b></div>
+          <div id="activityFeed"></div>
+        </aside>
+      </div>
+
+      <div class="three-grid">
+        <article class="glass mini-panel">
+          <span class="eyebrow">SCOUT SIGNAL</span>
+          <h3 id="topSignal">กำลังอ่าน Signal Inbox</h3>
+          <p id="topSignalMeta">—</p>
+          <button class="text-btn" data-jump="scout">เปิด Scout Lab →</button>
+        </article>
+        <article class="glass mini-panel">
+          <span class="eyebrow">LEARNING</span>
+          <h3>Failure → Root Cause → Retest → Skill</h3>
+          <p>Promote เฉพาะสิ่งที่มี evidence หลัง retest</p>
+          <button class="text-btn" data-jump="rnd">ดู R&D / Learning →</button>
+        </article>
+        <article class="glass mini-panel">
+          <span class="eyebrow">AGENT FACTORY</span>
+          <h3 id="candidateState">NO NEW AGENT NEEDED</h3>
+          <p id="candidateReason">Core-first policy is active.</p>
+          <button class="text-btn" data-jump="factory">ดู Gate →</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="agents">
+      <div class="section-title">
+        <div><span>CORE 12 • CHARACTER BIBLE</span><h2>แต่ละ Agent มีตัวตน วิธีคิด สกิล ชุด และอุปกรณ์เฉพาะ</h2></div>
+        <label class="search"><input id="agentSearch" placeholder="ค้นหา Agent / skill / codename..."></label>
+      </div>
+      <div id="agentGrid" class="agent-grid"></div>
+    </section>
+
+    <section class="view" id="scout">
+      <div class="section-title">
+        <div><span>SCOUT LEARNING PIPELINE</span><h2>Source → Signal → Evidence → R&D → Outcome</h2></div>
+        <span class="quality-chip">QUALITY OVER VOLUME</span>
+      </div>
+      <div class="pipeline glass">
+        <span>SOURCE</span><i>→</i><span>SIGNAL</span><i>→</i><span>RELEVANCE</span><i>→</i><span>EVIDENCE</span><i>→</i><span>R&D / JOB / EVAL</span><i>→</i><span>OUTCOME</span>
+      </div>
+      <div id="signalGrid" class="signal-grid"></div>
+    </section>
+
+    <section class="view" id="rnd">
+      <div class="section-title">
+        <div><span>R&D + ORGANIZATIONAL LEARNING</span><h2>เราเรียนรู้จากงานจริง ไม่ใช่จาก prompt ที่ยาวขึ้น</h2></div>
+      </div>
+      <div class="learning-map glass">
+        <div><b>01</b><span>Failure / Win</span></div><i>→</i>
+        <div><b>02</b><span>Root Cause</span></div><i>→</i>
+        <div><b>03</b><span>Small Experiment</span></div><i>→</i>
+        <div><b>04</b><span>QA / EVAL</span></div><i>→</i>
+        <div><b>05</b><span>Skill / Rule</span></div>
+      </div>
+      <div class="learning-cards">
+        <article class="glass"><span>PROVEN</span><h3>Stable seed ≠ runtime state</h3><p>Bootstrap เก็บ durable config; status/currentJob อยู่ runtime/event storage.</p></article>
+        <article class="glass"><span>CI-VALIDATED</span><h3>Replay-safe writes</h3><p>Job/Approval ใช้ idempotency + audit; ยังรอ remote D1 staging evidence.</p></article>
+        <article class="glass"><span>RULE</span><h3>Prompt growth ≠ intelligence</h3><p>แก้ context/eval/skill/tool ก่อนพิจารณา Agent ใหม่.</p></article>
+      </div>
+    </section>
+
+    <section class="view" id="factory">
+      <div class="section-title">
+        <div><span>QUALITY-FIRST AGENT FACTORY</span><h2>สร้าง Agent ใหม่เมื่อ “จำเป็นและพิสูจน์ได้” เท่านั้น</h2></div>
+        <span class="quality-chip">12/12 GATE</span>
+      </div>
+      <div class="factory-flow glass">
+        <div><b>01</b><span>Capability Gap</span></div><i>→</i>
+        <div><b>02</b><span>Core + Skill</span></div><i>→</i>
+        <div><b>03</b><span>Measure</span></div><i>→</i>
+        <div><b>04</b><span>Sandbox</span></div><i>→</i>
+        <div><b>05</b><span>A/B Eval</span></div><i>→</i>
+        <div><b>06</b><span>Promote / Merge / Reject</span></div>
+      </div>
+      <div class="factory-grid">
+        <article class="glass">
+          <span class="eyebrow">LATEST DECISION</span>
+          <h3 id="factoryDecision">NO NEW AGENT NEEDED</h3>
+          <p id="factoryReason">กำลังโหลด...</p>
+        </article>
+        <article class="glass">
+          <span class="eyebrow">MANDATORY SPEC</span>
+          <ul>
+            <li>Mission + Non-goals</li><li>Trigger + Context</li><li>Tools + Least Privilege</li>
+            <li>Memory + Data Scope</li><li>Output Schema + Truth Contract</li><li>Eval + KPI + Retirement Rule</li>
+          </ul>
+        </article>
+        <article class="glass">
+          <span class="eyebrow">HARD FAIL</span>
+          <ul><li>แต่ง facts/tests/actions</li><li>ซ่อน uncertainty</li><li>ขยาย permission โดยไม่จำเป็น</li><li>สร้าง role ซ้ำกับ Core Agent</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="legacy">
+      <div class="legacy-card glass">
+        <span class="eyebrow">PRESERVED • NOT DELETED</span>
+        <h2>Fleet RPG Operations v6</h2>
+        <p>หน้าเดิมเก็บไว้เป็น Legacy / reference เพื่อไม่ทำลายระบบเก่า แต่ Active Operations ใหม่ใช้ Core 12 และ Quality-First architecture แล้ว</p>
+        <a class="primary link" href="./captain-console-v6.html">เปิด Legacy v6</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>AGIS Active Operations v2 • Core 12 • Quality-first • Evidence-first</span>
+    <span id="updatedLabel">Updated —</span>
+  </footer>
+</div>
+
+<div id="drawer" class="drawer" aria-hidden="true">
+  <div class="backdrop" data-close></div>
+  <aside>
+    <button class="close" data-close>×</button>
+    <div id="drawerContent"></div>
+  </aside>
+</div>
+
+<script src="./active-operations-v2.js"></script>
+</body>
+</html>
