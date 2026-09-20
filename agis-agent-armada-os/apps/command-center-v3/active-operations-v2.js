@@ -31,7 +31,7 @@ function renderOps(){
           <div class="state-line"><i class="state-dot"></i><span>${esc(a.status)} • ${esc(a.currentJob||"")}</span></div>
         </button>`).join("")}</div>
     </section>`).join("");
-  $("[data-agent]").forEach(x=>x.onclick=()=>openAgent(x.dataset.agent));
+  $$("[data-agent]").forEach(x=>x.onclick=()=>openAgent(x.dataset.agent));
   const count=s=>agents.filter(a=>a.status===s).length;
   $("#kpiAgents").textContent=agents.length;$("#kpiWorking").textContent=count("WORKING");$("#kpiReview").textContent=count("REVIEW");$("#kpiBlocked").textContent=count("BLOCKED");
 }
@@ -103,7 +103,7 @@ function renderWork(){
 function renderTraining(){
   const latest=(DATA.training||[]).slice(-2).reverse();
   if(latest.length){
-    const cards=$(".learning-cards article");
+    const cards=$$(".learning-cards article");
     latest.forEach((x,i)=>{if(cards[i]){cards[i].querySelector("h3").textContent=x.lesson;cards[i].querySelector("p").textContent=x.evidence}})
   }
 }
