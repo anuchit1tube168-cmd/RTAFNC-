@@ -116,3 +116,28 @@ Workflow `.github/workflows/agis-crew-dashboard-pages.yml` จะรวม Comma
 8. Work + validate
 9. Store receipt
 10. Summarize TH/EN
+
+
+## Core v2 — Quality-First 12 Agents
+
+Current canonical team is the **12 Core Agents** in:
+
+- `agents/core-v2/CORE_PROTOCOL.md`
+- `agents/core-v2/CORE_AGENT_ROSTER.json`
+- `agents/core-v2/AG-001_atlas.md` through `AG-012_mentor.md`
+- `visual/CORE_AGENT_IMAGE_PROMPTS.md`
+
+Active Operations:
+`https://anuchit1tube168-cmd.github.io/RTAFNC-/active-operations.html`
+
+Core v2 rules:
+- Quality > Agent count.
+- Agent state must be truthful.
+- Scout is a RESEARCH-owned process.
+- R&D is a process, not automatically another Agent.
+- New Agent creation requires a proven capability gap and independent A/B evaluation.
+- Character outfit/equipment are visual identity metadata; they do not imply permissions.
+- No production write without explicit approval and audit.
+
+### Legacy preservation
+The original 10-character Fleet RPG remains under `apps/command-center-v3/captain-console-v6.html` for rollback/reference. It is not the canonical Core v2 team.
