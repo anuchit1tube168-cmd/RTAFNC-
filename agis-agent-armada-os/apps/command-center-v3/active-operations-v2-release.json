@@ -1,11 +1,22 @@
 {
   "application": "AGIS Active Operations",
-  "version": "2.0.0-core12",
+  "version": "2.1.0-core12",
   "architecture": "quality-first-core-agents",
   "agents": 12,
   "source_of_truth": "core-agent-roster-v2.json",
   "live_state_sync": "agis-pirate-armada1/data",
   "production_write": false,
   "legacy_preserved": "captain-console-v6.html",
-  "updated": "2026-09-20"
+  "updated": "2026-09-20",
+  "features": [
+    "department operations rooms",
+    "work matrix with active/queued/blocked jobs",
+    "agent read-context and stop/escalation rules",
+    "evidence gate / definition of done",
+    "canonical handoff routes",
+    "Scout/R&D/Agent Factory sync",
+    "runtime selector regression contract"
+  ],
+  "deployment_owner": ".github/workflows/agis-crew-dashboard-pages.yml",
+  "pages_conflict_fix": "LIFF Pages workflow no longer triggers on all tests/**; limited to tests/static-contract.test.mjs"
 }
