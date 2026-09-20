@@ -9,7 +9,7 @@ on:
       - 'supabase/functions/line-auth/**'
       - 'supabase/migrations/**'
       - 'docs/PRODUCTION_GAP_ANALYSIS.md'
-      - 'tests/**'
+      - 'tests/static-contract.test.mjs'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
