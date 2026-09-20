@@ -10,6 +10,100 @@ $$(".nav button").forEach(b=>b.onclick=()=>setView(b.dataset.view));
 $$("[data-jump]").forEach(b=>b.onclick=()=>setView(b.dataset.jump));
 setInterval(()=>{$("#clock").textContent=new Date().toLocaleTimeString("th-TH")},1000);
 
+
+const CORE_PIXEL_SPECS={
+ "AG-001":{id:"atlas",name:"ATLAS",primary:"#3B82F6",secondary:"#8ED8FF",skin:"#d7a078",hair:"#101827",ink:"#07111c",accessory:"crown",expression:"focused"},
+ "AG-002":{id:"oracle",name:"ORACLE",primary:"#8B5CF6",secondary:"#D8C4FF",skin:"#e0aa80",hair:"#2f204d",ink:"#0d1020",accessory:"target",expression:"focused"},
+ "AG-003":{id:"scout",name:"SCOUT",primary:"#14B8A6",secondary:"#99F6E4",skin:"#c98e6a",hair:"#162b32",ink:"#071820",accessory:"compass",expression:"alert"},
+ "AG-004":{id:"echo",name:"ECHO",primary:"#EC4899",secondary:"#FBCFE8",skin:"#e2ad82",hair:"#4a2138",ink:"#180912",accessory:"book",expression:"calm"},
+ "AG-005":{id:"forge",name:"FORGE",primary:"#F97316",secondary:"#FED7AA",skin:"#d9a17a",hair:"#382317",ink:"#160b06",accessory:"pan",expression:"focused"},
+ "AG-006":{id:"aether",name:"AETHER",primary:"#2563EB",secondary:"#BFDBFE",skin:"#d8a47a",hair:"#1f2937",ink:"#07111c",accessory:"crystal",expression:"calm"},
+ "AG-007":{id:"maker",name:"MAKER",primary:"#22C55E",secondary:"#BBF7D0",skin:"#c98862",hair:"#2b2421",ink:"#07140d",accessory:"hammer",expression:"happy"},
+ "AG-008":{id:"sentinel",name:"SENTINEL",primary:"#EAB308",secondary:"#FEF08A",skin:"#ddb08c",hair:"#424242",ink:"#161205",accessory:"cross",expression:"focused"},
+ "AG-009":{id:"aegis",name:"AEGIS",primary:"#EF4444",secondary:"#FECACA",skin:"#c88d69",hair:"#0d1118",ink:"#120506",accessory:"sword",expression:"alert"},
+ "AG-010":{id:"nexus",name:"NEXUS",primary:"#06B6D4",secondary:"#A5F3FC",skin:"#d1a17c",hair:"#263244",ink:"#07131a",accessory:"clone",expression:"calm"},
+ "AG-011":{id:"vector",name:"VECTOR",primary:"#A855F7",secondary:"#E9D5FF",skin:"#d6a17a",hair:"#24152f",ink:"#100817",accessory:"target",expression:"happy"},
+ "AG-012":{id:"mentor",name:"MENTOR",primary:"#6366F1",secondary:"#C7D2FE",skin:"#d9a77e",hair:"#303452",ink:"#0a0d20",accessory:"book",expression:"calm"}
+};
+const WORLD_ANCHORS={
+ command:[50,14],business:[18,29],product:[50,31],intelligence:[82,29],engineering:[23,67],
+ quality:[70,65],learning:[88,77],blocked:[51,81],ready:[50,52]
+};
+const WORLD_DEPT={Command:"command",Business:"business",Product:"product",Intelligence:"intelligence",Engineering:"engineering",Quality:"quality",Learning:"learning"};
+let WORLD={actors:new Map(),raf:0,last:0};
+function workZoneFor(a){
+ if(a.status==="BLOCKED") return "blocked";
+ if(a.status==="REVIEW") return "quality";
+ if(a.status==="LEARNING") return "learning";
+ if(a.status==="READY") return "ready";
+ return WORLD_DEPT[a.department]||"ready";
+}
+function seededOffset(id){
+ const n=[...id].reduce((s,c)=>s+c.charCodeAt(0),0);
+ return [((n*17)%13)-6,((n*29)%11)-5];
+}
+function renderWorld(){
+ const host=$("#worldCharacters"),world=$("#agentWorld");
+ if(!host||!world||!window.AGIS_PIXEL_STUDIO)return;
+ const live=DATA.roster.map(mergedAgent);
+ const liveIds=new Set(live.map(a=>a.id));
+ for(const [id,actor] of WORLD.actors){if(!liveIds.has(id)){actor.el.remove();WORLD.actors.delete(id)}}
+ live.forEach((a,index)=>{
+   let actor=WORLD.actors.get(a.id);
+   if(!actor){
+     const el=document.createElement("button");
+     el.className="world-character";
+     el.dataset.agent=a.id;
+     el.innerHTML='<canvas width="64" height="64"></canvas><span class="char-name"></span><small class="char-task"></small><i class="char-bubble"></i>';
+     host.appendChild(el);
+     const start=[12+(index%4)*24,18+Math.floor(index/4)*25];
+     actor={el,canvas:el.querySelector("canvas"),x:start[0],y:start[1],tx:start[0],ty:start[1],frame:0,nextWander:0,state:"READY"};
+     WORLD.actors.set(a.id,actor);
+     el.onclick=()=>openAgent(a.id);
+   }
+   const zone=workZoneFor(a),anchor=WORLD_ANCHORS[zone]||WORLD_ANCHORS.ready,off=seededOffset(a.id);
+   if(a.status==="READY"){
+     if(!actor.nextWander||performance.now()>actor.nextWander){
+       actor.tx=Math.max(8,Math.min(92,anchor[0]+off[0]+(Math.random()*10-5)));
+       actor.ty=Math.max(12,Math.min(88,anchor[1]+off[1]+(Math.random()*8-4)));
+       actor.nextWander=performance.now()+5000+Math.random()*5000;
+     }
+   }else{
+     actor.tx=Math.max(7,Math.min(93,anchor[0]+off[0]));
+     actor.ty=Math.max(10,Math.min(89,anchor[1]+off[1]));
+   }
+   actor.state=a.status;actor.agent=a;actor.el.style.setProperty("--agent",a.color);
+   actor.el.className="world-character "+statusClass(a.status);
+   actor.el.querySelector(".char-name").textContent=a.codename;
+   actor.el.querySelector(".char-task").textContent=(a.currentJob||a.status).slice(0,42);
+   actor.el.querySelector(".char-bubble").textContent=a.status==="BLOCKED"?"!":a.status==="REVIEW"?"?":a.status==="LEARNING"?"↻":a.status==="WORKING"?"⚡":"";
+ });
+ startWorldLoop();
+}
+function startWorldLoop(){
+ if(WORLD.raf)return;
+ const tick=(t)=>{
+   if(t-WORLD.last>110){
+     WORLD.last=t;
+     for(const actor of WORLD.actors.values()){
+       const dx=actor.tx-actor.x,dy=actor.ty-actor.y,dist=Math.hypot(dx,dy);
+       const moving=dist>.45;
+       if(moving){
+         const step=Math.min(1.55,dist);
+         actor.x+=dx/dist*step;actor.y+=dy/dist*step;
+       }
+       actor.el.style.left=actor.x+"%";actor.el.style.top=actor.y+"%";
+       const mode=moving?"walk":actor.state==="WORKING"?"action":"idle";
+       const spec=CORE_PIXEL_SPECS[actor.agent.id]||CORE_PIXEL_SPECS["AG-001"];
+       window.AGIS_PIXEL_STUDIO.drawCharacter(actor.canvas,spec,{mode,frame:actor.frame++%4});
+       actor.el.classList.toggle("walking",moving);
+     }
+   }
+   WORLD.raf=requestAnimationFrame(tick);
+ };
+ WORLD.raf=requestAnimationFrame(tick);
+}
+
 function stateFor(id){
   const r=DATA.state.find(x=>x.id===id);
   return r||{id,status:"READY",currentJob:"Awaiting approved work",learningState:"READY"};
@@ -143,7 +237,7 @@ async function boot(){
  }
  $("#syncPill").classList.add(synced?"synced":"fallback");$("#syncPill b").textContent=synced?"SYNCED":"FALLBACK";
  $("#stateSource").textContent=synced?"SYNCED":"LOCAL";$("#activitySource").textContent=synced?"SYNCED":"LOCAL";
- renderOps();renderAgents();renderActivity();renderWork();renderTraining();renderSignals();renderCandidate();
+ renderWorld();renderOps();renderAgents();renderActivity();renderWork();renderTraining();renderSignals();renderCandidate();
  $("#updatedLabel").textContent="Updated "+new Date().toLocaleString("th-TH");
 }
 boot();
