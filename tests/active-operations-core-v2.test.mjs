@@ -34,7 +34,7 @@ for(const a of agents){
 const html=fs.readFileSync(root+'active-operations.html','utf8');
 for(const token of [
   'active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix',
-  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList'
+  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES'
 ]){
   if(!html.includes(token)) errors.push('html missing '+token);
 }
