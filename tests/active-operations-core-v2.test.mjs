@@ -31,6 +31,15 @@ const js=fs.readFileSync(root+'active-operations-v2.js','utf8');
 for(const token of ['core-agent-roster-v2.json','agis-pirate-armada1/data/','jobs.json','schedule.json','training.json','renderOps','renderAgents','renderWork','renderTraining','renderSignals','renderCandidate']){
   if(!js.includes(token)) errors.push('js missing '+token);
 }
+/* runtime-selector-contract */
+if(js.includes('$("[data-agent]").forEach')) errors.push('multi-agent selector incorrectly uses single-element helper');
+if(js.includes('const cards=$(".learning-cards article")')) errors.push('learning card collection incorrectly uses single-element helper');
+if(!js.includes('$("[data-agent]").forEach')) errors.push('agent multi-selector contract missing');
+if(!js.includes('const cards=$(".learning-cards article")')) errors.push('learning card multi-selector contract missing');
+for(const token of ['Read Context Before Work','Stop / Escalation Rules']){
+  if(!js.includes(token)) errors.push('agent profile missing '+token);
+}
+
 if(errors.length){
   console.error('AGIS ACTIVE OPERATIONS CORE V2 FAILED');
   errors.forEach(e=>console.error('-',e));
@@ -38,13 +47,3 @@ if(errors.length){
 }
 console.log('AGIS ACTIVE OPERATIONS CORE V2 PASS');
 console.log(JSON.stringify({agents:agents.length,codenames:[...codenames]},null,2));
-
-
-/* runtime-selector-contract */
-if(js.includes('$("[data-agent]").forEach')) errors.push('multi-agent selector incorrectly uses single-element helper');
-if(js.includes('const cards=$(".learning-cards article")')) errors.push('learning card collection incorrectly uses single-element helper');
-if(!js.includes('$$("[data-agent]").forEach')) errors.push('agent multi-selector contract missing');
-if(!js.includes('const cards=$$(".learning-cards article")')) errors.push('learning card multi-selector contract missing');
-for(const token of ['Read Context Before Work','Stop / Escalation Rules']){
-  if(!js.includes(token)) errors.push('agent profile missing '+token);
-}
