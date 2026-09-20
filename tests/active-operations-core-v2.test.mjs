@@ -51,7 +51,7 @@ if(fs.existsSync('pixel-character-engine.js') && fs.readFileSync('pixel-characte
 const html=fs.readFileSync(root+'active-operations.html','utf8');
 for(const token of [
   'active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix',
-  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js'
+  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js','READY = patrol/available','BLOCKED = waits at Blocker Bay'
 ]){
   if(!html.includes(token)) errors.push('html missing '+token);
 }
