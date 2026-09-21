@@ -43,6 +43,9 @@ jobs:
           .github/workflows/agis-rpg-operations.yml
           .github/workflows/build-staging-sql.yml
           '
+          pixellab_write_workflows='
+          .github/workflows/pixellab-core12.yml
+          '
 
           is_listed() {
             printf '%s\n' "$1" | grep -Fxq "$2"
@@ -68,6 +71,16 @@ jobs:
             # GitHub-hosted validation artifacts are allowed only in these explicit workflows.
             if is_listed "$artifact_workflows" "$f"; then
               sed -i -E '/uses:[[:space:]]*actions\/upload-artifact@v4/d' "$tmp"
+            fi
+
+            # PixelLab generation may write only generated visual assets back to this repository.
+            # The exception is valid only for the manual owner-only workflow using the named secret and generator.
+            if is_listed "$pixellab_write_workflows" "$f"; then
+              if ! grep -q 'workflow_dispatch:' "$f" || ! grep -q 'PIXELLAB_API_KEY' "$f" || ! grep -q 'scripts/pixellab-core12.mjs' "$f" || ! grep -q 'git push' "$f"; then
+                echo "::error file=$f::PixelLab write exception requires manual dispatch, named secret, generator and explicit git push"
+                fail=1
+              fi
+              sed -i -E '/^[[:space:]]*contents:[[:space:]]*write[[:space:]]*$/d' "$tmp"
             fi
 
             # CI may curl only the local test container. External curl remains blocked.
