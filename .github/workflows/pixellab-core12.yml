@@ -1,0 +1,102 @@
+name: Generate PixelLab Core 12 Agents
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "Generate one pilot or all Core Agents"
+        required: true
+        type: choice
+        default: all
+        options:
+          - all
+          - ATLAS
+          - ORACLE
+          - SCOUT
+          - ECHO
+          - FORGE
+          - AETHER
+          - MAKER
+          - SENTINEL
+          - AEGIS
+          - NEXUS
+          - VECTOR
+          - MENTOR
+      confirm:
+        description: "Type GENERATE-CORE12 to spend PixelLab credits"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pixellab-core12-generation
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    if: github.actor == 'anuchit1tube168-cmd' && inputs.confirm == 'GENERATE-CORE12'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout owner repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate PixelLab integration contract
+        run: node scripts/pixellab-contract.mjs
+
+      - name: Check secret presence without printing it
+        shell: bash
+        env:
+          PIXELLAB_API_KEY: ${{ secrets.PIXELLAB_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PIXELLAB_API_KEY:-}" ]; then
+            echo "::error::Missing repository secret PIXELLAB_API_KEY"
+            exit 1
+          fi
+          echo "PIXELLAB_API_KEY is configured."
+
+      - name: Show generation plan
+        run: node scripts/pixellab-core12.mjs plan --scope=${{ inputs.scope }}
+
+      - name: Generate PixelLab managed characters
+        env:
+          PIXELLAB_API_KEY: ${{ secrets.PIXELLAB_API_KEY }}
+        run: node scripts/pixellab-core12.mjs generate --scope=${{ inputs.scope }}
+
+      - name: Index PixelLab exports
+        run: node scripts/pixellab-index-assets.mjs
+
+      - name: Verify generated visual assets
+        run: node scripts/pixellab-verify-assets.mjs --scope=${{ inputs.scope }}
+
+      - name: Mirror public PixelLab assets for root Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf assets/pixellab/core12
+          mkdir -p assets/pixellab/core12
+          cp -R agis-agent-armada-os/apps/command-center-v3/assets/pixellab/core12/. assets/pixellab/core12/
+
+      - name: Commit generated visual assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "agis-pixellab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          find agis-agent-armada-os/apps/command-center-v3/assets/pixellab/core12 assets/pixellab/core12 -type f \\(
+            -name '*.png' -o -name 'manifest.json' -o -name 'result.json' -o -name '*layout*.json' \\) -print0 | xargs -0 -r git add
+          if git diff --cached --quiet; then
+            echo "No generated asset changes to commit."
+            exit 0
+          fi
+          git commit -m "Generate PixelLab Core 12 visual assets (${{ inputs.scope }})"
+          git push
