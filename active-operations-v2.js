@@ -1,7 +1,8 @@
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 const LOCAL_ROSTER="./core-agent-roster-v2.json";
+const PIXELLAB_MANIFEST="./assets/pixellab/core12/manifest.json";
 const REMOTE_BASE="https://anuchit1tube168-cmd.github.io/agis-pirate-armada1/data/";
-let DATA={roster:[],state:[],activity:[],signals:[],candidates:null,jobs:[],schedule:[],training:[]};
+let DATA={roster:[],state:[],activity:[],signals:[],candidates:null,jobs:[],schedule:[],training:[],pixellab:{agents:[]}};
 
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 async function getJSON(url){const r=await fetch(url+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
@@ -54,10 +55,10 @@ function renderWorld(){
      const el=document.createElement("button");
      el.className="world-character";
      el.dataset.agent=a.id;
-     el.innerHTML='<canvas width="64" height="64"></canvas><span class="char-name"></span><small class="char-task"></small><i class="char-bubble"></i>';
+     el.innerHTML='<canvas width="64" height="64"></canvas><img class="pixellab-avatar" alt="" hidden><span class="char-name"></span><small class="char-task"></small><i class="char-bubble"></i>';
      host.appendChild(el);
      const start=[12+(index%4)*24,18+Math.floor(index/4)*25];
-     actor={el,canvas:el.querySelector("canvas"),x:start[0],y:start[1],tx:start[0],ty:start[1],frame:0,nextWander:0,state:"READY"};
+     actor={el,canvas:el.querySelector("canvas"),img:el.querySelector(".pixellab-avatar"),x:start[0],y:start[1],tx:start[0],ty:start[1],frame:0,nextWander:0,state:"READY",asset:null,lastAssetSrc:""};
      WORLD.actors.set(a.id,actor);
      el.onclick=()=>openAgent(a.id);
    }
@@ -72,7 +73,14 @@ function renderWorld(){
      actor.tx=Math.max(7,Math.min(93,anchor[0]+off[0]));
      actor.ty=Math.max(10,Math.min(89,anchor[1]+off[1]));
    }
-   actor.state=a.status;actor.agent=a;actor.el.style.setProperty("--agent",a.color);
+   actor.state=a.status;actor.agent=a;actor.asset=pixellabAssetFor(a.id);actor.el.style.setProperty("--agent",a.color);
+   if(actor.asset?.preview){
+     actor.img.hidden=false;actor.canvas.hidden=true;
+     if(!actor.lastAssetSrc){actor.img.src=actor.asset.preview;actor.lastAssetSrc=actor.asset.preview}
+     actor.el.classList.add("pixellab-character");
+   }else{
+     actor.img.hidden=true;actor.canvas.hidden=false;actor.el.classList.remove("pixellab-character");
+   }
    actor.el.className="world-character "+statusClass(a.status);
    actor.el.querySelector(".char-name").textContent=a.codename;
    actor.el.querySelector(".char-task").textContent=(a.currentJob||a.status).slice(0,42);
@@ -94,14 +102,31 @@ function startWorldLoop(){
        }
        actor.el.style.left=actor.x+"%";actor.el.style.top=actor.y+"%";
        const mode=moving?"walk":["WORKING","REVIEW","LEARNING"].includes(actor.state)?"action":"idle";
-       const spec=CORE_PIXEL_SPECS[actor.agent.id]||CORE_PIXEL_SPECS["AG-001"];
-       window.AGIS_PIXEL_STUDIO.drawCharacter(actor.canvas,spec,{mode,frame:actor.frame++%4});
+       if(actor.asset?.preview){
+         const dir=directionFor(dx,dy);
+         const src=actor.asset.directions?.[dir]||actor.asset.preview;
+         if(src&&src!==actor.lastAssetSrc){actor.img.src=src;actor.lastAssetSrc=src}
+         actor.el.classList.toggle("pixel-working",!moving&&["WORKING","REVIEW","LEARNING"].includes(actor.state));
+       }else{
+         const spec=CORE_PIXEL_SPECS[actor.agent.id]||CORE_PIXEL_SPECS["AG-001"];
+         window.AGIS_PIXEL_STUDIO.drawCharacter(actor.canvas,spec,{mode,frame:actor.frame++%4});
+       }
        actor.el.classList.toggle("walking",moving);
      }
    }
    WORLD.raf=requestAnimationFrame(tick);
  };
  WORLD.raf=requestAnimationFrame(tick);
+}
+
+function pixellabAssetFor(id){
+  return (DATA.pixellab?.agents||[]).find(x=>x.agentId===id&&x.preview)||null;
+}
+function directionFor(dx,dy){
+  if(Math.abs(dx)<.2&&Math.abs(dy)<.2)return "south";
+  const vertical=dy<-.2?"north":dy>.2?"south":"";
+  const horizontal=dx<-.2?"west":dx>.2?"east":"";
+  return vertical&&horizontal?vertical+"-"+horizontal:vertical||horizontal||"south";
 }
 
 function stateFor(id){
@@ -218,6 +243,7 @@ async function boot(){
  try{
    const local=await getJSON(LOCAL_ROSTER);DATA.roster=local.agents||[];
  }catch(e){console.error("Local roster failed",e)}
+ try{DATA.pixellab=await getJSON(PIXELLAB_MANIFEST)}catch{DATA.pixellab={agents:[]}}
  let synced=false;
  try{
    const [state,act,sig,cand,jobs,schedule,training]=await Promise.all([
