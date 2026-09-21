@@ -1,8 +1,9 @@
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 const LOCAL_ROSTER="./core-agent-roster-v2.json";
 const PIXELLAB_MANIFEST="./assets/pixellab/core12/manifest.json";
+const PIXELLAB_SHIP_MANIFEST="./assets/pixellab/ship/manifest.json";
 const REMOTE_BASE="https://anuchit1tube168-cmd.github.io/agis-pirate-armada1/data/";
-let DATA={roster:[],state:[],activity:[],signals:[],candidates:null,jobs:[],schedule:[],training:[],pixellab:{agents:[]}};
+let DATA={roster:[],state:[],activity:[],signals:[],candidates:null,jobs:[],schedule:[],training:[],pixellab:{agents:[]},pixellabShip:null};
 
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 async function getJSON(url){const r=await fetch(url+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
@@ -179,10 +180,23 @@ function startWorldLoop(){
  WORLD.raf=requestAnimationFrame(tick);
 }
 
+function applyPixellabShipArt(){
+  const hull=document.querySelector(".ship-hull");
+  if(!hull)return;
+  const bg=DATA.pixellabShip?.background;
+  if(bg){
+    hull.style.setProperty("--pixellab-ship-bg","url('"+bg.replaceAll("'","%27")+"')");
+    hull.classList.add("pixellab-map-ready");
+  }else{
+    hull.style.removeProperty("--pixellab-ship-bg");
+    hull.classList.remove("pixellab-map-ready");
+  }
+}
 function updatePixellabStatus(){
   const el=$("#pixellabStatus"); if(!el)return;
   const count=(DATA.pixellab?.agents||[]).filter(x=>x.preview).length;
-  el.textContent="PIXELLAB "+count+"/12 • "+(count?"GENERATED":"FALLBACK");
+  const ship=DATA.pixellabShip?.background?"SHIP":"SHIP:FALLBACK";
+  el.textContent="PIXELLAB "+count+"/12 • "+ship;
   el.classList.toggle("ready",count>0);el.classList.toggle("fallback",count===0);
 }
 function pixellabAssetFor(id){
@@ -310,7 +324,8 @@ async function boot(){
    const local=await getJSON(LOCAL_ROSTER);DATA.roster=local.agents||[];
  }catch(e){console.error("Local roster failed",e)}
  try{DATA.pixellab=await getJSON(PIXELLAB_MANIFEST)}catch{DATA.pixellab={agents:[]}}
- updatePixellabStatus();
+ try{DATA.pixellabShip=await getJSON(PIXELLAB_SHIP_MANIFEST)}catch{DATA.pixellabShip=null}
+ updatePixellabStatus();applyPixellabShipArt();
  let synced=false;
  try{
    const [state,act,sig,cand,jobs,schedule,training]=await Promise.all([
