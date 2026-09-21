@@ -1,5 +1,5 @@
 {
-  "version": "PIXELLAB-CORE12-1.0",
+  "version": "PIXELLAB-CORE12-SHIP-1.1",
   "api": "https://api.pixellab.ai/v2",
   "model": "create-character-v3",
   "imageSize": {
@@ -8,7 +8,7 @@
   },
   "view": "low top-down",
   "noBackground": true,
-  "style": "premium near-future AI operations specialist, cohesive 64x64 pixel-art RPG office character, clean readable silhouette, full body, professional techwear, subtle role-specific tool, no text, no logo, no weapon, transparent background",
+  "style": "cohesive professional top-down pixel RPG crew for the AGIS-12 near-future AI command ship, 64x64 low top-down view, crisp 16-bit/32-bit hybrid pixel art, dark navy and graphite shared uniform language, restrained cyan ship lighting, role-specific accent color, clean readable silhouette at gameplay scale, full body, professional executive-techwear, one subtle role tool, consistent proportions and shading across all 12 characters, no text, no logos, no firearms, no fantasy armor, transparent background",
   "agents": [
     {
       "id": "AG-001",
@@ -82,5 +82,7 @@
       "seed": 112,
       "description": "indigo soft-blue learning coach coat, skill-registry tablet and feedback-loop badge, calm mentor"
     }
-  ]
+  ],
+  "shipArtDirection": "AGIS-12 Command Ship — premium operational sci-fi, navy/graphite steel, cyan systems light, compact professional work rooms, management-simulation RPG rather than combat game",
+  "updated": "2026-09-21"
 }
