@@ -82,19 +82,56 @@
             <div><span>LIVE CHARACTER FLOOR</span><b>State-driven movement</b></div>
             <div class="world-tools"><span id="pixellabStatus" class="provider-pill fallback">PIXELLAB 0/12 • FALLBACK</span><div class="world-legend"><i class="working"></i>Working <i class="review"></i>Review <i class="blocked"></i>Blocked <i class="learning"></i>Learning <i class="ready"></i>Ready patrol</div></div>
           </div>
-          <p class="world-truth">Motion follows recorded state: READY = patrol/available, WORKING/REVIEW/LEARNING = active workstation animation, BLOCKED = waits at Blocker Bay.</p><div id="agentWorld" class="agent-world" aria-label="12 Core Agents walking and working">
-            <div class="world-zone command-zone" data-zone="command"><span>COMMAND</span><small>ATLAS</small></div>
-            <div class="world-zone business-zone" data-zone="business"><span>BUSINESS</span><small>ORACLE • ECHO • VECTOR</small></div>
-            <div class="world-zone product-zone" data-zone="product"><span>PRODUCT</span><small>FORGE</small></div>
-            <div class="world-zone intelligence-zone" data-zone="intelligence"><span>INTELLIGENCE</span><small>SCOUT</small></div>
-            <div class="world-zone engineering-zone" data-zone="engineering"><span>ENGINEERING</span><small>AETHER • MAKER • NEXUS</small></div>
-            <div class="world-zone quality-zone" data-zone="quality"><span>QUALITY / REVIEW</span><small>SENTINEL • AEGIS</small></div>
-            <div class="world-zone learning-zone" data-zone="learning"><span>KNOWLEDGE LAB</span><small>MENTOR</small></div>
-            <div class="world-zone blocker-zone" data-zone="blocked"><span>BLOCKER BAY</span><small>WAITING DEPENDENCY</small></div>
-            <div class="world-zone lounge-zone" data-zone="ready"><span>READY BAY</span><small>AVAILABLE</small></div>
+          
+          <p class="world-truth">GAME VISUALIZATION • READY agents perform ambient patrol inside their assigned room; WORKING/REVIEW/LEARNING/BLOCKED still follow recorded operational state.</p>
+          <div id="agentWorld" class="agent-world ship-world" aria-label="AGIS Core 12 pixel command ship">
+            <div class="ship-hull" aria-hidden="true">
+              <div class="ship-nose"></div>
+              <div class="ship-room room-bridge" data-zone="command">
+                <header><span>01</span><b>BRIDGE</b><small>ATLAS</small></header>
+                <div class="console console-wide"></div><div class="chair c1"></div>
+              </div>
+              <div class="ship-room room-strategy" data-zone="business">
+                <header><span>02</span><b>STRATEGY DECK</b><small>ORACLE • ECHO • VECTOR</small></header>
+                <div class="desk d1"></div><div class="desk d2"></div><div class="desk d3"></div>
+              </div>
+              <div class="ship-room room-product" data-zone="product">
+                <header><span>03</span><b>PRODUCT FORGE</b><small>FORGE</small></header>
+                <div class="holo-table"></div><div class="tool-rack"></div>
+              </div>
+              <div class="ship-room room-intel" data-zone="intelligence">
+                <header><span>04</span><b>INTEL BAY</b><small>SCOUT</small></header>
+                <div class="radar-console"></div><div class="screen-wall"></div>
+              </div>
+              <div class="ship-room room-engineering" data-zone="engineering">
+                <header><span>05</span><b>ENGINEERING / REACTOR</b><small>AETHER • MAKER • NEXUS</small></header>
+                <div class="reactor-core"></div><div class="workbench w1"></div><div class="workbench w2"></div><div class="workbench w3"></div>
+              </div>
+              <div class="ship-room room-quality" data-zone="quality">
+                <header><span>06</span><b>QA + SECURITY</b><small>SENTINEL • AEGIS</small></header>
+                <div class="review-desk"></div><div class="security-console"></div>
+              </div>
+              <div class="ship-room room-learning" data-zone="learning">
+                <header><span>07</span><b>KNOWLEDGE LAB</b><small>MENTOR</small></header>
+                <div class="archive-core"></div><div class="book-bank"></div>
+              </div>
+              <div class="ship-room room-blocked" data-zone="blocked">
+                <header><span>08</span><b>DOCK / BLOCKER BAY</b><small>WAITING DEPENDENCY</small></header>
+                <div class="dock-gate"></div>
+              </div>
+              <div class="ship-room room-ready" data-zone="ready">
+                <header><span>09</span><b>CREW HUB</b><small>AVAILABLE / HANDOFF</small></header>
+                <div class="mission-table"></div>
+              </div>
+              <div class="corridor corridor-v"></div>
+              <div class="corridor corridor-h top"></div>
+              <div class="corridor corridor-h bottom"></div>
+              <div class="bulkhead b1"></div><div class="bulkhead b2"></div><div class="bulkhead b3"></div><div class="bulkhead b4"></div>
+              <div class="ship-status-strip"><span>AGIS‑12 COMMAND SHIP</span><b>CORE 12 ONLINE</b><i id="shipStateLabel">STATE-SYNCED</i></div>
+            </div>
             <div id="worldCharacters" class="world-characters"></div>
           </div>
-          <div class="office-divider"><span>DEPARTMENT STATUS CARDS</span></div>
+<div class="office-divider"><span>DEPARTMENT STATUS CARDS</span></div>
           <div id="opsDepartments" class="ops-departments"></div>
           <div class="floor-center">
             <span>AGIS</span><b>MISSION CORE</b><small>Evidence → Action → Learning</small>
