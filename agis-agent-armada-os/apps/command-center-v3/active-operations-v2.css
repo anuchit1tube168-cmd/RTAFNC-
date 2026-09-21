@@ -107,3 +107,4 @@ linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
 .ship-hull.pixellab-map-ready:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(4,12,20,.34),rgba(4,12,20,.34)),var(--pixellab-ship-bg);background-size:cover;background-position:center;image-rendering:pixelated;opacity:.66;z-index:0;pointer-events:none}.ship-hull.pixellab-map-ready>.ship-room,.ship-hull.pixellab-map-ready>.corridor,.ship-hull.pixellab-map-ready>.bulkhead,.ship-hull.pixellab-map-ready>.ship-status-strip,.ship-hull.pixellab-map-ready>.ship-nose{z-index:2}.ship-room,.corridor,.bulkhead,.ship-status-strip,.ship-nose{z-index:1}
 
 /* AGIS-12 GAME RELEASE 3.0 — PIXEL COMMAND SHIP + CORE 12 */
+/* AGIS-12 GAME RELEASE 3.0.1 — CAPABILITY-VALIDATED PIXEL ENGINE */
