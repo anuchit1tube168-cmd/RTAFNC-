@@ -49,3 +49,6 @@ linear-gradient(180deg,#0b1d31,#081625);background-size:auto,30px 30px,30px 30px
 @media(max-width:760px){.agent-world{height:620px}.world-zone{min-width:90px}.world-zone small{display:none}.business-zone{left:2%}.intelligence-zone{right:2%}.engineering-zone{min-width:120px}.quality-zone{min-width:110px;right:4%;bottom:18%}.learning-zone{right:2%;bottom:2%}.blocker-zone{left:36%;bottom:2%}.world-character{width:72px}}
 
 .world-truth{margin:0 0 8px;font-size:7px;line-height:1.45;color:#6f879f}.world-legend .ready{background:#65758b}
+
+/* PixelLab generated Core 12 assets */
+.pixellab-avatar{width:64px;height:64px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 7px 7px rgba(0,0,0,.42));transform-origin:50% 85%}.world-character.pixellab-character.walking .pixellab-avatar{animation:pixellabWalk .42s steps(2,end) infinite}.world-character.pixellab-character.pixel-working .pixellab-avatar{animation:pixellabWork .75s ease-in-out infinite}.state-BLOCKED.pixellab-character .pixellab-avatar{filter:grayscale(.45) drop-shadow(0 7px 7px rgba(0,0,0,.42))}@keyframes pixellabWalk{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-3px) rotate(1deg)}}@keyframes pixellabWork{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px) scale(1.015)}}
