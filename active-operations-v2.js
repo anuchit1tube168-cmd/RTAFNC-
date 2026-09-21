@@ -26,22 +26,75 @@ const CORE_PIXEL_SPECS={
  "AG-011":{id:"vector",name:"VECTOR",primary:"#A855F7",secondary:"#E9D5FF",skin:"#d6a17a",hair:"#24152f",ink:"#100817",accessory:"target",expression:"happy"},
  "AG-012":{id:"mentor",name:"MENTOR",primary:"#6366F1",secondary:"#C7D2FE",skin:"#d9a77e",hair:"#303452",ink:"#0a0d20",accessory:"book",expression:"calm"}
 };
-const WORLD_ANCHORS={
- command:[50,14],business:[18,29],product:[50,31],intelligence:[82,29],engineering:[23,67],
- quality:[70,65],learning:[88,77],blocked:[51,81],ready:[50,52]
+const SHIP_STATIONS={
+ "AG-001":[50,13],
+ "AG-002":[19,25],
+ "AG-003":[82,26],
+ "AG-004":[28,25],
+ "AG-005":[50,31],
+ "AG-006":[18,67],
+ "AG-007":[29,68],
+ "AG-008":[68,68],
+ "AG-009":[78,68],
+ "AG-010":[24,78],
+ "AG-011":[23,35],
+ "AG-012":[87,79]
 };
-const WORLD_DEPT={Command:"command",Business:"business",Product:"product",Intelligence:"intelligence",Engineering:"engineering",Quality:"quality",Learning:"learning"};
+const SHIP_STATE_STATIONS={
+ quality:[73,69],
+ learning:[87,79],
+ blocked:[51,84],
+ ready:[50,49]
+};
+const SHIP_ROOM_BOUNDS={
+ "AG-001":[43,57,8,19],
+ "AG-002":[10,36,20,40],
+ "AG-004":[10,36,20,40],
+ "AG-011":[10,36,20,40],
+ "AG-005":[42,58,24,39],
+ "AG-003":[69,91,20,39],
+ "AG-006":[10,37,61,84],
+ "AG-007":[10,37,61,84],
+ "AG-010":[10,37,61,84],
+ "AG-008":[62,82,61,78],
+ "AG-009":[62,82,61,78],
+ "AG-012":[82,94,69,88]
+};
 let WORLD={actors:new Map(),raf:0,last:0};
-function workZoneFor(a){
- if(a.status==="BLOCKED") return "blocked";
- if(a.status==="REVIEW") return "quality";
- if(a.status==="LEARNING") return "learning";
- if(a.status==="READY") return "ready";
- return WORLD_DEPT[a.department]||"ready";
+function homeStation(a){return SHIP_STATIONS[a.id]||SHIP_STATE_STATIONS.ready}
+function clampToRoom(id,x,y){
+ const b=SHIP_ROOM_BOUNDS[id]; if(!b)return [x,y];
+ return [Math.max(b[0],Math.min(b[1],x)),Math.max(b[2],Math.min(b[3],y))];
+}
+function stateTarget(a){
+ if(a.status==="BLOCKED")return SHIP_STATE_STATIONS.blocked;
+ if(a.status==="REVIEW")return SHIP_STATE_STATIONS.quality;
+ if(a.status==="LEARNING")return SHIP_STATE_STATIONS.learning;
+ return homeStation(a);
 }
 function seededOffset(id){
- const n=[...id].reduce((s,c)=>s+c.charCodeAt(0),0);
- return [((n*17)%13)-6,((n*29)%11)-5];
+ const n=[...id].reduce((sum,c)=>sum+c.charCodeAt(0),0);
+ return [((n*17)%7)-3,((n*29)%5)-2];
+}
+function queueShipRoute(actor,target,forceCorridor=false){
+ const [tx,ty]=target;
+ const dist=Math.hypot(tx-actor.x,ty-actor.y);
+ if(!forceCorridor||dist<18){
+   actor.route=[[tx,ty]];
+   return;
+ }
+ const corridorX=50, corridorY=49;
+ actor.route=[
+   [corridorX,actor.y],
+   [corridorX,corridorY],
+   [corridorX,ty],
+   [tx,ty]
+ ];
+}
+function nextAmbientTarget(a){
+ const home=homeStation(a),off=seededOffset(a.id);
+ const raw=[home[0]+off[0]+(Math.random()*7-3.5),home[1]+off[1]+(Math.random()*5-2.5)];
+ return clampToRoom(a.id,raw[0],raw[1]);
 }
 function renderWorld(){
  const host=$("#worldCharacters"),world=$("#agentWorld");
@@ -58,30 +111,31 @@ function renderWorld(){
      el.innerHTML='<canvas width="64" height="64"></canvas><img class="pixellab-avatar" alt="" hidden><span class="char-name"></span><small class="char-task"></small><i class="char-bubble"></i>';
      host.appendChild(el);
      const start=[12+(index%4)*24,18+Math.floor(index/4)*25];
-     actor={el,canvas:el.querySelector("canvas"),img:el.querySelector(".pixellab-avatar"),x:start[0],y:start[1],tx:start[0],ty:start[1],frame:0,nextWander:0,state:"READY",asset:null,lastAssetSrc:""};
+     const home=SHIP_STATIONS[a.id]||[50,49];
+     actor={el,canvas:el.querySelector("canvas"),img:el.querySelector(".pixellab-avatar"),x:home[0],y:home[1],tx:home[0],ty:home[1],route:[],frame:0,nextWander:0,state:"READY",asset:null,lastAssetSrc:"",lastZone:""};
      WORLD.actors.set(a.id,actor);
      el.onclick=()=>openAgent(a.id);
    }
-   const zone=workZoneFor(a),anchor=WORLD_ANCHORS[zone]||WORLD_ANCHORS.ready,off=seededOffset(a.id);
+   const desired=stateTarget(a);
+   const zone=a.status==="BLOCKED"?"blocked":a.status==="REVIEW"?"quality":a.status==="LEARNING"?"learning":"home";
    if(a.status==="READY"){
-     if(!actor.nextWander||performance.now()>actor.nextWander){
-       actor.tx=Math.max(8,Math.min(92,anchor[0]+off[0]+(Math.random()*10-5)));
-       actor.ty=Math.max(12,Math.min(88,anchor[1]+off[1]+(Math.random()*8-4)));
-       actor.nextWander=performance.now()+5000+Math.random()*5000;
+     if(!actor.nextWander||performance.now()>actor.nextWander||actor.lastZone!=="ready"){
+       queueShipRoute(actor,nextAmbientTarget(a),false);
+       actor.nextWander=performance.now()+3600+Math.random()*4200;
+       actor.lastZone="ready";
      }
-   }else{
-     actor.tx=Math.max(7,Math.min(93,anchor[0]+off[0]));
-     actor.ty=Math.max(10,Math.min(89,anchor[1]+off[1]));
+   }else if(actor.lastZone!==zone||!actor.route?.length){
+     queueShipRoute(actor,desired,actor.lastZone&&actor.lastZone!==zone);
+     actor.lastZone=zone;
    }
    actor.state=a.status;actor.agent=a;actor.asset=pixellabAssetFor(a.id);actor.el.style.setProperty("--agent",a.color);
+   actor.el.className="world-character "+statusClass(a.status)+(actor.asset?.preview?" pixellab-character":"");
    if(actor.asset?.preview){
      actor.img.hidden=false;actor.canvas.hidden=true;
      if(!actor.lastAssetSrc){actor.img.src=actor.asset.preview;actor.lastAssetSrc=actor.asset.preview}
-     actor.el.classList.add("pixellab-character");
    }else{
-     actor.img.hidden=true;actor.canvas.hidden=false;actor.el.classList.remove("pixellab-character");
+     actor.img.hidden=true;actor.canvas.hidden=false;
    }
-   actor.el.className="world-character "+statusClass(a.status);
    actor.el.querySelector(".char-name").textContent=a.codename;
    actor.el.querySelector(".char-task").textContent=(a.currentJob||a.status).slice(0,42);
    actor.el.querySelector(".char-bubble").textContent=a.status==="BLOCKED"?"!":a.status==="REVIEW"?"?":a.status==="LEARNING"?"↻":a.status==="WORKING"?"⚡":"";
@@ -94,11 +148,17 @@ function startWorldLoop(){
    if(t-WORLD.last>110){
      WORLD.last=t;
      for(const actor of WORLD.actors.values()){
+       if(actor.route?.length){
+         const [nx,ny]=actor.route[0];actor.tx=nx;actor.ty=ny;
+       }
        const dx=actor.tx-actor.x,dy=actor.ty-actor.y,dist=Math.hypot(dx,dy);
        const moving=dist>.45;
        if(moving){
-         const step=Math.min(1.55,dist);
+         const step=Math.min(1.2,dist);
          actor.x+=dx/dist*step;actor.y+=dy/dist*step;
+       }else if(actor.route?.length){
+         actor.x=actor.tx;actor.y=actor.ty;actor.route.shift();
+         if(actor.route.length){actor.tx=actor.route[0][0];actor.ty=actor.route[0][1]}
        }
        actor.el.style.left=actor.x+"%";actor.el.style.top=actor.y+"%";
        const mode=moving?"walk":["WORKING","REVIEW","LEARNING"].includes(actor.state)?"action":"idle";
@@ -269,7 +329,7 @@ async function boot(){
    DATA.signals=[];DATA.jobs=[];DATA.schedule=[];DATA.training=[];DATA.candidates={latestDecision:{newAgentNeeded:false,reason:"No local candidate is justified.",route:"Use Core Agents first."}};
  }
  $("#syncPill").classList.add(synced?"synced":"fallback");$("#syncPill b").textContent=synced?"SYNCED":"FALLBACK";
- $("#stateSource").textContent=synced?"SYNCED":"LOCAL";$("#activitySource").textContent=synced?"SYNCED":"LOCAL";
+ $("#stateSource").textContent=synced?"SYNCED":"LOCAL";$("#activitySource").textContent=synced?"SYNCED":"LOCAL"; const ship=$("#shipStateLabel"); if(ship)ship.textContent=synced?"STATE-SYNCED":"LOCAL-FALLBACK";
  renderWorld();renderOps();renderAgents();renderActivity();renderWork();renderTraining();renderSignals();renderCandidate();
  $("#updatedLabel").textContent="Updated "+new Date().toLocaleString("th-TH");
 }
