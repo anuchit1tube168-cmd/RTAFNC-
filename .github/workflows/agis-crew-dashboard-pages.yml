@@ -75,7 +75,7 @@ jobs:
 
           engine = (root/'pixel-character-engine.js').read_text(encoding='utf-8')
           engine_required = [
-            "version:'1.1.0'", 'AGIS_PIXEL_STUDIO', 'downloadSpriteSheet',
+            'AGIS_PIXEL_STUDIO', 'drawCharacter', 'downloadSpriteSheet', 'crew:Object.freeze',
             "id:'agis'", "id:'fable'", "id:'navigator'", "id:'archaeologist'",
             "id:'shipwright'", "id:'doctor'", "id:'swordsman'", "id:'cook'",
             "id:'sniper'", "id:'clone'"
