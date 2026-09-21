@@ -1,26 +1,39 @@
 {
   "application": "AGIS Active Operations",
-  "version": "2.2.0-living-core12",
+  "version": "3.0.1-pixel-command-ship",
   "architecture": "quality-first-core-agents",
   "agents": 12,
   "source_of_truth": "core-agent-roster-v2.json",
   "live_state_sync": "agis-pirate-armada1/data",
   "production_write": false,
   "legacy_preserved": "captain-console-v6.html",
-  "updated": "2026-09-20",
+  "updated": "2026-09-21",
   "features": [
-    "12 animated pixel Core Agents",
-    "state-driven walk/idle/action behavior",
-    "department work zones + blocker bay + ready bay + knowledge lab",
-    "clickable moving Agent profiles",
-    "department status cards",
-    "work matrix with active/queued/blocked jobs",
-    "agent read-context and stop/escalation rules",
-    "evidence gate / definition of done",
-    "canonical handoff routes",
-    "Scout/R&D/Agent Factory sync",
-    "root/deployed mirror contract including pixel engine"
+    "AGIS-12 top-down pixel command ship",
+    "nine interactive work rooms and corridors",
+    "12 dedicated Agent home stations and ambient routes",
+    "state-driven routing to QA/Knowledge/Blocker zones",
+    "professional Core 12 fallback pixel silhouettes",
+    "PixelLab Core 12 character pipeline",
+    "PixelLab ship background pipeline",
+    "PixelLab asset auto-load with local engine fallback",
+    "work matrix, evidence gate and canonical handoffs",
+    "root/deployed mirror protection"
   ],
   "deployment_owner": ".github/workflows/agis-crew-dashboard-pages.yml",
-  "pages_conflict_fix": "LIFF Pages workflow no longer triggers on all tests/**; limited to tests/static-contract.test.mjs"
+  "pages_conflict_fix": "LIFF Pages workflow no longer triggers on all tests/**; limited to tests/static-contract.test.mjs",
+  "pixelLab": {
+    "characterEndpoint": "/v2/create-character-v3",
+    "shipEndpoint": "/v2/create-image-pixen",
+    "secret": "PIXELLAB_API_KEY",
+    "generationStatus": "READY_AFTER_SECRET",
+    "fallback": "AGIS_PIXEL_STUDIO + CSS command ship"
+  },
+  "evidence": {
+    "coreContract": "35583605308",
+    "pixelLabContract": "35583605429",
+    "deploy": "35583605496",
+    "pages": "35583604446",
+    "ci": "35583605420"
+  }
 }
