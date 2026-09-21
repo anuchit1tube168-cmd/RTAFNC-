@@ -45,6 +45,7 @@ jobs:
           '
           pixellab_write_workflows='
           .github/workflows/pixellab-core12.yml
+          .github/workflows/pixellab-ship.yml
           '
 
           is_listed() {
@@ -76,7 +77,7 @@ jobs:
             # PixelLab generation may write only generated visual assets back to this repository.
             # The exception is valid only for the manual owner-only workflow using the named secret and generator.
             if is_listed "$pixellab_write_workflows" "$f"; then
-              if ! grep -q 'workflow_dispatch:' "$f" || ! grep -q 'PIXELLAB_API_KEY' "$f" || ! grep -q 'scripts/pixellab-core12.mjs' "$f" || ! grep -q 'git push' "$f"; then
+              if ! grep -q 'workflow_dispatch:' "$f" || ! grep -q 'PIXELLAB_API_KEY' "$f" || ! grep -q 'git push' "$f" || ! grep -qE 'scripts/pixellab-(core12|ship)\.mjs' "$f"; then
                 echo "::error file=$f::PixelLab write exception requires manual dispatch, named secret, generator and explicit git push"
                 fail=1
               fi
