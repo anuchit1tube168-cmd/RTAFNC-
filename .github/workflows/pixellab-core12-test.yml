@@ -1,0 +1,33 @@
+name: PixelLab Core 12 Integration Test
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'integrations/pixellab/**'
+      - 'scripts/pixellab-*.mjs'
+      - '.github/workflows/pixellab-core12.yml'
+      - '.github/workflows/pixellab-core12-test.yml'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations-v2.js'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations-v2.css'
+  pull_request:
+    paths:
+      - 'integrations/pixellab/**'
+      - 'scripts/pixellab-*.mjs'
+      - '.github/workflows/pixellab-core12.yml'
+      - 'agis-agent-armada-os/apps/command-center-v3/active-operations-v2.js'
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --check scripts/pixellab-core12.mjs
+      - run: node --check scripts/pixellab-index-assets.mjs
+      - run: node --check scripts/pixellab-verify-assets.mjs
+      - run: node scripts/pixellab-contract.mjs
