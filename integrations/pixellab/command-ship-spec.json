@@ -1,0 +1,10 @@
+{
+  "version": "PIXELLAB-AGIS12-SHIP-1.0",
+  "endpoint": "/create-image-pixen",
+  "seed": 712,
+  "image_size": {
+    "width": 512,
+    "height": 384
+  },
+  "description": "Top-down pixel art interior of a premium near-future AI command ship for a management RPG. Symmetrical dark navy spacecraft hull with clearly separated rooms connected by central corridors: bridge at top center, strategy deck upper left, product forge upper center, intelligence radar bay upper right, engineering and glowing reactor lower left, quality and security review room lower right-center, knowledge archive laboratory far lower right, small blocker dock lower center, central crew mission hub. Professional 16-bit/32-bit hybrid pixel game art, crisp grid-aligned walls and floors, readable room boundaries, blue steel and graphite palette with restrained cyan lighting, subtle warm workstation lights, high detail but uncluttered, no characters, no text, no logos, no UI labels, straight top-down low perspective suitable as a game map background."
+}
