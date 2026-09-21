@@ -85,41 +85,47 @@
           
           <p class="world-truth">GAME VISUALIZATION • READY agents perform ambient patrol inside their assigned room; WORKING/REVIEW/LEARNING/BLOCKED still follow recorded operational state.</p>
           <div id="agentWorld" class="agent-world ship-world" aria-label="AGIS Core 12 pixel command ship">
+            <aside class="ship-hud" aria-label="Ship tactical HUD">
+              <div class="ship-hud-head"><div><span>AGIS‑12 TACTICAL HUD</span><b id="hudShipState">CORE 12</b></div><button id="hudReset" type="button">ALL ROOMS</button></div>
+              <div id="shipMinimap" class="ship-minimap" aria-label="Command ship minimap"></div>
+              <div class="ship-hud-section"><span>ROOM STATUS</span><div id="roomStatusList" class="room-status-list"></div></div>
+              <div id="shipSelection" class="ship-selection"><span>SELECTED</span><b>ไม่มีการเลือก</b><small>คลิกห้องหรือตัว Agent เพื่อดูรายละเอียด</small></div>
+            </aside>
             <div class="ship-hull" aria-hidden="true">
               <div class="ship-nose"></div>
-              <div class="ship-room room-bridge" data-zone="command">
+              <div class="ship-room room-bridge" data-zone="command" tabindex="0" role="button" aria-label="command room">
                 <header><span>01</span><b>BRIDGE</b><small>ATLAS</small></header>
                 <div class="console console-wide"></div><div class="chair c1"></div>
               </div>
-              <div class="ship-room room-strategy" data-zone="business">
+              <div class="ship-room room-strategy" data-zone="business" tabindex="0" role="button" aria-label="business room">
                 <header><span>02</span><b>STRATEGY DECK</b><small>ORACLE • ECHO • VECTOR</small></header>
                 <div class="desk d1"></div><div class="desk d2"></div><div class="desk d3"></div>
               </div>
-              <div class="ship-room room-product" data-zone="product">
+              <div class="ship-room room-product" data-zone="product" tabindex="0" role="button" aria-label="product room">
                 <header><span>03</span><b>PRODUCT FORGE</b><small>FORGE</small></header>
                 <div class="holo-table"></div><div class="tool-rack"></div>
               </div>
-              <div class="ship-room room-intel" data-zone="intelligence">
+              <div class="ship-room room-intel" data-zone="intelligence" tabindex="0" role="button" aria-label="intelligence room">
                 <header><span>04</span><b>INTEL BAY</b><small>SCOUT</small></header>
                 <div class="radar-console"></div><div class="screen-wall"></div>
               </div>
-              <div class="ship-room room-engineering" data-zone="engineering">
+              <div class="ship-room room-engineering" data-zone="engineering" tabindex="0" role="button" aria-label="engineering room">
                 <header><span>05</span><b>ENGINEERING / REACTOR</b><small>AETHER • MAKER • NEXUS</small></header>
                 <div class="reactor-core"></div><div class="workbench w1"></div><div class="workbench w2"></div><div class="workbench w3"></div>
               </div>
-              <div class="ship-room room-quality" data-zone="quality">
+              <div class="ship-room room-quality" data-zone="quality" tabindex="0" role="button" aria-label="quality room" tabindex="0" role="button" aria-label="quality room">
                 <header><span>06</span><b>QA + SECURITY</b><small>SENTINEL • AEGIS</small></header>
                 <div class="review-desk"></div><div class="security-console"></div>
               </div>
-              <div class="ship-room room-learning" data-zone="learning">
+              <div class="ship-room room-learning" data-zone="learning" tabindex="0" role="button" aria-label="learning room" tabindex="0" role="button" aria-label="learning room">
                 <header><span>07</span><b>KNOWLEDGE LAB</b><small>MENTOR</small></header>
                 <div class="archive-core"></div><div class="book-bank"></div>
               </div>
-              <div class="ship-room room-blocked" data-zone="blocked">
+              <div class="ship-room room-blocked" data-zone="blocked" tabindex="0" role="button" aria-label="blocked room" tabindex="0" role="button" aria-label="blocked room">
                 <header><span>08</span><b>DOCK / BLOCKER BAY</b><small>WAITING DEPENDENCY</small></header>
                 <div class="dock-gate"></div>
               </div>
-              <div class="ship-room room-ready" data-zone="ready">
+              <div class="ship-room room-ready" data-zone="ready" tabindex="0" role="button" aria-label="ready room" tabindex="0" role="button" aria-label="ready room">
                 <header><span>09</span><b>CREW HUB</b><small>AVAILABLE / HANDOFF</small></header>
                 <div class="mission-table"></div>
               </div>
