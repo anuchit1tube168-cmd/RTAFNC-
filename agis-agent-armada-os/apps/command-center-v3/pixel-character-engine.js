@@ -132,6 +132,48 @@
     if (spec.id === 'swordsman') { rect(ctx,cx-12,top+8,4,12,spec.secondary); }
     if (spec.id === 'clone') { rect(ctx,cx-8,top+10,16,8,'rgba(99,230,255,.35)'); }
 
+    // Core 12 role silhouettes — visible even before PixelLab assets are generated.
+    if (spec.id === 'atlas') {
+      rect(ctx,cx-14,top+29,5,5,spec.secondary); rect(ctx,cx+9,top+29,5,5,spec.secondary);
+      rect(ctx,cx-6,top+34,12,3,shade(spec.secondary,.78));
+    }
+    if (spec.id === 'oracle') {
+      rect(ctx,cx-9,top+14,18,5,'rgba(196,181,253,.45)'); rect(ctx,cx-7,top+15,5,2,spec.secondary); rect(ctx,cx+2,top+15,5,2,spec.secondary);
+    }
+    if (spec.id === 'scout') {
+      rect(ctx,cx+8,top+13,5,8,spec.secondary); line(ctx,cx+10,top+12,cx+14,top+8,spec.secondary,1);
+      rect(ctx,cx-14,top+31,4,12,shade(spec.primary,.55));
+    }
+    if (spec.id === 'echo') {
+      rect(ctx,cx-9,top+27,18,3,spec.secondary); rect(ctx,cx-14,top+34,4,4,'#f7bfdc');
+    }
+    if (spec.id === 'forge') {
+      rect(ctx,cx-7,top+35,14,10,shade(spec.secondary,.84)); rect(ctx,cx+8,top+30,2,15,spec.secondary);
+    }
+    if (spec.id === 'aether') {
+      line(ctx,cx-9,top+31,cx+9,top+43,spec.secondary,1); line(ctx,cx+9,top+31,cx-9,top+43,spec.secondary,1);
+      rect(ctx,cx-12,top+29,3,17,shade(spec.primary,.62)); rect(ctx,cx+9,top+29,3,17,shade(spec.primary,.62));
+    }
+    if (spec.id === 'maker') {
+      rect(ctx,cx-11,top+42,22,4,spec.secondary); rect(ctx,cx-8,top+43,4,5,spec.ink); rect(ctx,cx+3,top+43,4,5,spec.ink);
+    }
+    if (spec.id === 'sentinel') {
+      rect(ctx,cx-12,top+28,24,3,spec.secondary); rect(ctx,cx-3,top+31,6,15,shade(spec.secondary,.75));
+    }
+    if (spec.id === 'aegis') {
+      rect(ctx,cx-8,top+12,16,6,'rgba(239,68,68,.35)'); rect(ctx,cx-14,top+32,4,12,spec.secondary);
+    }
+    if (spec.id === 'nexus') {
+      rect(ctx,cx-8,top+13,16,5,'rgba(165,243,252,.38)'); line(ctx,cx-8,top+36,cx+8,top+36,spec.secondary,1);
+      rect(ctx,cx-15,top+33,3,9,shade(spec.secondary,.75));
+    }
+    if (spec.id === 'vector') {
+      rect(ctx,cx-14,top+33,4,12,shade(spec.primary,.58)); line(ctx,cx-8,top+42,cx+8,top+32,spec.secondary,1);
+    }
+    if (spec.id === 'mentor') {
+      rect(ctx,cx-10,top+27,20,4,spec.secondary); rect(ctx,cx-12,top+31,4,15,shade(spec.primary,.60)); rect(ctx,cx+8,top+31,4,15,shade(spec.primary,.60));
+    }
+
     const eyeY = top + 17;
     if (spec.expression === 'happy') {
       line(ctx,cx-6,eyeY,cx-3,eyeY+2,spec.ink,1); line(ctx,cx+3,eyeY+2,cx+6,eyeY,spec.ink,1); line(ctx,cx-2,eyeY+7,cx+2,eyeY+8,spec.ink,1);
@@ -198,7 +240,7 @@
   }
 
   window.AGIS_PIXEL_STUDIO = Object.freeze({
-    version:'1.1.0',
+    version:'1.2.0-core12',
     size:SIZE,
     crew:Object.freeze(crew),
     byId:Object.freeze(byId),
