@@ -11,7 +11,7 @@ for(const a of spec.agents||[]){
   const prompt=[spec.style,a.description,"same visual universe as the other AGIS Core agents; distinctive accent color and role tool; readable at 64x64"].join(". ");
   if(prompt.length>2000)errors.push(a.id+" prompt exceeds documented character description limit");
 }
-for(const file of ["scripts/pixellab-core12.mjs","scripts/pixellab-index-assets.mjs","scripts/pixellab-verify-assets.mjs"]){
+for(const file of ["scripts/pixellab-core12.mjs","scripts/pixellab-index-assets.mjs","scripts/pixellab-verify-assets.mjs","scripts/pixellab-ship.mjs","integrations/pixellab/command-ship-spec.json"]){
   if(!fs.existsSync(file))errors.push("missing "+file);
 }
 const generator=fs.readFileSync("scripts/pixellab-core12.mjs","utf8");
@@ -20,7 +20,7 @@ for(const token of ["PIXELLAB_API_KEY","/create-character-v3","/background-jobs/
 }
 if(/Bearer\s+[A-Za-z0-9-]{20,}/.test(generator))errors.push("possible literal bearer token in generator");
 const app=fs.readFileSync("agis-agent-armada-os/apps/command-center-v3/active-operations-v2.js","utf8");
-for(const token of ["PIXELLAB_MANIFEST","pixellabAssetFor","pixellab-avatar","AGIS_PIXEL_STUDIO"]){
+for(const token of ["PIXELLAB_MANIFEST","PIXELLAB_SHIP_MANIFEST","pixellabAssetFor","applyPixellabShipArt","pixellab-avatar","AGIS_PIXEL_STUDIO"]){
   if(!app.includes(token))errors.push("Active Operations missing PixelLab/fallback contract "+token);
 }
 if(errors.length){console.error("PIXELLAB CORE12 CONTRACT FAILED");errors.forEach(e=>console.error("-",e));process.exit(1)}
