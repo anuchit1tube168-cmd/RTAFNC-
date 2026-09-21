@@ -119,6 +119,12 @@ function startWorldLoop(){
  WORLD.raf=requestAnimationFrame(tick);
 }
 
+function updatePixellabStatus(){
+  const el=$("#pixellabStatus"); if(!el)return;
+  const count=(DATA.pixellab?.agents||[]).filter(x=>x.preview).length;
+  el.textContent="PIXELLAB "+count+"/12 • "+(count?"GENERATED":"FALLBACK");
+  el.classList.toggle("ready",count>0);el.classList.toggle("fallback",count===0);
+}
 function pixellabAssetFor(id){
   return (DATA.pixellab?.agents||[]).find(x=>x.agentId===id&&x.preview)||null;
 }
@@ -244,6 +250,7 @@ async function boot(){
    const local=await getJSON(LOCAL_ROSTER);DATA.roster=local.agents||[];
  }catch(e){console.error("Local roster failed",e)}
  try{DATA.pixellab=await getJSON(PIXELLAB_MANIFEST)}catch{DATA.pixellab={agents:[]}}
+ updatePixellabStatus();
  let synced=false;
  try{
    const [state,act,sig,cand,jobs,schedule,training]=await Promise.all([
