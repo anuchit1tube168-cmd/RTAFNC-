@@ -51,7 +51,7 @@ if(fs.existsSync('pixel-character-engine.js') && fs.readFileSync('pixel-characte
 const html=fs.readFileSync(root+'active-operations.html','utf8');
 for(const token of [
   'active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix',
-  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js','READY = patrol/available','BLOCKED = waits at Blocker Bay'
+  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js','READY = patrol/available','BLOCKED = waits at Blocker Bay','AGIS‑12 COMMAND SHIP','STRATEGY DECK','ENGINEERING / REACTOR','QA + SECURITY'
 ]){
   if(!html.includes(token)) errors.push('html missing '+token);
 }
@@ -59,7 +59,7 @@ for(const token of [
 const js=fs.readFileSync(root+'active-operations-v2.js','utf8');
 for(const token of [
   'core-agent-roster-v2.json','agis-pirate-armada1/data/','jobs.json','schedule.json','training.json',
-  'renderOps','renderAgents','renderWork','renderTraining','renderSignals','renderCandidate','renderWorld','startWorldLoop','CORE_PIXEL_SPECS','WORLD_ANCHORS',
+  'renderOps','renderAgents','renderWork','renderTraining','renderSignals','renderCandidate','renderWorld','startWorldLoop','CORE_PIXEL_SPECS','SHIP_STATIONS','SHIP_ROOM_BOUNDS','queueShipRoute',
   'Read Context Before Work','Stop / Escalation Rules'
 ]){
   if(!js.includes(token)) errors.push('js missing '+token);
