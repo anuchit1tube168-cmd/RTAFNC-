@@ -51,7 +51,7 @@ if(fs.existsSync('pixel-character-engine.js') && fs.readFileSync('pixel-characte
 const html=fs.readFileSync(root+'active-operations.html','utf8');
 for(const token of [
   'active-operations-v2.css','active-operations-v2.js','12 Core Agents','Work Matrix',
-  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js','READY = patrol/available','BLOCKED = waits at Blocker Bay','AGIS‑12 COMMAND SHIP','STRATEGY DECK','ENGINEERING / REACTOR','QA + SECURITY'
+  'Scout','Agent Factory','Legacy v6','opsDepartments','activeJobs','handoffList','EVIDENCE GATE • DEFINITION OF DONE','NO EVIDENCE = NOT DONE','CANONICAL HANDOFF ROUTES','agentWorld','worldCharacters','LIVE CHARACTER FLOOR','pixel-character-engine.js','GAME VISUALIZATION','AGIS‑12 COMMAND SHIP','CREW HUB','DOCK / BLOCKER BAY','AGIS‑12 COMMAND SHIP','STRATEGY DECK','ENGINEERING / REACTOR','QA + SECURITY'
 ]){
   if(!html.includes(token)) errors.push('html missing '+token);
 }
@@ -67,7 +67,7 @@ for(const token of [
 
 const spriteSpecCount=(js.match(/"AG-\d{3}":\{id:/g)||[]).length;
 if(spriteSpecCount!==12) errors.push('expected 12 Core pixel specs, got '+spriteSpecCount);
-for(const token of ['walk','action','BLOCKER BAY','KNOWLEDGE LAB','READY BAY']){
+for(const token of ['walk','action','DOCK / BLOCKER BAY','KNOWLEDGE LAB','CREW HUB']){
   const combined=html+'\n'+js;
   if(!combined.includes(token)) errors.push('living office missing '+token);
 }
