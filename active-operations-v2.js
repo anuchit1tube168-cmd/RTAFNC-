@@ -27,6 +27,17 @@ const CORE_PIXEL_SPECS={
  "AG-011":{id:"vector",name:"VECTOR",primary:"#A855F7",secondary:"#E9D5FF",skin:"#d6a17a",hair:"#24152f",ink:"#100817",accessory:"target",expression:"happy"},
  "AG-012":{id:"mentor",name:"MENTOR",primary:"#6366F1",secondary:"#C7D2FE",skin:"#d9a77e",hair:"#303452",ink:"#0a0d20",accessory:"book",expression:"calm"}
 };
+const ROOM_META={
+ command:{label:"BRIDGE",agents:["AG-001"],mini:[48,5,16,15]},
+ business:{label:"STRATEGY",agents:["AG-002","AG-004","AG-011"],mini:[7,21,29,23]},
+ product:{label:"PRODUCT",agents:["AG-005"],mini:[42,24,17,19]},
+ intelligence:{label:"INTEL",agents:["AG-003"],mini:[69,21,24,23]},
+ engineering:{label:"ENGINEERING",agents:["AG-006","AG-007","AG-010"],mini:[7,60,34,32]},
+ quality:{label:"QA / SECURITY",agents:["AG-008","AG-009"],mini:[62,60,26,29]},
+ learning:{label:"KNOWLEDGE",agents:["AG-012"],mini:[83,68,12,26]},
+ blocked:{label:"BLOCKER DOCK",agents:[],mini:[43,79,15,16]},
+ ready:{label:"CREW HUB",agents:[],mini:[42,45,17,15]}
+};
 const SHIP_STATIONS={
  "AG-001":[50,13],
  "AG-002":[19,25],
@@ -68,23 +79,28 @@ function clampToRoom(id,x,y){
  return [Math.max(b[0],Math.min(b[1],x)),Math.max(b[2],Math.min(b[3],y))];
 }
 function stateTarget(a){
- if(a.status==="BLOCKED")return SHIP_STATE_STATIONS.blocked;
- if(a.status==="REVIEW")return SHIP_STATE_STATIONS.quality;
- if(a.status==="LEARNING")return SHIP_STATE_STATIONS.learning;
- return homeStation(a);
+ const key=a.status==="BLOCKED"?"blocked":a.status==="REVIEW"?"quality":a.status==="LEARNING"?"learning":null;
+ if(!key)return homeStation(a);
+ const base=SHIP_STATE_STATIONS[key],off=seededOffset(a.id);
+ return [base[0]+off[0]*.65,base[1]+off[1]*.65];
 }
 function seededOffset(id){
  const n=[...id].reduce((sum,c)=>sum+c.charCodeAt(0),0);
  return [((n*17)%7)-3,((n*29)%5)-2];
 }
-function queueShipRoute(actor,target,forceCorridor=false){
+function corridorLaneFor(id=""){
+ const n=[...id].reduce((sum,c)=>sum+c.charCodeAt(0),0);
+ return [-2.2,0,2.2][n%3];
+}
+function queueShipRoute(actor,target,forceCorridor=false,id=""){
  const [tx,ty]=target;
  const dist=Math.hypot(tx-actor.x,ty-actor.y);
  if(!forceCorridor||dist<18){
    actor.route=[[tx,ty]];
    return;
  }
- const corridorX=50, corridorY=49;
+ const lane=corridorLaneFor(id||actor.agent?.id||"");
+ const corridorX=50+lane,corridorY=49+lane*.32;
  actor.route=[
    [corridorX,actor.y],
    [corridorX,corridorY],
@@ -96,6 +112,60 @@ function nextAmbientTarget(a){
  const home=homeStation(a),off=seededOffset(a.id);
  const raw=[home[0]+off[0]+(Math.random()*7-3.5),home[1]+off[1]+(Math.random()*5-2.5)];
  return clampToRoom(a.id,raw[0],raw[1]);
+}
+function roomForAgent(a){
+ if(a.status==="BLOCKED")return "blocked";
+ if(a.status==="REVIEW")return "quality";
+ if(a.status==="LEARNING")return "learning";
+ return Object.entries(ROOM_META).find(([,m])=>m.agents.includes(a.id))?.[0]||"ready";
+}
+function statusRank(status){return ({BLOCKED:5,REVIEW:4,WORKING:3,LEARNING:2,READY:1})[status]||0}
+function roomState(agents){
+ if(!agents.length)return "EMPTY";
+ return [...agents].sort((a,b)=>statusRank(b.status)-statusRank(a.status))[0].status;
+}
+function focusShipRoom(key){
+ $$(".ship-room").forEach(r=>r.classList.toggle("room-focus",r.dataset.zone===key));
+ $$(".world-character").forEach(el=>{
+   const a=DATA.roster.map(mergedAgent).find(x=>x.id===el.dataset.agent);
+   el.classList.toggle("dimmed",!!a&&roomForAgent(a)!==key);
+ });
+ const meta=ROOM_META[key]; if(!meta)return;
+ const agents=DATA.roster.map(mergedAgent).filter(a=>roomForAgent(a)===key);
+ const panel=$("#shipSelection");
+ if(panel)panel.innerHTML='<span>ROOM</span><b>'+esc(meta.label)+'</b><small>'+(agents.length?agents.map(a=>esc(a.codename)+" • "+esc(a.status)).join("<br>"):"ไม่มี Agent อยู่ในห้องนี้")+'</small>';
+}
+function clearShipFocus(){
+ $$(".ship-room").forEach(r=>r.classList.remove("room-focus"));
+ $$(".world-character").forEach(el=>el.classList.remove("dimmed"));
+ const panel=$("#shipSelection"); if(panel)panel.innerHTML='<span>SELECTED</span><b>ALL ROOMS</b><small>กำลังแสดง Agent ทั้งลำ</small>';
+}
+function selectAgentHud(a){
+ const panel=$("#shipSelection"); if(!panel||!a)return;
+ panel.innerHTML='<span>AGENT</span><b>'+esc(a.codename)+' • '+esc(a.status)+'</b><small>'+esc(a.currentJob||"Awaiting approved work")+'</small>';
+}
+function renderShipHud(){
+ const live=DATA.roster.map(mergedAgent);
+ const mini=$("#shipMinimap"),list=$("#roomStatusList"); if(!mini||!list)return;
+ mini.innerHTML=Object.entries(ROOM_META).map(([key,m])=>{
+   const agents=live.filter(a=>roomForAgent(a)===key),state=roomState(agents);
+   const [x,y,w,h]=m.mini;
+   return '<button class="mini-room mini-'+state.toLowerCase()+'" data-room="'+key+'" style="left:'+x+'%;top:'+y+'%;width:'+w+'%;height:'+h+'%" title="'+esc(m.label)+'">'+agents.length+'</button>';
+ }).join("");
+ list.innerHTML=Object.entries(ROOM_META).map(([key,m])=>{
+   const agents=live.filter(a=>roomForAgent(a)===key),state=roomState(agents);
+   return '<button class="room-status room-'+state.toLowerCase()+'" data-room="'+key+'"><span>'+esc(m.label)+'</span><b>'+agents.length+'</b><small>'+esc(state)+'</small></button>';
+ }).join("");
+ $$("[data-room]").forEach(el=>el.onclick=e=>{e.stopPropagation();focusShipRoom(el.dataset.room)});
+ $$(".ship-room").forEach(el=>{
+   el.onclick=e=>{e.stopPropagation();focusShipRoom(el.dataset.zone)};
+   el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();focusShipRoom(el.dataset.zone)}};
+ });
+ const reset=$("#hudReset"); if(reset)reset.onclick=clearShipFocus;
+ const label=$("#hudShipState"); if(label){
+   const blocked=live.filter(a=>a.status==="BLOCKED").length,active=live.filter(a=>["WORKING","REVIEW","LEARNING"].includes(a.status)).length;
+   label.textContent=blocked?"ALERT "+blocked+" BLOCKED":"ACTIVE "+active+" • READY "+(live.length-active);
+ }
 }
 function renderWorld(){
  const host=$("#worldCharacters"),world=$("#agentWorld");
@@ -115,18 +185,18 @@ function renderWorld(){
      const home=SHIP_STATIONS[a.id]||[50,49];
      actor={el,canvas:el.querySelector("canvas"),img:el.querySelector(".pixellab-avatar"),x:home[0],y:home[1],tx:home[0],ty:home[1],route:[],frame:0,nextWander:0,state:"READY",asset:null,lastAssetSrc:"",lastZone:""};
      WORLD.actors.set(a.id,actor);
-     el.onclick=()=>openAgent(a.id);
+     el.onclick=()=>{selectAgentHud(a);openAgent(a.id)};
    }
    const desired=stateTarget(a);
    const zone=a.status==="BLOCKED"?"blocked":a.status==="REVIEW"?"quality":a.status==="LEARNING"?"learning":"home";
    if(a.status==="READY"){
      if(!actor.nextWander||performance.now()>actor.nextWander||actor.lastZone!=="ready"){
-       queueShipRoute(actor,nextAmbientTarget(a),false);
+       queueShipRoute(actor,nextAmbientTarget(a),false,a.id);
        actor.nextWander=performance.now()+3600+Math.random()*4200;
        actor.lastZone="ready";
      }
    }else if(actor.lastZone!==zone||!actor.route?.length){
-     queueShipRoute(actor,desired,actor.lastZone&&actor.lastZone!==zone);
+     queueShipRoute(actor,desired,actor.lastZone&&actor.lastZone!==zone,a.id);
      actor.lastZone=zone;
    }
    actor.state=a.status;actor.agent=a;actor.asset=pixellabAssetFor(a.id);actor.el.style.setProperty("--agent",a.color);
@@ -141,7 +211,22 @@ function renderWorld(){
    actor.el.querySelector(".char-task").textContent=(a.currentJob||a.status).slice(0,42);
    actor.el.querySelector(".char-bubble").textContent=a.status==="BLOCKED"?"!":a.status==="REVIEW"?"?":a.status==="LEARNING"?"↻":a.status==="WORKING"?"⚡":"";
  });
+ renderShipHud();
  startWorldLoop();
+}
+function separateActors(actor){
+ for(const other of WORLD.actors.values()){
+   if(other===actor)continue;
+   const dx=actor.x-other.x,dy=actor.y-other.y,d=Math.hypot(dx,dy);
+   if(d>0&&d<3.3){
+     const push=(3.3-d)*.12;
+     actor.x+=dx/d*push;actor.y+=dy/d*push;
+   }else if(d===0){
+     const lane=corridorLaneFor(actor.agent?.id||"");
+     actor.x+=lane>=0?.18:-.18;
+   }
+ }
+ actor.x=Math.max(4,Math.min(96,actor.x));actor.y=Math.max(5,Math.min(94,actor.y));
 }
 function startWorldLoop(){
  if(WORLD.raf)return;
@@ -161,6 +246,7 @@ function startWorldLoop(){
          actor.x=actor.tx;actor.y=actor.ty;actor.route.shift();
          if(actor.route.length){actor.tx=actor.route[0][0];actor.ty=actor.route[0][1]}
        }
+       separateActors(actor);
        actor.el.style.left=actor.x+"%";actor.el.style.top=actor.y+"%";
        const mode=moving?"walk":["WORKING","REVIEW","LEARNING"].includes(actor.state)?"action":"idle";
        if(actor.asset?.preview){
