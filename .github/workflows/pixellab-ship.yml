@@ -1,0 +1,46 @@
+name: Generate PixelLab AGIS-12 Ship Art
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type GENERATE-SHIP to spend PixelLab credits"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  generate-ship:
+    if: github.actor == 'anuchit1tube168-cmd' && inputs.confirm == 'GENERATE-SHIP'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check secret
+        env:
+          PIXELLAB_API_KEY: ${{ secrets.PIXELLAB_API_KEY }}
+        run: |
+          [ -n "${PIXELLAB_API_KEY:-}" ] || { echo '::error::Missing PIXELLAB_API_KEY'; exit 1; }
+      - name: Generate ship background
+        env:
+          PIXELLAB_API_KEY: ${{ secrets.PIXELLAB_API_KEY }}
+        run: node scripts/pixellab-ship.mjs
+      - name: Mirror asset for root Pages
+        run: |
+          rm -rf assets/pixellab/ship
+          mkdir -p assets/pixellab/ship
+          cp -R agis-agent-armada-os/apps/command-center-v3/assets/pixellab/ship/. assets/pixellab/ship/
+      - name: Commit generated ship art
+        run: |
+          git config user.name 'agis-pixellab-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add agis-agent-armada-os/apps/command-center-v3/assets/pixellab/ship assets/pixellab/ship
+          git diff --cached --quiet && exit 0
+          git commit -m 'Generate PixelLab AGIS-12 command ship art'
+          git push
