@@ -1,0 +1,86 @@
+{
+  "version": "PIXELLAB-CORE12-1.0",
+  "api": "https://api.pixellab.ai/v2",
+  "model": "create-character-v3",
+  "imageSize": {
+    "width": 64,
+    "height": 64
+  },
+  "view": "low top-down",
+  "noBackground": true,
+  "style": "premium near-future AI operations specialist, cohesive 64x64 pixel-art RPG office character, clean readable silhouette, full body, professional techwear, subtle role-specific tool, no text, no logo, no weapon, transparent background",
+  "agents": [
+    {
+      "id": "AG-001",
+      "codename": "ATLAS",
+      "seed": 101,
+      "description": "navy executive tactical blazer, electric-blue accents, command tablet and smart earpiece, calm decisive commander"
+    },
+    {
+      "id": "AG-002",
+      "codename": "ORACLE",
+      "seed": 102,
+      "description": "charcoal-violet finance strategist suit, lavender accents, thin smart glasses and compact financial slate, analytical calm"
+    },
+    {
+      "id": "AG-003",
+      "codename": "SCOUT",
+      "seed": 103,
+      "description": "teal graphite research field jacket, signal scanner monocle and evidence tablet, observant intelligence analyst"
+    },
+    {
+      "id": "AG-004",
+      "codename": "ECHO",
+      "seed": 104,
+      "description": "rose graphite smart business wear, subtle sound-wave lapel pin and interview tablet, warm attentive customer researcher"
+    },
+    {
+      "id": "AG-005",
+      "codename": "FORGE",
+      "seed": 105,
+      "description": "burnt-orange cream product lead jacket, digital stylus and workflow slate, pragmatic product designer"
+    },
+    {
+      "id": "AG-006",
+      "codename": "AETHER",
+      "seed": 106,
+      "description": "ice-blue graphite systems architect coat, blueprint tablet and holographic grid tool, composed technical architect"
+    },
+    {
+      "id": "AG-007",
+      "codename": "MAKER",
+      "seed": 107,
+      "description": "green black engineer utility jacket, wrist terminal and compact diagnostic tool, focused builder engineer"
+    },
+    {
+      "id": "AG-008",
+      "codename": "SENTINEL",
+      "seed": 108,
+      "description": "black gold quality inspector coat, validation badge and test slate, skeptical evidence reviewer"
+    },
+    {
+      "id": "AG-009",
+      "codename": "AEGIS",
+      "seed": 109,
+      "description": "dark graphite security coat with restrained crimson accents, access-control visor and digital shield device, vigilant security reviewer"
+    },
+    {
+      "id": "AG-010",
+      "codename": "NEXUS",
+      "seed": 110,
+      "description": "cyan graphite integration suit with subtle node-link motif, API tracer tablet and connector tool, calm systems integrator"
+    },
+    {
+      "id": "AG-011",
+      "codename": "VECTOR",
+      "seed": 111,
+      "description": "purple white growth strategist jacket, channel radar tablet and analytics slate, energetic measured-growth specialist"
+    },
+    {
+      "id": "AG-012",
+      "codename": "MENTOR",
+      "seed": 112,
+      "description": "indigo soft-blue learning coach coat, skill-registry tablet and feedback-loop badge, calm mentor"
+    }
+  ]
+}
