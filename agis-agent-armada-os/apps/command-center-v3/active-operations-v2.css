@@ -103,3 +103,5 @@ linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
 .ship-room:has(+ .world-character){filter:none}
 @media(max-width:1100px){.ship-world{height:620px}.ship-room header small{display:none}.world-character{transform:translate(-50%,-50%) scale(.9)}}
 @media(max-width:760px){.ship-world{height:720px;min-width:760px}.floor{overflow-x:auto}.world-toolbar,.world-truth{min-width:760px}.ship-hull{inset:10px}.world-character{transform:translate(-50%,-50%) scale(.82)}}
+
+.ship-hull.pixellab-map-ready:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(4,12,20,.34),rgba(4,12,20,.34)),var(--pixellab-ship-bg);background-size:cover;background-position:center;image-rendering:pixelated;opacity:.66;z-index:0;pointer-events:none}.ship-hull.pixellab-map-ready>.ship-room,.ship-hull.pixellab-map-ready>.corridor,.ship-hull.pixellab-map-ready>.bulkhead,.ship-hull.pixellab-map-ready>.ship-status-strip,.ship-hull.pixellab-map-ready>.ship-nose{z-index:2}.ship-room,.corridor,.bulkhead,.ship-status-strip,.ship-nose{z-index:1}
