@@ -1,6 +1,6 @@
 {
   "application": "AGIS Active Operations",
-  "version": "3.0.1-pixel-command-ship",
+  "version": "3.1.0-tactical-ship-hud",
   "architecture": "quality-first-core-agents",
   "agents": 12,
   "source_of_truth": "core-agent-roster-v2.json",
@@ -10,15 +10,16 @@
   "updated": "2026-09-21",
   "features": [
     "AGIS-12 top-down pixel command ship",
-    "nine interactive work rooms and corridors",
-    "12 dedicated Agent home stations and ambient routes",
+    "tactical HUD + live minimap",
+    "9 clickable room status controls",
+    "room focus and selected-Agent HUD",
+    "3-lane corridor routing",
+    "nearby-Agent collision avoidance",
+    "12 dedicated Agent home stations and ambient room patrol",
     "state-driven routing to QA/Knowledge/Blocker zones",
     "professional Core 12 fallback pixel silhouettes",
-    "PixelLab Core 12 character pipeline",
-    "PixelLab ship background pipeline",
-    "PixelLab asset auto-load with local engine fallback",
-    "work matrix, evidence gate and canonical handoffs",
-    "root/deployed mirror protection"
+    "PixelLab Core 12 character + ship art pipelines with fallback",
+    "work matrix, evidence gate and canonical handoffs"
   ],
   "deployment_owner": ".github/workflows/agis-crew-dashboard-pages.yml",
   "pages_conflict_fix": "LIFF Pages workflow no longer triggers on all tests/**; limited to tests/static-contract.test.mjs",
@@ -30,10 +31,12 @@
     "fallback": "AGIS_PIXEL_STUDIO + CSS command ship"
   },
   "evidence": {
-    "coreContract": "35583605308",
-    "pixelLabContract": "35583605429",
-    "deploy": "35583605496",
-    "pages": "35583604446",
-    "ci": "35583605420"
+    "coreContract": "35584258765",
+    "ci": "35584258574",
+    "pages": "35584257451",
+    "security": "PASS",
+    "quality": "PASS",
+    "credential": "PASS",
+    "ownerGate": "PASS"
   }
 }
