@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="RTAFNC ERP / Company OS — operational ERP for dashboard, stakeholders, projects, finance, documents, personnel, automation and audit.">
+  <title>RTAFNC ERP — Company OS</title>
+  <link rel="icon" href="../icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="erp-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">ERP</div>
+      <div><strong>RTAFNC Company OS</strong><small>One-for-All ERP</small></div>
+    </div>
+    <nav id="mainNav" class="main-nav" aria-label="เมนูหลัก"></nav>
+    <div class="sidebar-foot">
+      <div class="sync-card"><span class="dot"></span><div><b>Local-first Ready</b><small id="storageMode">Browser Storage</small></div></div>
+      <a href="../active-operations.html" class="back-link">← AGIS Operations</a>
+    </div>
+  </aside>
+
+  <div class="content-wrap">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobileMenu">☰</button>
+      <div class="search-box"><span>⌕</span><input id="globalSearch" placeholder="ค้นหา ลูกค้า โครงการ เอกสาร งาน บุคลากร..."></div>
+      <div class="top-actions">
+        <button class="ghost" id="importBtn">Import</button>
+        <button class="ghost" id="exportBtn">Backup JSON</button>
+        <button class="primary" id="quickAddBtn">＋ สร้างรายการ</button>
+        <div class="profile"><div class="avatar">AG</div><span><b>AGIS Admin</b><small>Owner</small></span></div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="page-head">
+        <div><p class="eyebrow" id="pageEyebrow">EXECUTIVE OVERVIEW</p><h1 id="pageTitle">แดชบอร์ดภาพรวม</h1><p id="pageSub">เห็นงาน เงิน คน เอกสาร และความเสี่ยงในหน้าเดียว</p></div>
+        <div class="page-tools"><select id="periodFilter"><option value="month">เดือนนี้</option><option value="quarter">ไตรมาสนี้</option><option value="year">ปีนี้</option></select><button class="ghost" id="refreshBtn">↻ Refresh</button></div>
+      </section>
+
+      <section id="viewRoot"></section>
+    </main>
+  </div>
+</div>
+
+<dialog id="recordDialog">
+  <form method="dialog" class="dialog-card" id="recordForm">
+    <div class="dialog-head"><div><p class="eyebrow">NEW RECORD</p><h2 id="dialogTitle">สร้างรายการ</h2></div><button value="cancel" class="icon-btn">✕</button></div>
+    <div id="dialogFields" class="form-grid"></div>
+    <div class="dialog-actions"><button value="cancel" class="ghost">ยกเลิก</button><button type="button" class="primary" id="saveRecordBtn">บันทึก</button></div>
+  </form>
+</dialog>
+
+<dialog id="detailDialog">
+  <form method="dialog" class="dialog-card detail-card">
+    <div class="dialog-head"><div><p class="eyebrow">RECORD DETAIL</p><h2 id="detailTitle">รายละเอียด</h2></div><button value="cancel" class="icon-btn">✕</button></div>
+    <div id="detailBody"></div>
+  </form>
+</dialog>
+
+<input type="file" id="importFile" accept="application/json" hidden>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
