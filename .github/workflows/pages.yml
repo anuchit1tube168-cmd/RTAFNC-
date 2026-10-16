@@ -6,6 +6,7 @@ on:
     paths:
       - 'apps/liff/**'
       - 'apps/admin/**'
+      - 'apps/rtafnc-one-uat/**'
       - 'supabase/functions/line-auth/**'
       - 'supabase/migrations/**'
       - 'docs/PRODUCTION_GAP_ANALYSIS.md'
@@ -48,14 +49,20 @@ jobs:
           test -s apps/liff/extensions.css
           test -s apps/admin/index.html
           test -s apps/admin/styles.css
+          test -s apps/rtafnc-one-uat/index.html
+          test -s apps/rtafnc-one-uat/uat.json
+          grep -q 'PRODUCTION WRITE OFF' apps/rtafnc-one-uat/index.html
+          grep -q '"production_write": false' apps/rtafnc-one-uat/uat.json
+          grep -q '"contains_operational_pii": false' apps/rtafnc-one-uat/uat.json
 
       - name: Prepare public demo artifact
         run: |
           set -euo pipefail
           rm -rf public
-          mkdir -p public/admin-demo
+          mkdir -p public/admin-demo public/rtafnc-one-uat
           cp -R apps/liff/. public/
           cp -R apps/admin/. public/admin-demo/
+          cp -R apps/rtafnc-one-uat/. public/rtafnc-one-uat/
           touch public/.nojekyll
           cp public/index.html public/404.html
           printf '{"application":"RTAFNC Student LIFF","mode":"demo","commit":"%s","deployed_at":"%s"}\n' \
@@ -66,6 +73,8 @@ jobs:
           test -s public/config.js
           test -s public/admin-demo/index.html
           test -s public/admin-demo/interaction-hotfix.js
+          test -s public/rtafnc-one-uat/index.html
+          test -s public/rtafnc-one-uat/uat.json
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
