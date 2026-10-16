@@ -6,26 +6,37 @@
   "source_company_os_commit": "c3a4a493bd3d0b3b0eef30c4eb63b6ee9b94a0b9",
   "source_metadata_worker_commit": "102383498a42d871dccaef88d90c8a54a89d15fa",
   "source_worker_dryrun_gate_commit": "ea4f02bd77067fcfbb35aa9b9776ed6db2e6517b",
+  "source_line_identity_commit": "71a3af36ab70cfb8bb338686119299dcee0891ba",
   "registered_modules": 20,
   "production_write": false,
   "authoritative_backend_connected": false,
   "contains_operational_pii": false,
   "metadata_worker": {
     "state": "credential-gated",
-    "contract": "read-only metadata",
+    "contract": "read-only metadata plus verification-only identity boundary",
     "endpoints_prepared": [
       "/api/uat/health",
       "/api/uat/modules",
-      "/api/uat/posture"
+      "/api/uat/posture",
+      "POST /api/uat/identity/verify"
     ],
     "typescript": "pass",
     "contract_tests": "pass",
     "security_gates": "pass",
     "wrangler_dry_run": "pass",
     "cloudflare_live_deploy": "not-confirmed",
+    "line_identity": {
+      "server_verification_code": "pass",
+      "raw_token_profile_leak_tests": "pass",
+      "line_channel_configuration": "not-confirmed",
+      "live_verification": "not-confirmed",
+      "session_issuance": false,
+      "role_lookup": false,
+      "authoritative_record_lookup": false
+    },
     "d1_connected": false,
     "queues_connected": false,
     "gas_drive_sheets_connected": false
   },
-  "generated_at": "2026-10-16T20:50:00+07:00"
+  "generated_at": "2026-10-16T21:00:00+07:00"
 }
