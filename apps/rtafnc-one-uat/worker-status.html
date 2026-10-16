@@ -26,18 +26,19 @@
       <div class="row"><span class="key">Token / profile leak tests</span><span class="value pass">PASS</span></div>
       <div class="row"><span class="key">Security / credential gates</span><span class="value pass">PASS</span></div>
       <div class="row"><span class="key">Wrangler 4.44.0 dry-run</span><span class="value pass">PASS</span></div>
-      <div class="row"><span class="key">Cloudflare live deploy</span><span class="value gate">CREDENTIAL GATED</span></div>
+      <div class="row"><span class="key">Cloudflare live deploy</span><span class="value gate">NOT DEPLOYED</span></div>
     </section>
 
     <section class="card">
-      <h2>Safety posture</h2>
+      <h2>Verified gate state</h2>
       <div class="row"><span class="key">Production write</span><span class="value off">OFF</span></div>
       <div class="row"><span class="key">Authoritative backend</span><span class="value off">DISCONNECTED</span></div>
-      <div class="row"><span class="key">LINE channel config</span><span class="value gate">NOT CONFIRMED</span></div>
+      <div class="row"><span class="key">Cloudflare credentials</span><span class="value gate">NOT CONFIGURED</span></div>
+      <div class="row"><span class="key">LINE channel config</span><span class="value gate">NOT CONFIGURED</span></div>
+      <div class="row"><span class="key">Deploy step</span><span class="value gate">SKIPPED · FAIL CLOSED</span></div>
       <div class="row"><span class="key">Service session</span><span class="value off">OFF</span></div>
       <div class="row"><span class="key">Role lookup</span><span class="value off">OFF</span></div>
-      <div class="row"><span class="key">D1 binding</span><span class="value off">NONE</span></div>
-      <div class="row"><span class="key">Queue binding</span><span class="value off">NONE</span></div>
+      <div class="row"><span class="key">D1 / Queue bindings</span><span class="value off">NONE</span></div>
       <div class="row"><span class="key">Operational PII</span><span class="value off">NOT INCLUDED</span></div>
     </section>
   </div>
@@ -51,8 +52,8 @@
     <p>POST identity endpoint รับเฉพาะ raw LINE ID token เพื่อให้ Worker ตรวจสอบกับ LINE Platform ฝั่ง server และตอบกลับเฉพาะสถานะยืนยันแบบ metadata-minimised. POST/PUT/PATCH/DELETE อื่นที่เป็น state-changing path ยังคงถูก block ด้วย <strong>production_write_disabled</strong>.</p>
   </section>
 
-  <div class="notice good"><strong>LINE verification code-ready:</strong> implementation ตรวจ raw ID token ฝั่ง server, re-check issuer/audience/subject/expiration, ใช้ no-store และไม่คืน LINE user ID, display name, email, picture หรือ token กลับ browser. Session issuance และ role lookup ยังปิดอยู่.</div>
-  <div class="notice"><strong>Current live blocker:</strong> ยังไม่มีหลักฐาน Cloudflare Worker deployment และ LINE channel configuration ที่ใช้งานจริง จึงไม่แสดง Worker URL และไม่อ้างว่า LINE login ฝั่ง backend active แล้ว เมื่อ protected configuration พร้อม workflow จะ deploy หลัง validation + Wrangler dry-run เท่านั้น.</div>
+  <div class="notice good"><strong>Code / CI ready:</strong> Worker + LINE verification ผ่าน TypeScript, contract/privacy tests, security gates และ Wrangler dry-run แล้ว. Identity endpoint ไม่คืน LINE user ID, display name, email, picture หรือ token และยังไม่ออก session.</div>
+  <div class="notice"><strong>Protected gate evidence:</strong> workflow run <code>38912155565</code> ตรวจพบ Cloudflare credential gate = <strong>false</strong> และ LINE identity configuration = <strong>false</strong>; ขั้น Deploy จึงถูก skip ตาม fail-closed design. ขั้นถัดไปคือเพิ่มค่าผ่าน GitHub Environment <code>uat</code> แบบ protected แล้วค่อย dispatch workflow บน <code>main</code>. ห้ามใส่ token/secret ใน source, issue, PR หรือ chat.</div>
   <a class="back" href="./">← กลับ Full Company OS UAT</a>
 </main>
 </body>
