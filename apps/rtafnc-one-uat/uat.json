@@ -3,10 +3,29 @@
   "surface": "Full Company OS public UAT shell",
   "mode": "uat-read-only",
   "source_repository": "anuchit1tube168-cmd/rtafnc-one",
-  "source_merge_commit": "c3a4a493bd3d0b3b0eef30c4eb63b6ee9b94a0b9",
+  "source_company_os_commit": "c3a4a493bd3d0b3b0eef30c4eb63b6ee9b94a0b9",
+  "source_metadata_worker_commit": "102383498a42d871dccaef88d90c8a54a89d15fa",
+  "source_worker_dryrun_gate_commit": "ea4f02bd77067fcfbb35aa9b9776ed6db2e6517b",
   "registered_modules": 20,
   "production_write": false,
   "authoritative_backend_connected": false,
   "contains_operational_pii": false,
-  "generated_at": "2026-10-16T08:36:00+07:00"
+  "metadata_worker": {
+    "state": "credential-gated",
+    "contract": "read-only metadata",
+    "endpoints_prepared": [
+      "/api/uat/health",
+      "/api/uat/modules",
+      "/api/uat/posture"
+    ],
+    "typescript": "pass",
+    "contract_tests": "pass",
+    "security_gates": "pass",
+    "wrangler_dry_run": "pass",
+    "cloudflare_live_deploy": "not-confirmed",
+    "d1_connected": false,
+    "queues_connected": false,
+    "gas_drive_sheets_connected": false
+  },
+  "generated_at": "2026-10-16T20:50:00+07:00"
 }
