@@ -1,0 +1,12 @@
+{
+  "application": "RTAFNC ONE",
+  "surface": "Full Company OS public UAT shell",
+  "mode": "uat-read-only",
+  "source_repository": "anuchit1tube168-cmd/rtafnc-one",
+  "source_merge_commit": "c3a4a493bd3d0b3b0eef30c4eb63b6ee9b94a0b9",
+  "registered_modules": 20,
+  "production_write": false,
+  "authoritative_backend_connected": false,
+  "contains_operational_pii": false,
+  "generated_at": "2026-10-16T08:36:00+07:00"
+}
