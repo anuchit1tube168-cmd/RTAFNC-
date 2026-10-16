@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>RTAFNC ONE — Full Company OS UAT</title>
+  <style>
+    :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--sky:#0ea5e9;--bg:#f8fafc;--card:#fff;--ok:#059669;--warn:#d97706;--violet:#7c3aed;--slate:#475569}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,"Noto Sans Thai","Tahoma",system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 10% 0%,#dbeafe 0,#f8fafc 27rem,#fff 58rem);min-height:100vh}
+    a{color:inherit}.wrap{max-width:1240px;margin:auto;padding:24px}.hero{background:#020617;color:#fff;border-radius:32px;padding:34px;box-shadow:0 24px 70px #94a3b855;overflow:hidden;position:relative}.hero:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;background:#0ea5e922;right:-90px;top:-170px}.badges,.nav,.chips{display:flex;gap:8px;flex-wrap:wrap}.badge{border:1px solid #ffffff26;background:#ffffff12;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;letter-spacing:.04em}.badge.sky{color:#bae6fd}.badge.green{color:#a7f3d0}.badge.amber{color:#fde68a}.eyebrow{margin-top:22px;color:#7dd3fc;font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.05;margin:8px 0 14px;max-width:900px}.hero p{max-width:850px;line-height:1.75;color:#cbd5e1;margin:0}.nav{margin-top:24px}.nav a{text-decoration:none;border-radius:14px;padding:11px 15px;background:#fff;color:#0f172a;font-size:13px;font-weight:850}.nav a.secondary{background:#ffffff0e;border:1px solid #ffffff24;color:#fff}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.metric,.panel,.module{background:var(--card);border:1px solid var(--line);box-shadow:0 8px 28px #94a3b81f}.metric{border-radius:20px;padding:17px}.metric b{font-size:30px;display:block;margin-top:5px}.metric small{color:var(--muted)}.section{margin-top:34px;scroll-margin-top:20px}.section h2{font-size:25px;margin:0}.section>.intro{color:var(--muted);line-height:1.7;margin:6px 0 17px}.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.module{border-radius:22px;padding:18px;display:flex;flex-direction:column;min-height:235px}.module .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:#0f172a;color:#fff;font-weight:900}.state{font-size:10px;font-weight:900;border-radius:999px;padding:6px 8px;border:1px solid}.state.active{background:#ecfdf5;color:#047857;border-color:#a7f3d0}.state.staging{background:#eff6ff;color:#0369a1;border-color:#bae6fd}.state.read-only{background:#fffbeb;color:#b45309;border-color:#fde68a}.state.planned{background:#f1f5f9;color:#475569;border-color:#cbd5e1}.module h3{margin:14px 0 3px;font-size:18px}.module .short{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#0284c7;font-weight:900}.module p{font-size:13px;color:#64748b;line-height:1.65;margin:8px 0}.chip{font-size:10px;padding:5px 7px;background:#f1f5f9;color:#475569;border-radius:8px}.authority{margin-top:auto;padding-top:14px;border-top:1px solid #f1f5f9;font-size:11px;color:#64748b}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{border-radius:24px;padding:20px}.panel h3{margin:0 0 9px}.panel p,.panel li{font-size:13px;color:#64748b;line-height:1.75}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.step{background:#f8fafc;border:1px solid #e2e8f0;border-radius:15px;padding:14px;text-align:center;font-size:12px;font-weight:800}.safe{background:#ecfdf5!important;border-color:#a7f3d0!important}.blocked{background:#fffbeb!important;border-color:#fde68a!important}.footer{margin:34px 0 8px;padding:19px;border-top:1px solid #e2e8f0;color:#64748b;font-size:12px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.notice{margin-top:14px;border:1px solid #bae6fd;background:#f0f9ff;color:#075985;padding:14px 16px;border-radius:16px;font-size:13px;line-height:1.65}
+    @media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.modules{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.wrap{padding:14px}.hero{padding:25px}}
+    @media(max-width:580px){.modules,.metrics,.flow{grid-template-columns:1fr}.hero{border-radius:24px}.hero h1{font-size:35px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="badges"><span class="badge sky">RTAFNC ONE</span><span class="badge">FULL COMPANY OS</span><span class="badge green">UAT · READ ONLY</span><span class="badge amber">PRODUCTION WRITE OFF</span></div>
+    <div class="eyebrow">Royal Thai Air Force Nursing College · One-for-All Operations Layer</div>
+    <h1>ศูนย์รวมงานนักเรียน กำลังพล เอกสาร โครงการ งบประมาณ Workflow และ AI</h1>
+    <p>Public UAT shell สำหรับตรวจโครงสร้างและประสบการณ์ใช้งานของ Full Company OS ที่ merge แล้วใน private RTAFNC ONE โดยหน้านี้ไม่เชื่อมข้อมูลนักเรียน/สุขภาพ/กำลังพลจริง ไม่เปิด authoritative write และไม่เผยแพร่ source code จาก private repository</p>
+    <nav class="nav"><a href="#modules">20 Modules</a><a href="#budget" class="secondary">Budget</a><a href="#automation" class="secondary">Automation</a><a href="#audit" class="secondary">Audit</a><a href="#release" class="secondary">Release Gates</a></nav>
+  </header>
+
+  <section class="metrics" aria-label="module summary">
+    <div class="metric"><small>Registered modules</small><b>20</b><small>Full Company OS registry</small></div>
+    <div class="metric"><small>Active</small><b>4</b><small>existing operational routes</small></div>
+    <div class="metric"><small>Staging</small><b>8</b><small>integration / controlled rollout</small></div>
+    <div class="metric"><small>Read only</small><b>7</b><small>authoritative source views</small></div>
+    <div class="metric"><small>Planned</small><b>1</b><small>awaiting implementation</small></div>
+  </section>
+
+  <div class="notice"><strong>UAT boundary:</strong> ตัวเลขและสถานะบนหน้านี้เป็น capability registry เท่านั้น รายละเอียด Budget, Audit actor, Student/HR/Health records และ notification recipients ไม่ถูกส่งมายัง public host นี้</div>
+
+  <section id="modules" class="section">
+    <h2>Module Registry</h2><p class="intro">สถานะตาม RTAFNC ONE main หลัง Full Company OS adoption — ทุก write path ต้องผ่าน RBAC, audit และ owner approval</p>
+    <div id="moduleGrid" class="modules"></div>
+  </section>
+
+  <section id="budget" class="section"><h2>Budget & Finance Operations</h2><p class="intro">แนวคิด finance ถูกปรับให้ตรงบริบทหน่วยงาน: ใช้เฉพาะ requested/approved budget จาก Project Master ใน private runtime ไม่ทำหน้าที่เป็นระบบบัญชีหรือภาษี</p><div class="grid2"><div class="panel"><h3>Private authoritative read model</h3><ul><li>Project portfolio + requested budget</li><li>Approved budget + operational gap</li><li>Deadline / progress / blocker จาก project snapshot</li><li>Missing field แสดง missing — ไม่เดาค่า</li></ul></div><div class="panel"><h3>Public UAT boundary</h3><ul><li>ไม่แสดงยอดเงินจริง</li><li>ไม่มี invoice / tax ledger</li><li>ไม่มี accounting write หรือ sync อัตโนมัติ</li><li>connector ภายนอกต้องผ่าน approval ก่อน</li></ul></div></div></section>
+
+  <section id="automation" class="section"><h2>Automation Control Center</h2><p class="intro">รวมสถานะ workflow, notification, webhook/cron posture และ audit signal โดยไม่สร้าง dispatch bypass</p><div class="flow"><div class="step safe">Submit</div><div class="step">Review</div><div class="step">Approve / Reject</div><div class="step">Notify</div><div class="step safe">Audit</div></div><div class="grid2" style="margin-top:14px"><div class="panel"><h3>Enabled concept</h3><p>Unified queue, idempotency, metadata-only notification health, retry/reason-code signals และ scheduled workflow posture</p></div><div class="panel"><h3>Fail-closed boundary</h3><p>ไม่มี secret, recipient address, raw request payload หรือ production dispatch token อยู่ใน public UAT shell</p></div></div></section>
+
+  <section id="audit" class="section"><h2>Audit & Controlled Reports</h2><p class="intro">private runtime ใช้ append-only <span class="mono">module_audit_events</span> และ <span class="mono">workflow_decisions</span>; public shell แสดงเฉพาะ contract</p><div class="grid2"><div class="panel"><h3>Audit guarantees</h3><ul><li>append-only metadata events</li><li>workflow decisions แยกจาก request payload</li><li>actor references อยู่ฝั่ง protected runtime</li><li>ไม่มี health/contact detail ใน dashboard public</li></ul></div><div class="panel"><h3>Controlled export</h3><p>Export ยังเป็น <strong>REVIEW GATED</strong> จนกว่าจะมี column allowlist + role + data classification; UAT public ไม่มีปุ่มดาวน์โหลดข้อมูลจริง</p></div></div></section>
+
+  <section id="release" class="section"><h2>Release Gates</h2><p class="intro">เส้นทางจาก UAT ไป production ต้องผ่าน gate เดิมทั้งหมด</p><div class="flow"><div class="step safe">TypeScript</div><div class="step safe">Unit Tests</div><div class="step safe">Credential Scan</div><div class="step safe">Security Guard</div><div class="step blocked">Owner Approval</div></div><div class="notice"><strong>Current posture:</strong> Clean-room reference mode · Production write OFF · UAT shell contains no operational PII · authoritative backend not connected to this public host.</div></section>
+
+  <footer class="footer"><span>RTAFNC ONE · Full Company OS UAT</span><span>Source merge: <span class="mono">c3a4a493bd3d0b3b0eef30c4eb63b6ee9b94a0b9</span></span><span>Generated: 16 Oct 2026</span></footer>
+</div>
+<script>
+const modules=[
+['students','Student Master','นักเรียน','active','ทะเบียนนักเรียนและมุมมองข้อมูลกลาง ใช้ student_id 7 หลัก','Drive / Sheets + controlled cache',['Student Master','Profile','Academic year','RBAC view']],
+['personnel','Personnel / HRIS','กำลังพล','staging','กำลังพล โครงสร้างบังคับบัญชา อัตรากำลัง คำสั่ง และวงรอบงานบุคคล','Authoritative orders / Drive',['Position map','Command chain','Orders','Workforce gaps']],
+['advisor','Advisor Care','ที่ปรึกษา','staging','นัดหมายอาจารย์ที่ปรึกษา การให้คำปรึกษา และการติดตามแบบควบคุมสิทธิ์','Advisor workflow records',['Booking','Approval','Follow-up','Sensitive-note boundary']],
+['health','Health Operations','สุขภาพ','read-only','รายงานสุขภาพแบบ metadata-minimised ไม่แสดงข้อมูลอ่อนไหวข้ามสิทธิ์','Authorised health records',['Daily status','Year separation','Trend metadata','Report handoff']],
+['documents','Document & Correspondence','สารบรรณ','active','หนังสือเข้า-ออก เจ้าของงาน due date และการติดตามเอกสาร','Drive / Sheets / controlled workflow',['Incoming','Outgoing','Owner','Due date','Audit']],
+['good-deeds','Good Deeds','ความดี','staging','ชั่วโมงความดี หลักฐาน การอนุมัติ และสถานะสะสมรายบุคคล','Good Deeds records',['Submission','Evidence','Approval','Hours summary']],
+['booking','Smart Resource Booking','จองทรัพยากร','planned','ห้องประชุม ยานพาหนะ ครุภัณฑ์ และทรัพยากรร่วมพร้อม approval flow','Booking service datastore',['Calendar','Conflict check','Approval','Borrow / return']],
+['supplies','Supplies & Assets','พัสดุ','staging','ภาพรวมครุภัณฑ์ พัสดุ สถานะทรัพย์สิน และงานเบิก-คืน','Governance supplies records',['Asset status','Issue / return','Evidence','Audit trail']],
+['projects','Projects & Work','โครงการ','read-only','Project Master + Tracking snapshot สำหรับ status, budget, deadline, progress และ blocker','Project Master + Tracking projection',['Portfolio','Deadline','Progress','Blocker','Budget']],
+['workflow','Workflow & Approvals','อนุมัติ','active','คิวรวม submit → review → approve/reject → close พร้อม RBAC และ audit','Control-plane workflow state',['Unified queue','Review handoff','RBAC','Audit','Idempotency']],
+['notifications','Notification Health','แจ้งเตือน','read-only','สุขภาพ LINE/Telegram/Email จาก metadata ledger พร้อม failed, blocked, retry','Notification metadata ledger',['Delivery outcomes','Retry signal','Reason codes','Channel health']],
+['ai-command','AI Command Center','AI','staging','AI สำหรับค้นหา สรุป next action และเรียก workflow ภายใต้สิทธิ์','Authorised context only',['Search','Summarise','Next actions','Skill reuse']],
+['relations','Directory & External Relations','เครือข่าย','staging','CRM ถูกปรับเป็น directory/relations โดยไม่รวม Student, HR, Health PII ฐานเดียว','Domain-owned directories only',['Directory','Partners','Contact boundary','Cross-domain links']],
+['opportunities','Proposal & Opportunity Pipeline','ข้อเสนอ','read-only','Deals/quotes ถูกแปลงเป็น pipeline โครงการ ข้อเสนอ และการอนุมัติ','Project source + approval workflow',['Proposal status','Approval stage','Owner','Budget signal']],
+['budget-finance','Budget & Finance Operations','งบประมาณ','read-only','ภาพรวมงบขอ/อนุมัติจากโครงการจริง ไม่ใช่บัญชีหรือภาษี','Project Master approved budget fields',['Requested budget','Approved budget','Gap','Project portfolio']],
+['templates','Template & Procedure Library','แม่แบบ','staging','คลังเอกสาร แบบฟอร์ม ขั้นตอน และ workflow template แบบ versioned','Approved Drive documents',['Templates','Procedures','Version','Owner approval']],
+['automation','Automation Control Center','อัตโนมัติ','read-only','workflow queue, notification health, webhook/cron posture และ audit signals','Workflow + notification + audit metadata',['Workflow health','Notification health','Webhook posture','Cron posture']],
+['audit-reports','Audit & Controlled Reports','ตรวจสอบ','read-only','append-only activity/decision summary และ report coverage พร้อม export gate','Audit + workflow decision ledgers',['Audit health','Decision ledger','Report coverage','Export gate']],
+['portal','Student / Staff Service Portal','พอร์ทัล','active','self-service portal ตามบทบาทสำหรับนักเรียนและกำลังพล','Service catalog + RBAC',['Self-service','Requests','Status','Role-scoped navigation']],
+['worklog-calendar','Calendar & Worklog Boundary','ปฏิทินงาน','staging','ปฏิทินเชื่อมแล้ว ส่วน worklog จะไม่สร้างชั่วโมงจนมี authoritative source','Service events; worklog pending',['Events','Schedule','Worklog contract','No inferred hours']]
+];
+const labels={active:'ACTIVE',staging:'STAGING','read-only':'READ ONLY',planned:'PLANNED'};
+document.getElementById('moduleGrid').innerHTML=modules.map((m,i)=>`<article class="module"><div class="top"><div class="icon">${String(i+1).padStart(2,'0')}</div><span class="state ${m[3]}">${labels[m[3]]}</span></div><div class="short">${m[2]}</div><h3>${m[1]}</h3><p>${m[4]}</p><div class="chips">${m[6].map(c=>`<span class="chip">${c}</span>`).join('')}</div><div class="authority"><strong>Data authority</strong><br>${m[5]}</div></article>`).join('');
+</script>
+</body>
+</html>
