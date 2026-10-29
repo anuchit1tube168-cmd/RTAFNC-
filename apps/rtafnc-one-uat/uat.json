@@ -7,13 +7,16 @@
   "source_metadata_worker_commit": "102383498a42d871dccaef88d90c8a54a89d15fa",
   "source_worker_dryrun_gate_commit": "ea4f02bd77067fcfbb35aa9b9776ed6db2e6517b",
   "source_line_identity_commit": "71a3af36ab70cfb8bb338686119299dcee0891ba",
+  "source_single_core_reconciliation_commit": "a167ba878d85a1dcf651424f023b7973fa5f0683",
   "registered_modules": 20,
   "production_write": false,
   "authoritative_backend_connected": false,
   "contains_operational_pii": false,
   "metadata_worker": {
-    "state": "credential-gated",
-    "contract": "read-only metadata plus verification-only identity boundary",
+    "state": "single-core-staging-held",
+    "contract": "read-only metadata plus verification-only identity boundary through Pages service binding",
+    "required_transport": "Cloudflare Pages staging -> internal RTAFNC_GATEWAY service binding -> Core Worker",
+    "workers_dev_exposure": false,
     "endpoints_prepared": [
       "/api/uat/health",
       "/api/uat/modules",
@@ -24,18 +27,21 @@
     "contract_tests": "pass",
     "security_gates": "pass",
     "wrangler_dry_run": "pass",
-    "cloudflare_live_deploy": "not-deployed",
+    "cloudflare_live_deploy": "held-not-deployed",
     "protected_gate_evidence": {
-      "workflow_run_id": 38912155565,
-      "source_commit": "71a3af36ab70cfb8bb338686119299dcee0891ba",
+      "workflow_run_id": 40885515191,
+      "source_commit": "a167ba878d85a1dcf651424f023b7973fa5f0683",
       "cloudflare_credentials_ready": false,
       "line_identity_configuration_ready": false,
-      "deploy_step": "skipped",
+      "pages_staging_origin_ready": false,
+      "deploy_command_present": false,
+      "remote_deployment": "held-pending-owner-approval-and-service-binding",
       "result": "fail-closed-as-designed"
     },
     "line_identity": {
       "server_verification_code": "pass",
       "raw_token_profile_leak_tests": "pass",
+      "required_internal_transport_marker": "pages-service-binding-v1",
       "line_channel_configuration": "not-configured",
       "live_verification": "not-run",
       "session_issuance": false,
@@ -46,6 +52,7 @@
     "queues_connected": false,
     "gas_drive_sheets_connected": false
   },
-  "next_action": "Configure protected GitHub environment settings for Cloudflare and LINE, then dispatch RTAFNC UAT Worker Read-only on main.",
-  "generated_at": "2026-10-16T21:10:00+07:00"
+  "control_issue": "anuchit1tube168-cmd/rtafnc-one#48",
+  "next_action": "Proceed only through Issue #48: explicit owner approval, verified Cloudflare Pages staging origin, internal RTAFNC_GATEWAY binding, canonical LINE_LOGIN_CHANNEL_ID verification, same-origin E2E, RBAC/privacy negative tests, and rollback rehearsal. Do not deploy a standalone public workers.dev identity Worker.",
+  "generated_at": "2026-10-29T20:50:00+07:00"
 }
