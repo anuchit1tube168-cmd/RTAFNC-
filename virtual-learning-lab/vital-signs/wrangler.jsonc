@@ -8,5 +8,12 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*", "/healthz"]
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rtafnc-campus-uat",
+      "database_id": "1592a12a-3289-468b-950c-32fb5ead3118"
+    }
+  ],
   "observability": { "enabled": true }
 }
