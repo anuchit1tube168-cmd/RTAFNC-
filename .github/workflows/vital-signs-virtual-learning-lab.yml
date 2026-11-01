@@ -1,0 +1,42 @@
+name: Vital Signs Virtual Learning Lab CI
+
+on:
+  pull_request:
+    paths:
+      - 'virtual-learning-lab/vital-signs/**'
+      - '.github/workflows/vital-signs-virtual-learning-lab.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'virtual-learning-lab/vital-signs/**'
+      - '.github/workflows/vital-signs-virtual-learning-lab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: virtual-learning-lab/vital-signs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Type check
+        run: npm run check
+      - name: Production build
+        run: npm run build
+      - name: Verify required contracts
+        run: |
+          test -f dist/client/index.html
+          test -f dist/rtafnc_vital_signs_lab/index.js
+          grep -q "healthz" src/worker.ts
+          grep -q "No Evidence = Not Done" README.md
+          grep -q "React Three Fiber" README.md
+          echo "Virtual Learning Lab validation PASS"
