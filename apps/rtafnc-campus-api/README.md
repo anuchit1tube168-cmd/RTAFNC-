@@ -1,69 +1,73 @@
-# RTAFNC Campus API — Staging Core
+# RTAFNC Campus Core Read API — UAT
 
-Cloudflare Worker + D1 staging backend for the RTAFNC Campus portal.
+Read-only Cloudflare Worker facade for the existing `rtafnc-campus-uat` D1 database.
 
-## Safety posture
+## Current source-of-truth
 
-- Production write: **OFF**
-- Google Drive masters remain source-of-truth during UAT.
-- No Google Drive file IDs, OAuth tokens, service-account keys, LINE secrets, passwords, health data, or student records are committed to GitHub.
-- Health remains a separate domain and is not copied into CORE during this stage.
-- Advisor authorization must use verified staff identity; display-name matching alone is not authorization.
+Google Drive remains authoritative during UAT. Cloudflare D1 is a reconciled runtime/read model, not a replacement source-of-truth.
 
-## Current vertical slice
+Verified UAT posture on 2026-11-01:
 
-`Google Drive masters (read-only) -> verified import/sync -> D1 CORE staging -> read-only Worker API -> portal`
+- Active students: **252** (`Y1=64`, `Y2=64`, `Y3=61`, `Y4=63`).
+- `student_id` is the 7-digit business key.
+- Advisor group mapping: **252 students / 33 groups**, orphan 0.
+- Advisor staff/account authorization: **BLOCKED** until a stable verified staff identifier is available. Name-only authorization is prohibited.
+- Good Deed aggregate profile: **164 deeds / 42 students**, 162 approved, 2 rejected, 592.5 total hours, 42/42 IDs matched to active roster.
+- Good Deed UAT projection copies no names, descriptions, approvers, locations, or images into the aggregate profile.
+- Health migration: **BLOCKED_SEPARATE_APPROVAL**; patient rows are not copied into Campus CORE.
+- Production write: **OFF**.
+- Staff login: **OFF**.
+- Advisor authorization: **OFF**.
+- Legacy auth reuse: **OFF**.
 
-CORE covers:
+## Existing Cloudflare resources
 
-- 7-digit student identity
-- verified staff identity
-- advisor bindings
-- source registry
-- sync audit trail
+The account already contains the D1 database `rtafnc-campus-uat`. The account is currently at its D1 database-count limit, so this project reuses the existing UAT database and does **not** create or delete databases.
 
-Good Deed and Health are registered as known domains but are intentionally not imported into CORE yet.
+The existing `rtafnc-campus` Worker is already bound to that UAT database. This folder is designed for a separate, minimal read facade named `rtafnc-campus-core-read-uat` so the existing Worker does not need to be overwritten.
 
-## Source aliases
+## Safety rules
 
-The database stores logical source keys in public migrations. Real provider references are injected privately during environment setup.
-
-- `DRIVE_STUDENT_MASTER_2569`
-- `DRIVE_HRIS_MASTER_2569`
-- `DRIVE_ADVISOR_MASTER_2569`
-- `DRIVE_GOOD_DEED_2569`
-- `DRIVE_HEALTH_MASTER_2569`
+- Google Drive masters are read-only sources during UAT.
+- No Google Drive URLs/IDs, OAuth tokens, service-account keys, LINE secrets, passwords, health rows, or student records are committed here.
+- Provider references remain private inside the existing D1/source synchronization process.
+- `PRODUCTION_WRITE=false` is enforced in the public example and checked again against `system_config` at runtime.
+- All non-GET requests return `403 production_write_off`.
+- `/api/v1/sources` is disabled by default and, when enabled for controlled UAT, excludes provider references/URLs.
+- No automatic D1 migration directory is configured in Wrangler.
 
 ## Read-only endpoints
 
-- `GET /healthz`
-- `GET /api/v1/sources` — staging-only metadata; no provider references
-- `GET /api/v1/core/summary` — aggregate counts only
+- `GET /healthz` — verifies D1 reachability and fail-closed runtime posture.
+- `GET /api/v1/core/summary` — aggregate student/staff/advisor mapping counts only.
+- `GET /api/v1/good-deed/summary` — aggregate Good Deed profile only; no row-level PII.
+- `GET /api/v1/sources` — non-sensitive source status only; disabled by default.
 
-All non-GET requests return `403 production_write_off`.
+## UAT D1 contract
 
-## D1 schema
-
-`migrations/0001_core.sql` creates:
+The existing UAT database already contains the operational schema. Relevant tables include:
 
 - `source_registry`
+- `system_config`
+- `student_core_staging`
+- `staff_core_staging`
+- `advisor_group_assignments_staging`
+- `advisor_bindings_staging`
+- `integration_gates`
+- `good_deed_source_profile`
 - `sync_runs`
-- `core_students`
-- `core_staff`
-- `advisor_bindings`
-- `audit_events`
 
-`migrations/0002_seed_source_registry.sql` adds logical source aliases without exposing private Drive IDs.
+Files under `migrations/` in this folder are **contract fixtures for CI/disposable local validation only**. They are deliberately not connected to Wrangler migrations and must not be applied over the existing UAT database.
 
-## Staging deployment gate
+## Integration gates
 
-1. Create `rtafnc-campus-core-staging` in Cloudflare D1.
-2. Copy `wrangler.example.jsonc` to a non-public deployment config or inject the real D1 binding through Cloudflare/GitHub environment configuration.
-3. Apply D1 migrations remotely.
-4. Keep `PRODUCTION_WRITE=false`.
-5. Inject provider references privately.
-6. Run the Drive-to-D1 importer in read-only mode.
-7. Reconcile counts/checksums before enabling any protected read route.
-8. Run cross-role RBAC tests before Good Deed or Health integration.
+Current gates intentionally remain conservative:
 
-Production deployment/write is not authorized by this scaffold.
+- CORE student identity: PASS.
+- Advisor group mapping: PASS.
+- Advisor staff identity binding: BLOCKED.
+- HRIS account identity: BLOCKED.
+- Good Deed profile/read adapter: validated aggregate-only read path.
+- Health data migration: BLOCKED pending separate approval, RBAC and migration controls.
+
+Production write is not authorized by this project.
