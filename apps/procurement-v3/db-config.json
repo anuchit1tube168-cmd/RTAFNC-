@@ -8,6 +8,14 @@
     "currency": "THB",
     "productionWrite": false
   },
+  "liveMirror": {
+    "provider": "cloudflare-workers-kv",
+    "namespaceId": "d3f616bdd48144be828255309cb5dcfc",
+    "worker": "rtafnc-procurement-v3-api",
+    "apiEndpoint": "https://rtafnc-procurement-v3-api.anuchit1tube168.workers.dev",
+    "mode": "read-only",
+    "sourceOfTruth": "google-sheets"
+  },
   "tables": [
     "Settings",
     "Users",
@@ -24,8 +32,11 @@
     "AuditLog"
   ],
   "connection": {
-    "mode": "authenticated-backend-required",
-    "apiEndpoint": null,
-    "directBrowserSheetsWrite": false
+    "mode": "worker-api-readonly",
+    "apiEndpoint": "https://rtafnc-procurement-v3-api.anuchit1tube168.workers.dev",
+    "snapshotPath": "/api/v1/snapshot",
+    "healthPath": "/healthz",
+    "directBrowserSheetsWrite": false,
+    "productionWrite": false
   }
 }
