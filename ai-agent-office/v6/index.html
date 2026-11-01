@@ -20,7 +20,36 @@ $('agents').innerHTML=A.map((a,i)=>`<div class="a" data-id="${a.id}" id="r${a.id
 function setPhase(p,t,x){S.phase=p;$('phase').textContent=p;$('ph').textContent=p;$('ct').textContent=t;$('cx').textContent=x;document.querySelectorAll('.step').forEach((e,i)=>e.classList.toggle('on',i<=P.indexOf(p)));lg('CASE → '+p)}
 function go(a,n,g,p){a.goal=g;a.priority=p;if(a.node===n)return false;a.route=path(a.node,n).slice(1);a.state='MOVE';a.anim='Walk';a.target=n;a.replans++;return true}
 function act(a,anim,ms,g,p,done){a.state='ACT';a.anim=anim;a.goal=g;a.priority=p;a.prog=0;a.actEnd=performance.now()+ms;a.done=done;lg(a.name+': '+g)}
-function choose(a){if(S.deteriorated&&!S.treated&&a.id==='medical'){if(a.node!=='R')return['go','R','Rapid response',100];return['act','Treat',4000,'Emergency intervention',100,()=>{S.treated=1;S.deteriorated=0;S.hr=88;S.sp=99;S.q+=30;setPhase('DOCUMENTATION','Documentation','Emergency stabilized; record the encounter.')}]}if(a.id==='dispatch'&&!S.handoff){if(S.phase==='NEW')return['act','Console',1900,'Receive & validate case',85,()=>setPhase('DISPATCHED','Team activation','Dispatch moves to handoff point.')];if(S.phase==='DISPATCHED'){if(a.node!=='H')return['go','H','Move to handoff',88];return['act','Handoff',1700,'Structured handoff',88,()=>{S.handoff=1;S.q+=12;setPhase('TRIAGE','Triage','Triage owns the case and moves bedside.')}}}if(a.id==='triage'&&S.handoff&&!S.triaged){if(a.node!=='L')return['go','L','Navigate bedside',90];return['act','Assess',3000,'Assess patient & vitals',90,()=>{S.triaged=1;S.q+=18;setPhase('TREATMENT','Treatment','Medical Agent takes over clinical care.')}}if(a.id==='medical'&&S.triaged&&!S.treated){if(a.node!=='R')return['go','R','Approach bedside',92];return['act','Treat',3800,'Clinical treatment',92,()=>{S.treated=1;S.hr=86;S.sp=99;S.q+=30;setPhase('DOCUMENTATION','Documentation','Treatment complete; structured note required.')}}if(a.id==='documentation'&&S.treated&&!S.doc){if(a.node!=='DOC')return['go','DOC','Move to documentation station',70];return['act','Type',3000,'Record clinical note',70,()=>{S.doc=1;S.q+=20;setPhase('AUDIT','Audit','Auditor checks safety and completeness.')}}if(a.id==='auditor'&&S.doc&&!S.audit){if(a.node!=='A')return['go','A','Move to QA station',75];return['act','Audit',2800,'Quality review',75,()=>{S.audit=1;S.q+=20;S.closed=1;setPhase('COMPLETED','Complete','Quality gate passed; agents return standby.')}}return null}
+function choose(a){
+ if(S.deteriorated&&!S.treated&&a.id==='medical'){
+  if(a.node!=='R') return ['go','R','Rapid response',100];
+  return ['act','Treat',4000,'Emergency intervention',100,()=>{S.treated=1;S.deteriorated=0;S.hr=88;S.sp=99;S.q+=30;setPhase('DOCUMENTATION','Documentation','Emergency stabilized; record the encounter.')}];
+ }
+ if(a.id==='dispatch'&&!S.handoff){
+  if(S.phase==='NEW') return ['act','Console',1900,'Receive & validate case',85,()=>setPhase('DISPATCHED','Team activation','Dispatch moves to handoff point.')];
+  if(S.phase==='DISPATCHED'){
+   if(a.node!=='H') return ['go','H','Move to handoff',88];
+   return ['act','Handoff',1700,'Structured handoff',88,()=>{S.handoff=1;S.q+=12;setPhase('TRIAGE','Triage','Triage owns the case and moves bedside.')}];
+  }
+ }
+ if(a.id==='triage'&&S.handoff&&!S.triaged){
+  if(a.node!=='L') return ['go','L','Navigate bedside',90];
+  return ['act','Assess',3000,'Assess patient & vitals',90,()=>{S.triaged=1;S.q+=18;setPhase('TREATMENT','Treatment','Medical Agent takes over clinical care.')}];
+ }
+ if(a.id==='medical'&&S.triaged&&!S.treated){
+  if(a.node!=='R') return ['go','R','Approach bedside',92];
+  return ['act','Treat',3800,'Clinical treatment',92,()=>{S.treated=1;S.hr=86;S.sp=99;S.q+=30;setPhase('DOCUMENTATION','Documentation','Treatment complete; structured note required.')}];
+ }
+ if(a.id==='documentation'&&S.treated&&!S.doc){
+  if(a.node!=='DOC') return ['go','DOC','Move to documentation station',70];
+  return ['act','Type',3000,'Record clinical note',70,()=>{S.doc=1;S.q+=20;setPhase('AUDIT','Audit','Auditor checks safety and completeness.')}];
+ }
+ if(a.id==='auditor'&&S.doc&&!S.audit){
+  if(a.node!=='A') return ['go','A','Move to QA station',75];
+  return ['act','Audit',2800,'Quality review',75,()=>{S.audit=1;S.q+=20;S.closed=1;setPhase('COMPLETED','Complete','Quality gate passed; agents return standby.')}];
+ }
+ return null;
+}
 function brain(force=0){if(!S.auto&&!force)return;for(let a of A){if(a.state==='ACT')continue;let q=choose(a);if(!q){if(a.state!=='MOVE'){a.state='IDLE';a.anim='Idle';a.priority=0;a.goal='Standby'}continue}if(q[0]==='go')go(a,q[1],q[2],q[3]);else act(a,q[1],q[2],q[3],q[4],q[5])}ui()}
 function mv(a,dt,now){a.t+=dt;if(a.state==='MOVE'){let n=a.route[0];if(!n){a.node=a.target;a.state='IDLE';brain(1)}else{let [x,z]=nodes[n],dx=x-a.g.position.x,dz=z-a.g.position.z,d=Math.hypot(dx,dz),occ=A.some(o=>o!==a&&Math.hypot(o.g.position.x-x,o.g.position.z-z)<.4);if(occ){a.anim='Idle';if(Math.random()<.01)a.replans++}else if(d<.08){a.g.position.set(x,0,z);a.node=n;a.route.shift()}else{a.anim='Walk';let s=Math.min(d,2*dt);a.g.position.x+=dx/d*s;a.g.position.z+=dz/d*s;let rr=Math.atan2(dx,dz),dr=((rr-a.g.rotation.y+Math.PI*3)%(Math.PI*2))-Math.PI;a.g.rotation.y+=dr*Math.min(1,dt*8)}}}if(a.state==='ACT'){a.prog=Math.max(0,1-(a.actEnd-now)/Math.max(1,(a.actEnd-(a.actEnd-2000))));if(now>=a.actEnd){let d=a.done;a.done=null;a.state='IDLE';a.anim='Idle';d?.();brain(1)}}let w=a.t*9,mv=a.state==='MOVE';a.body.position.y=mv?Math.abs(Math.sin(w))*.035:Math.sin(now*.002)*.01;if(mv){a.ll.rotation.x=Math.sin(w)*.7;a.rl.rotation.x=-Math.sin(w)*.7;a.la.rotation.x=-Math.sin(w)*.45;a.ra.rotation.x=Math.sin(w)*.45}else{a.ll.rotation.x*=.84;a.rl.rotation.x*=.84;a.la.rotation.x*=.84;a.ra.rotation.x*=.84}if(a.state==='ACT'){let t=now*.004;if(['Console','Type'].includes(a.anim)){a.la.rotation.x=-1+Math.sin(t)*.07;a.ra.rotation.x=-1+Math.cos(t)*.07}else if(a.anim==='Handoff'){a.ra.rotation.x=-1.2;a.ra.rotation.z=-.35}else if(a.anim==='Assess'){a.body.rotation.x=.15;a.la.rotation.x=-1.05;a.ra.rotation.x=-.8+Math.sin(t)*.1}else if(a.anim==='Treat'){a.body.rotation.x=.23;a.la.rotation.x=-1.2+Math.sin(t)*.1;a.ra.rotation.x=-1.05+Math.cos(t)*.12}else if(a.anim==='Audit'){a.ra.rotation.x=-.9+Math.sin(t)*.08}}else a.body.rotation.x*=.85;a.ring.material.opacity=a.priority>=90?.5:a.priority?.24:.08}
 function ui(){$('hr').textContent=S.hr;$('bp').textContent=S.bp;$('sp').textContent=S.sp;$('pri').textContent=S.deteriorated?'RED':'NORMAL';let ac=[...A].sort((a,b)=>b.priority-a.priority)[0];$('act').textContent='Active: '+(ac.priority?ac.name:'Standby');$('nav').textContent='Nav: '+(A.some(a=>a.state==='MOVE')?'MOVING':'READY');for(let a of A){$('t'+a.id).textContent=a.goal||'Standby';let b=$('s'+a.id);b.textContent=a.state==='ACT'?a.anim.toUpperCase():a.state;b.className='b '+(a.priority>=95?'alert':a.state==='MOVE'?'move':a.state==='ACT'?'work':'')}let a=sel;$('bn').textContent=a.name;$('bg').textContent=a.goal;$('bs').textContent=a.state;$('ba').textContent=a.anim;$('bpath').textContent=a.route.length;$('bpr').textContent=a.priority;$('br').textContent=a.replans}
