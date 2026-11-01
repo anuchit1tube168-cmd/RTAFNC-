@@ -22,7 +22,7 @@ jobs:
       - name: Check Worker syntax
         run: node --check apps/rtafnc-campus-api/src/index.js
 
-      - name: Validate D1 migrations in memory
+      - name: Validate UAT schema contract in memory
         run: |
           python3 - <<'PY'
           import sqlite3
@@ -35,32 +35,70 @@ jobs:
 
           tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
           required = {
-              'source_registry', 'sync_runs', 'core_students',
-              'core_staff', 'advisor_bindings', 'audit_events'
+              'source_registry', 'system_config', 'student_core_staging',
+              'staff_core_staging', 'advisor_group_assignments_staging',
+              'advisor_bindings_staging', 'integration_gates',
+              'good_deed_source_profile', 'sync_runs'
           }
           missing = required - tables
           if missing:
-              raise SystemExit(f'missing tables: {sorted(missing)}')
+              raise SystemExit(f'missing contract tables: {sorted(missing)}')
 
-          count = db.execute('SELECT COUNT(*) FROM source_registry').fetchone()[0]
-          if count != 5:
-              raise SystemExit(f'expected 5 source aliases, got {count}')
-          print('D1 schema + source registry seed: PASS')
+          obsolete = {'core_students', 'core_staff', 'advisor_bindings'} & tables
+          if obsolete:
+              raise SystemExit(f'obsolete duplicate schema detected: {sorted(obsolete)}')
+
+          cfg = dict(db.execute('SELECT key, value FROM system_config'))
+          expected = {
+              'environment': 'uat',
+              'production_write': 'false',
+              'production_write_enabled': 'false',
+              'source_policy': 'google_drive_master_read_only',
+              'identity_business_key': 'student_id_7_digits',
+              'staff_login_enabled': 'false',
+              'advisor_auth_enabled': 'false',
+              'health_migration_enabled': 'false',
+              'legacy_auth_reuse': 'false',
+              'runtime': 'cloudflare-only',
+          }
+          mismatches = {k: (cfg.get(k), v) for k, v in expected.items() if cfg.get(k) != v}
+          if mismatches:
+              raise SystemExit(f'unsafe/missing UAT defaults: {mismatches}')
+
+          source_count = db.execute('SELECT COUNT(*) FROM source_registry').fetchone()[0]
+          if source_count != 0:
+              raise SystemExit('contract fixture must not seed provider/source registry rows')
+
+          print('UAT schema contract + fail-closed defaults: PASS')
           PY
 
-      - name: Enforce production write OFF
+      - name: Enforce deployment posture
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
 
-          cfg = Path('apps/rtafnc-campus-api/wrangler.example.jsonc').read_text(encoding='utf-8')
-          data = json.loads(cfg)
-          if data.get('vars', {}).get('PRODUCTION_WRITE') != 'false':
-              raise SystemExit('PRODUCTION_WRITE must remain false in staging config')
-          if 'REPLACE_WITH_STAGING_D1_DATABASE_ID' not in cfg:
-              raise SystemExit('example config must not contain a real D1 database id')
-          print('Production write posture: OFF')
+          path = Path('apps/rtafnc-campus-api/wrangler.example.jsonc')
+          cfg_text = path.read_text(encoding='utf-8')
+          data = json.loads(cfg_text)
+          vars_ = data.get('vars', {})
+
+          if vars_.get('ENVIRONMENT') != 'uat':
+              raise SystemExit('example environment must remain uat')
+          if vars_.get('PRODUCTION_WRITE') != 'false':
+              raise SystemExit('PRODUCTION_WRITE must remain false')
+          if vars_.get('EXPOSE_SOURCE_STATUS') != 'false':
+              raise SystemExit('source-status endpoint must remain disabled by default')
+          if 'REPLACE_WITH_EXISTING_UAT_D1_DATABASE_ID' not in cfg_text:
+              raise SystemExit('public example must not contain a real D1 database id')
+          if 'migrations_dir' in cfg_text:
+              raise SystemExit('UAT example must not auto-apply migrations')
+
+          d1 = data.get('d1_databases', [])
+          if len(d1) != 1 or d1[0].get('database_name') != 'rtafnc-campus-uat':
+              raise SystemExit('example must target the existing UAT database name only')
+
+          print('Deployment posture: UAT read-only, migrations disabled')
           PY
 
       - name: Prevent private Drive URLs in public source
@@ -70,9 +108,9 @@ jobs:
             exit 1
           fi
 
-      - name: Basic secret guard
+      - name: Basic secret and provider-id guard
         run: |
-          if grep -R -n -E -- '-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|service_account_key|LINE_CHANNEL_SECRET=' apps/rtafnc-campus-api; then
-            echo 'Possible secret material found.'
+          if grep -R -n -E -- '-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|service_account_key|LINE_CHANNEL_SECRET=|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' apps/rtafnc-campus-api; then
+            echo 'Possible secret or real provider resource ID found.'
             exit 1
           fi
