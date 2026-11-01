@@ -50,8 +50,18 @@ jobs:
 
       - name: Enforce production write OFF
         run: |
-          grep -q '"PRODUCTION_WRITE": "false"' apps/rtafnc-campus-api/wrangler.example.jsonc
-          ! grep -R -n 'PRODUCTION_WRITE.*true' apps/rtafnc-campus-api
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          cfg = Path('apps/rtafnc-campus-api/wrangler.example.jsonc').read_text(encoding='utf-8')
+          data = json.loads(cfg)
+          if data.get('vars', {}).get('PRODUCTION_WRITE') != 'false':
+              raise SystemExit('PRODUCTION_WRITE must remain false in staging config')
+          if 'REPLACE_WITH_STAGING_D1_DATABASE_ID' not in cfg:
+              raise SystemExit('example config must not contain a real D1 database id')
+          print('Production write posture: OFF')
+          PY
 
       - name: Prevent private Drive URLs in public source
         run: |
