@@ -34,7 +34,8 @@ jobs:
         run: npm run build
       - name: Verify required contracts
         run: |
-          test -f dist/index.html
+          test -f dist/client/index.html
+          test -f dist/rtafnc_vital_signs_lab/index.js
           grep -q "healthz" src/worker.ts
           grep -q "No Evidence = Not Done" README.md
           grep -q "React Three Fiber" README.md
