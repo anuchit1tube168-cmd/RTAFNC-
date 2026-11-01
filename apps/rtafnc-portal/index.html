@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0B2A4A" />
+  <meta name="description" content="ต้นแบบเว็บไซต์วิทยาลัยพยาบาลทหารอากาศ — ศูนย์รวมข่าวสาร บริการนักเรียน บุคลากร ระบบสารสนเทศ และงานประกันคุณภาพ" />
+  <title>วิทยาลัยพยาบาลทหารอากาศ | RTAF Nursing College</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">ข้ามไปยังเนื้อหา</a>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="mini-links"><span>วิทยาลัยพยาบาลทหารอากาศ</span><span>กรมแพทย์ทหารอากาศ</span></div>
+      <div class="mini-links"><a href="#contact">ติดต่อเรา</a><button id="contrastBtn" class="text-btn" type="button">โหมดคอนทราสต์</button></div>
+    </div>
+  </header>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="หน้าแรก วิทยาลัยพยาบาลทหารอากาศ">
+        <span class="brand-mark" aria-hidden="true">วพอ.</span>
+        <span class="brand-copy"><strong>วิทยาลัยพยาบาลทหารอากาศ</strong><small>RTAF Nursing College</small></span>
+      </a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mainNav">☰ เมนู</button>
+      <nav class="main-nav" id="mainNav" aria-label="เมนูหลัก">
+        <a href="#home">หน้าแรก</a>
+        <a href="#about">เกี่ยวกับ วพอ.</a>
+        <a href="#people">บุคลากร</a>
+        <a href="#units">หน่วยงานภายใน</a>
+        <a href="#curriculum">หลักสูตร</a>
+        <a href="#staff">สำหรับบุคลากร</a>
+        <a href="#students">สำหรับ นพอ.</a>
+        <a href="#information">สารสนเทศ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="home">
+      <div class="hero-grid container">
+        <div class="hero-copy">
+          <span class="eyebrow">AIR FORCE • NURSING • LEADERSHIP</span>
+          <h1>วิชาการดี จริยธรรมเด่น<br>เน้นวินัย ใฝ่พัฒนา สู่สากล</h1>
+          <p>ศูนย์กลางข้อมูล ข่าวสาร บริการนักเรียนพยาบาล บุคลากร และระบบดิจิทัลของวิทยาลัยพยาบาลทหารอากาศ</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#services">เข้าสู่ระบบบริการ</a>
+            <a class="btn secondary" href="#news">ข่าวและประกาศ</a>
+          </div>
+          <div class="hero-kpis" aria-label="ข้อมูลสรุป">
+            <div><strong>4</strong><span>ชั้นปี</span></div>
+            <div><strong>256</strong><span>นักเรียนตามแผนรับ</span></div>
+            <div><strong>24/7</strong><span>ระบบสารสนเทศ</span></div>
+          </div>
+        </div>
+        <div class="hero-visual" role="img" aria-label="พื้นที่ภาพหลักของวิทยาลัยพยาบาลทหารอากาศ">
+          <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+          <div class="hero-card"><span class="hero-icon">✚</span><strong>RTAFNC Digital Campus</strong><small>Academic • Student Care • Personnel • QA</small></div>
+          <div class="floating-card fc1">ระบบนักเรียนพยาบาล</div>
+          <div class="floating-card fc2">HRIS & e-Saraban</div>
+          <div class="floating-card fc3">Quality Assurance</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-links" id="services" aria-label="ระบบสำคัญ">
+      <div class="container quick-grid">
+        <a href="#students"><span>🎓</span><strong>ระบบ นพอ.</strong><small>บริการนักเรียน</small></a>
+        <a href="#staff"><span>👥</span><strong>ระบบบุคลากร</strong><small>HRIS / งานราชการ</small></a>
+        <a href="#gooddeed"><span>⭐</span><strong>Good Deed</strong><small>บันทึกความดี</small></a>
+        <a href="#health"><span>🩺</span><strong>Health Report</strong><small>ติดตามสุขภาพ</small></a>
+        <a href="#qa"><span>📊</span><strong>ประกันคุณภาพ</strong><small>QA / KPI</small></a>
+        <a href="#documents"><span>🗂️</span><strong>สารบรรณ</strong><small>หนังสือราชการ</small></a>
+      </div>
+    </section>
+
+    <section class="section" id="news">
+      <div class="container split-head"><div><span class="eyebrow dark">RTAFNC UPDATE</span><h2>ข่าวประชาสัมพันธ์</h2></div><button class="link-btn" data-show-all="news">ดูทั้งหมด →</button></div>
+      <div class="container news-grid" id="newsGrid">
+        <article class="news-feature card"><div class="news-thumb thumb-1"><span>ข่าวเด่น</span></div><div class="card-body"><span class="meta">31 ต.ค. 2569 • ข่าวประชาสัมพันธ์</span><h3>เปิดต้นแบบ RTAFNC Digital Portal ศูนย์รวมระบบบริการของวิทยาลัย</h3><p>รวมช่องทางบริการนักเรียน บุคลากร สารสนเทศ และระบบสนับสนุนการบริหารไว้ในหน้าเดียว</p><a href="#services">อ่านรายละเอียด →</a></div></article>
+        <div class="news-list">
+          <article class="news-row card"><div class="date-box"><strong>31</strong><span>ต.ค.</span></div><div><span class="meta">วิชาการ</span><h3>ประกาศตารางเรียนและปฏิทินการศึกษา</h3><p>พื้นที่เชื่อมตารางเรียน กิจกรรม และประกาศสำคัญรายชั้นปี</p></div></article>
+          <article class="news-row card"><div class="date-box"><strong>30</strong><span>ต.ค.</span></div><div><span class="meta">ฝ่ายปกครอง</span><h3>แนวทางการปกครอง วินัย และกิจวัตรนักเรียน</h3><p>รวมระเบียบ คู่มือ และช่องทางแจ้งข่าวจากฝ่ายปกครอง</p></div></article>
+          <article class="news-row card"><div class="date-box"><strong>28</strong><span>ต.ค.</span></div><div><span class="meta">ประกันคุณภาพ</span><h3>ศูนย์ข้อมูล QA และรายงานสารสนเทศ</h3><p>แดชบอร์ดตัวชี้วัด ผลการศึกษา งานวิจัย และหลักฐานประกันคุณภาพ</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="students">
+      <div class="container split-head"><div><span class="eyebrow dark">STUDENT SERVICES</span><h2>บริการสำหรับนักเรียนพยาบาลทหารอากาศ</h2></div><p class="section-note">โครงเดียวกับ “บริการนักเรียน” ของเว็บต้นแบบ แต่เปลี่ยนเป็นระบบของ วพอ.</p></div>
+      <div class="container service-grid">
+        <button class="service-card" data-modal="ผลการเรียน"><span>📘</span><strong>ผลการเรียน</strong><small>ตรวจสอบผลการศึกษาและประวัติรายวิชา</small></button>
+        <button class="service-card" data-modal="ตารางเรียน"><span>🗓️</span><strong>ตารางเรียน/ฝึก</strong><small>ตารางเรียน ตารางฝึก และปฏิทินกิจกรรม</small></button>
+        <button class="service-card" id="gooddeed" data-modal="Good Deed"><span>⭐</span><strong>บันทึกความดี</strong><small>ส่งกิจกรรม ติดตามสถานะ และชั่วโมงสะสม</small></button>
+        <button class="service-card" data-modal="ลา/ออกนอกพื้นที่"><span>📝</span><strong>ลา/ออกนอกพื้นที่</strong><small>คำร้องและการอนุมัติตามสายบังคับบัญชา</small></button>
+        <button class="service-card" id="health" data-modal="Health Report"><span>🩺</span><strong>Health Report</strong><small>รายงานอาการป่วยและการติดตามสุขภาพ</small></button>
+        <button class="service-card" data-modal="เอกสารนักเรียน"><span>📄</span><strong>เอกสารนักเรียน</strong><small>แบบฟอร์ม หนังสือรับรอง และคู่มือ</small></button>
+        <button class="service-card" data-modal="E-Learning"><span>💻</span><strong>E-Learning</strong><small>บทเรียนออนไลน์และสื่อการสอน</small></button>
+        <button class="service-card" data-modal="ระบบดูแลใจ"><span>💙</span><strong>ระบบดูแลใจ</strong><small>ช่องทางช่วยเหลือและส่งต่ออย่างเป็นส่วนตัว</small></button>
+      </div>
+    </section>
+
+    <section class="section" id="staff">
+      <div class="container split-head"><div><span class="eyebrow dark">STAFF SERVICES</span><h2>สำหรับอาจารย์และบุคลากร</h2></div></div>
+      <div class="container feature-grid">
+        <article class="feature-card"><div class="feature-icon">👤</div><h3>HRIS กำลังพล</h3><p>สถานภาพกำลังพล ตำแหน่ง อัตรา การพัฒนา และข้อมูลสำหรับวางแผนบุคลากร</p><a href="#information">เปิดศูนย์สารสนเทศ →</a></article>
+        <article class="feature-card" id="documents"><div class="feature-icon">📨</div><h3>e-Saraban</h3><p>หนังสือเข้า-ออก เลขรับ เลขส่ง QR เอกสารแนบ และติดตามสถานะงาน</p><button data-modal="e-Saraban">เข้าสู่ระบบ →</button></article>
+        <article class="feature-card"><div class="feature-icon">📚</div><h3>คำสั่ง/ระเบียบ/ประชุม</h3><p>คลังคำสั่ง ระเบียบ แบบฟอร์ม และบันทึกการประชุมที่ค้นหาได้</p><button data-modal="คลังเอกสาร">เปิดคลัง →</button></article>
+        <article class="feature-card" id="qa"><div class="feature-icon">✅</div><h3>QA / วิจัย / KPI</h3><p>หลักฐานประกันคุณภาพ ตัวชี้วัด งานวิจัย และแผนพัฒนาคุณภาพ</p><button data-modal="QA Dashboard">เปิดแดชบอร์ด →</button></article>
+      </div>
+    </section>
+
+    <section class="section navy" id="about">
+      <div class="container about-grid">
+        <div><span class="eyebrow">ABOUT RTAFNC</span><h2>องค์กรการศึกษาพยาบาลทหาร<br>ที่เชื่อม “วิชาชีพ” กับ “ภาวะผู้นำ”</h2><p>เว็บไซต์ใหม่นี้ใช้สถาปัตยกรรมข้อมูลแบบ portal-first: ข่าวสารและข้อมูลสาธารณะอยู่ด้านหน้า ระบบที่ต้องยืนยันตัวตนแยกตามบทบาท และข้อมูลอ่อนไหวถูกจำกัดสิทธิ์ตาม RBAC</p><div class="pill-row"><span>Academic</span><span>Military Discipline</span><span>Clinical Excellence</span><span>Digital Campus</span></div></div>
+        <div class="about-card"><h3>ข้อมูลทั่วไป</h3><ul><li>ประวัติวิทยาลัย</li><li>วิสัยทัศน์ / พันธกิจ / ค่านิยม</li><li>โครงสร้างการบริหารและสายบังคับบัญชา</li><li>คณะผู้บริหารและบุคลากร</li><li>แผนที่วิทยาลัยและพื้นที่ฝึก</li></ul></div>
+      </div>
+    </section>
+
+    <section class="section" id="people">
+      <div class="container split-head"><div><span class="eyebrow dark">OUR PEOPLE</span><h2>บุคลากรและสายการบังคับบัญชา</h2></div></div>
+      <div class="container org-grid">
+        <div class="org-card"><span>ผู้บริหาร</span><strong>ผู้อำนวยการวิทยาลัย</strong><small>กำกับนโยบายและการบริหารทั้งหมด</small></div>
+        <div class="org-card"><span>การศึกษา</span><strong>ฝ่ายอำนวยการศึกษา</strong><small>หลักสูตร การเรียนการสอน ประเมินผล</small></div>
+        <div class="org-card"><span>ปกครอง</span><strong>ฝ่ายปกครอง</strong><small>วินัย กิจวัตร การพัฒนานักเรียน</small></div>
+        <div class="org-card"><span>สนับสนุน</span><strong>อำนวยการ / QA / วิจัย</strong><small>กำลังพล ธุรการ การประกันคุณภาพ</small></div>
+      </div>
+    </section>
+
+    <section class="section soft" id="units">
+      <div class="container split-head"><div><span class="eyebrow dark">INTERNAL UNITS</span><h2>หน่วยงานภายใน</h2></div></div>
+      <div class="container unit-grid">
+        <a href="#curriculum">อำนวยการศึกษา <span>→</span></a><a href="#students">ฝ่ายปกครอง <span>→</span></a><a href="#qa">ประกันคุณภาพ <span>→</span></a><a href="#information">สารสนเทศ <span>→</span></a><a href="#staff">กำลังพล <span>→</span></a><a href="#staff">ธุรการ/สารบรรณ <span>→</span></a><a href="#information">วิจัยและนวัตกรรม <span>→</span></a><a href="#contact">อาคาร/สถานที่ <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="section" id="curriculum">
+      <div class="container split-head"><div><span class="eyebrow dark">CURRICULUM</span><h2>หลักสูตรและการฝึก</h2></div></div>
+      <div class="container curriculum-grid">
+        <article class="curr-card"><span class="curr-no">01</span><h3>หลักสูตรพยาบาลศาสตรบัณฑิต</h3><p>โครงสร้างรายวิชา ฝึกปฏิบัติ ผลลัพธ์การเรียนรู้ และข้อมูลการรับนักเรียน</p></article>
+        <article class="curr-card"><span class="curr-no">02</span><h3>การฝึกทหารและภาวะผู้นำ</h3><p>วินัยทหาร แบบธรรมเนียม การฝึกภาคสนาม และการทำงานตามสายบังคับบัญชา</p></article>
+        <article class="curr-card"><span class="curr-no">03</span><h3>การฝึกคลินิกและการแพทย์ฉุกเฉิน</h3><p>การฝึกในแหล่งฝึก การประเมินสมรรถนะ และการบูรณาการสถานการณ์จำลอง</p></article>
+      </div>
+    </section>
+
+    <section class="section soft" id="information">
+      <div class="container split-head"><div><span class="eyebrow dark">INFORMATION CENTER</span><h2>รายงานสารสนเทศ</h2></div><p class="section-note">ออกแบบให้เชื่อม Looker Studio / Google Sheets / D1 / API ได้ภายหลัง</p></div>
+      <div class="container dashboard-grid">
+        <div class="dash-card"><span>นักเรียน</span><strong>256</strong><div class="spark"><i style="height:42%"></i><i style="height:60%"></i><i style="height:58%"></i><i style="height:78%"></i></div><small>จำนวนตามแผน 4 ชั้นปี</small></div>
+        <div class="dash-card"><span>ข่าว/ประกาศ</span><strong>12</strong><div class="ring" style="--p:72"><b>72%</b></div><small>รายการอัปเดตประจำเดือน</small></div>
+        <div class="dash-card"><span>ระบบดิจิทัล</span><strong>8</strong><div class="bars"><i></i><i></i><i></i><i></i><i></i></div><small>บริการหลักใน portal</small></div>
+        <div class="dash-card"><span>ความพร้อมระบบ</span><strong>99.9%</strong><div class="statusline"><i></i><span>Portal prototype</span></div><small>ค่าแสดงตัวอย่างสำหรับ UI</small></div>
+      </div>
+    </section>
+
+    <section class="section" id="campus">
+      <div class="container split-head"><div><span class="eyebrow dark">RTAFNC AROUND CAMPUS</span><h2>รอบรั้ว วพอ.</h2></div><button class="link-btn" data-show-all="campus">ดูทั้งหมด →</button></div>
+      <div class="container campus-grid">
+        <article class="campus-card"><div class="campus-art art-a"></div><span>กิจกรรมวิชาการ</span><h3>การเรียนรู้เชิงสถานการณ์และ Simulation</h3></article>
+        <article class="campus-card"><div class="campus-art art-b"></div><span>กิจกรรมทหาร</span><h3>วินัย ภาวะผู้นำ และการทำงานเป็นทีม</h3></article>
+        <article class="campus-card"><div class="campus-art art-c"></div><span>จิตอาสา</span><h3>บริการสังคมและภารกิจเพื่อส่วนรวม</h3></article>
+      </div>
+    </section>
+
+    <section class="section navy compact" id="contact">
+      <div class="container contact-grid">
+        <div><span class="eyebrow">CONTACT</span><h2>วิทยาลัยพยาบาลทหารอากาศ</h2><p>พื้นที่นี้เตรียมไว้สำหรับที่อยู่ เบอร์โทร อีเมล แผนที่ และช่องทางราชการของวิทยาลัย โดยควรดึงจากข้อมูลทางการล่าสุดก่อนเผยแพร่จริง</p></div>
+        <div class="contact-actions"><a class="btn light" href="mailto:">ส่งอีเมล</a><a class="btn ghost" href="#home">กลับด้านบน ↑</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-grid"><div><strong>RTAF Nursing College</strong><p>ต้นแบบเว็บใหม่แบบ clean-room ที่ได้รับแรงบันดาลใจจากโครงสร้าง portal ของเว็บไซต์สถาบันการศึกษา แต่สร้างโค้ดและอัตลักษณ์ใหม่ทั้งหมดสำหรับ วพอ.</p></div><div><strong>เมนูลัด</strong><a href="#news">ข่าวประชาสัมพันธ์</a><a href="#students">สำหรับ นพอ.</a><a href="#staff">สำหรับบุคลากร</a></div><div><strong>ระบบ</strong><a href="#gooddeed">Good Deed</a><a href="#health">Health Report</a><a href="#qa">Quality Assurance</a></div></div><div class="container footer-bottom"><span>© 2026 RTAFNC Prototype</span><span>Responsive • Accessible • RBAC-ready</span></div></footer>
+
+  <dialog id="serviceDialog"><button class="dialog-close" id="dialogClose" aria-label="ปิด">×</button><span class="eyebrow dark">MODULE PREVIEW</span><h2 id="dialogTitle">ระบบ</h2><p>โมดูลนี้ถูกวางตำแหน่งใน Information Architecture แล้ว ขั้น deploy จริงสามารถเชื่อมไปยังระบบเดิมของ วพอ. หรือ API/LIFF/Google Apps Script ที่ใช้งานอยู่ โดยไม่ต้องเปลี่ยนหน้า portal หลัก</p><div class="dialog-actions"><button class="btn primary" id="dialogOk">รับทราบ</button></div></dialog>
+  <script src="assets/app.js"></script>
+</body>
+</html>
