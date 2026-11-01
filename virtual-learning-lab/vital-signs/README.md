@@ -2,33 +2,7 @@
 
 Interactive 3D Educational Simulation สำหรับนักเรียนพยาบาลทหารอากาศ — บทเรียนแรก **การวัดและประเมินสัญญาณชีพ**
 
-> Status: Phase 1–5 implementation candidate. ห้ามถือว่า Production Ready จนกว่า CI build, browser QA, mobile QA และ Cloudflare `/healthz` deployment จะผ่านจริง
-
-## Learning Outcomes
-
-### Knowledge
-- อธิบายวัตถุประสงค์และการแปลผล Vital Signs ในบริบทผู้ป่วยจำลอง
-- เชื่อมโยง Temperature, BP, Pulse, SpO₂ และ RR กับอาการของผู้ป่วย
-
-### Skills
-- เตรียมผู้ป่วยและอุปกรณ์
-- ใช้ Thermometer, BP cuff, Pulse oximeter และ Stethoscope ตามลำดับที่เหมาะสม
-- บันทึกผลการประเมิน
-
-### Clinical / Professional Reasoning
-- ตรวจพบค่าที่ควรติดตาม
-- เลือก Reassess + Report แทนการละเลยหรือเริ่มการรักษาเกินขอบเขต
-
-### Safety
-- Hand hygiene ก่อนสัมผัสผู้ป่วย
-- ยืนยันตัวผู้ป่วยก่อนหัตถการ
-- บันทึก Critical Error เมื่อข้าม Safety Gate
-
-### Communication
-- สื่อสารกับผู้ป่วยจำลองและรายงานผลตามบทบาท
-
-### Professionalism
-- บันทึกข้อมูลครบถ้วนและไม่สร้างค่าที่ไม่ได้ประเมิน
+Live Worker: `https://rtafnc-vital-signs-lab.anuchit1tube168.workers.dev`
 
 ## Core Learning Loop
 
@@ -38,9 +12,19 @@ Interactive 3D Educational Simulation สำหรับนักเรียน
 
 `Action → State Change → Result → Feedback → Score / Event Log`
 
-## 3D Environment
+## Learning Outcomes
 
-React Three Fiber scene มีพื้น ผนัง เตียง ผู้ป่วย โต๊ะ และวัตถุ Interactive:
+- **Knowledge** — เข้าใจวัตถุประสงค์และการแปลผล Vital Signs ในบริบทจำลอง
+- **Skills** — เตรียมผู้ป่วย/อุปกรณ์และใช้เครื่องมือวัดได้ตามลำดับ
+- **Clinical Reasoning** — ตรวจพบค่าที่ควรติดตามและเลือก reassess/report อย่างเหมาะสม
+- **Safety** — Hand hygiene และ Patient ID ก่อนหัตถการ
+- **Communication** — สื่อสารและรายงานผลตามบทบาท
+- **Professionalism** — บันทึกข้อมูลครบ ไม่สร้างค่าที่ไม่ได้ประเมิน
+
+## Interactive 3D Environment
+
+React Three Fiber scene มีพื้น ผนัง เตียง ผู้ป่วย โต๊ะ แสงและเงา พร้อมวัตถุ:
+
 - Alcohol Hand Rub
 - Patient ID
 - Thermometer
@@ -49,87 +33,91 @@ React Three Fiber scene มีพื้น ผนัง เตียง ผู�
 - Stethoscope
 - Digital Worksheet
 
-ผู้เรียนหมุนกล้อง 360°, Zoom, Pan, เลือก และใช้วัตถุได้
+ผู้เรียนหมุนกล้อง 360°, Zoom, Pan, เลือกและใช้วัตถุได้จริง
 
-## Assessment Domains
-
-- Knowledge
-- Skill
-- Clinical Reasoning
-- Safety
-- Communication
-- Time Management
-- Professionalism
-
-Critical errors ถูกเก็บใน session state และนำไป Debriefing
-
-## Included UX
+## Included Learning Systems
 
 - Interactive Tutorial
 - Start / Pause / Resume / Reset
-- Decision-based branching
-- Immediate feedback
-- Digital Worksheet + autosave
+- Branching Decision Point ที่ให้ผลต่างกัน
+- Immediate Feedback
+- Critical Error tracking
+- 7-domain scoring: Knowledge, Skill, Clinical Reasoning, Safety, Communication, Time Management, Professionalism
+- Digital Worksheet + Local Auto Save
 - 5-question Quiz
 - Student Dashboard
-- Teacher Dashboard (Demo current-session data)
+- Teacher Dashboard
 - Debriefing Timeline vs Recommended Path
 - Responsive desktop/tablet/mobile
 - Reduced-motion support
 
-## Persistence
+## Cloudflare Runtime
 
-### Demo Mode
-Zustand persist → browser localStorage key `rtafnc-vital-signs-lab-v1`
+Stack:
+- React + TypeScript
+- Three.js + React Three Fiber + Drei
+- Zustand
+- Vite + Cloudflare Vite Plugin
+- Cloudflare Workers Static Assets
+- Cloudflare D1
 
-### Cloudflare API
+Endpoints:
 - `GET /healthz`
 - `POST /api/session`
 - `POST /api/events`
 - `GET /api/sessions`
+- `GET /api/teacher/summary`
 
-If D1 is not bound, the Worker returns Demo Local mode without pretending server persistence succeeded.
+Cloudflare production binding:
+- Worker: `rtafnc-vital-signs-lab`
+- D1 binding: `DB`
+- Database: `rtafnc-campus-uat`
+- Virtual Lab tables are isolated under the `vlab_*` namespace.
 
-### D1
-`schema.sql` contains tables for users, courses, lessons, scenarios, sessions, actions, skill_scores, quiz_results, worksheets, reflections, feedback and audit_logs.
+The account D1 quota is currently full, so this Lab reuses the already-existing Virtual Lab schema in `rtafnc-campus-uat`; no unrelated database was deleted.
 
-## Cloudflare
+## Data model
 
-Uses the Cloudflare Vite plugin + Workers Static Assets. `wrangler.jsonc` configures SPA fallback and runs the Worker first for `/api/*` and `/healthz`.
+`schema.sql` mirrors the active `vlab_*` namespace:
+- vlab_users
+- vlab_courses
+- vlab_lessons
+- vlab_scenarios
+- vlab_sessions
+- vlab_actions
+- vlab_skill_scores
+- vlab_quiz_results
+- vlab_worksheets
+- vlab_reflections
+- vlab_feedback
+- vlab_audit_logs
 
-Deployment command after QA:
+## Demo vs Production Security
 
-```bash
-npm install
-npm run build
-npx wrangler d1 create rtafnc-vital-signs-lab-db
-# add the returned D1 database_id binding to wrangler.jsonc
-npx wrangler d1 execute rtafnc-vital-signs-lab-db --file=./schema.sql --remote
-npm run deploy
-```
+Demo mode remains available so the Lab can be tried without login.
 
-## Security / RBAC status
+Important: the Student / Instructor / Admin switch in the current UI is for UX testing only. It is **not production authorization**. Before storing identifiable learner data, production server-side authentication, RBAC and permission tests are still required.
 
-- Demo UI exposes role switch only for UX testing; it is **not** production authorization.
-- Production RBAC must be enforced server-side before real learner data is stored.
-- No secrets are embedded in the frontend.
-- Real learner/health data must not be used in Demo Mode.
+Do not put real learner or health data into Demo Mode.
 
-## Required gates before “Done”
+## Validation evidence
 
-1. `npm run check`
-2. `npm run build`
-3. Desktop functional test
-4. Mobile functional test
-5. Start/Pause/Reset test
-6. Interactive object/action test
-7. Branching decision test
-8. Worksheet autosave + refresh test
-9. Quiz scoring test
-10. Browser refresh / slow-network test
-11. Cloudflare deploy
-12. `/healthz` returns `ok:true`
-13. D1 save/read test
-14. RBAC/permission test with production auth
+Validated during implementation:
+- TypeScript check and production build
+- Cloudflare Workers production build
+- Static asset deployment
+- D1 binding present after deploy
+- D1 read probe (`SELECT 1`) successful
+- Active `vlab_*` schema inspected against Worker write fields
 
-No Evidence = Not Done.
+Remaining gates before calling the full platform Production Ready:
+1. External-browser `/healthz` response verification
+2. Real desktop interaction test
+3. Real mobile Safari/Chrome interaction test
+4. Slow-network / refresh / offline-resume test
+5. Server-side authentication + RBAC
+6. Permission test for Student / Instructor / Admin
+7. Clinical content validation by course SME/instructor
+8. E2E session write/read test through the public Worker endpoint
+
+**No Evidence = Not Done.**
