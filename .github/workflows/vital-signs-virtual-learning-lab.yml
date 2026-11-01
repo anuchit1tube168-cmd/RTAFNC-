@@ -26,8 +26,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: virtual-learning-lab/vital-signs/package.json
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Type check
@@ -41,8 +39,3 @@ jobs:
           grep -q "No Evidence = Not Done" README.md
           grep -q "React Three Fiber" README.md
           echo "Virtual Learning Lab validation PASS"
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vital-signs-virtual-learning-lab-dist
-          path: virtual-learning-lab/vital-signs/dist
