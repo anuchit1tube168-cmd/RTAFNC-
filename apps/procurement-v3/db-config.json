@@ -1,0 +1,31 @@
+{
+  "project": "RTAFNC-Procurement-v3",
+  "database": {
+    "provider": "google-sheets",
+    "spreadsheetId": "13LwwCOF5gjKZQMQuDeiG31jnWQoPCYUO56rN5i3S7nw",
+    "schemaVersion": "1.0.0",
+    "timezone": "Asia/Bangkok",
+    "currency": "THB",
+    "productionWrite": false
+  },
+  "tables": [
+    "Settings",
+    "Users",
+    "Plans",
+    "Procurements",
+    "TOR",
+    "Vendors",
+    "Contracts",
+    "Receipts",
+    "Assets",
+    "Inventory",
+    "Committees",
+    "Documents",
+    "AuditLog"
+  ],
+  "connection": {
+    "mode": "authenticated-backend-required",
+    "apiEndpoint": null,
+    "directBrowserSheetsWrite": false
+  }
+}
