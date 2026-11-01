@@ -1,0 +1,68 @@
+name: Campus API Safety CI
+
+on:
+  push:
+    paths:
+      - 'apps/rtafnc-campus-api/**'
+      - '.github/workflows/campus-api-ci.yml'
+  pull_request:
+    paths:
+      - 'apps/rtafnc-campus-api/**'
+      - '.github/workflows/campus-api-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Worker syntax
+        run: node --check apps/rtafnc-campus-api/src/index.js
+
+      - name: Validate D1 migrations in memory
+        run: |
+          python3 - <<'PY'
+          import sqlite3
+          from pathlib import Path
+
+          root = Path('apps/rtafnc-campus-api/migrations')
+          db = sqlite3.connect(':memory:')
+          for path in sorted(root.glob('*.sql')):
+              db.executescript(path.read_text(encoding='utf-8'))
+
+          tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+          required = {
+              'source_registry', 'sync_runs', 'core_students',
+              'core_staff', 'advisor_bindings', 'audit_events'
+          }
+          missing = required - tables
+          if missing:
+              raise SystemExit(f'missing tables: {sorted(missing)}')
+
+          count = db.execute('SELECT COUNT(*) FROM source_registry').fetchone()[0]
+          if count != 5:
+              raise SystemExit(f'expected 5 source aliases, got {count}')
+          print('D1 schema + source registry seed: PASS')
+          PY
+
+      - name: Enforce production write OFF
+        run: |
+          grep -q '"PRODUCTION_WRITE": "false"' apps/rtafnc-campus-api/wrangler.example.jsonc
+          ! grep -R -n 'PRODUCTION_WRITE.*true' apps/rtafnc-campus-api
+
+      - name: Prevent private Drive URLs in public source
+        run: |
+          if grep -R -n -E 'https://(drive|docs)\.google\.com' apps/rtafnc-campus-api; then
+            echo 'Private Google Drive URL found in public source.'
+            exit 1
+          fi
+
+      - name: Basic secret guard
+        run: |
+          if grep -R -n -E -- '-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|service_account_key|LINE_CHANNEL_SECRET=' apps/rtafnc-campus-api; then
+            echo 'Possible secret material found.'
+            exit 1
+          fi
