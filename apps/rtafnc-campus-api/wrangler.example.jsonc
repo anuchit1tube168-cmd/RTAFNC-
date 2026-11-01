@@ -1,20 +1,19 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "rtafnc-campus-api-staging",
+  "name": "rtafnc-campus-core-read-uat",
   "main": "src/index.js",
   "compatibility_date": "2026-11-01",
   "vars": {
-    "ENVIRONMENT": "staging",
+    "ENVIRONMENT": "uat",
     "PRODUCTION_WRITE": "false",
-    "EXPOSE_SOURCE_STATUS": "true",
+    "EXPOSE_SOURCE_STATUS": "false",
     "ALLOWED_ORIGIN": "https://anuchit1tube168-cmd.github.io"
   },
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "rtafnc-campus-core-staging",
-      "database_id": "REPLACE_WITH_STAGING_D1_DATABASE_ID",
-      "migrations_dir": "migrations"
+      "database_name": "rtafnc-campus-uat",
+      "database_id": "REPLACE_WITH_EXISTING_UAT_D1_DATABASE_ID"
     }
   ]
 }
