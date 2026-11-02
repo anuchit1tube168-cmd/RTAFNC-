@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "rtafnc-mt1-virtual-lab",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-11-02",
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "redact_query_string": true
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/healthz"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "LAB",
+      "id": "2d73f51d40324da5818731d9be44575f"
+    }
+  ]
+}
