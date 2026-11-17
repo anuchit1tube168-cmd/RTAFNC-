@@ -18,6 +18,10 @@ on:
       - 'agis-agent-armada-os/apps/command-center-v3/README.md'
       - '.github/workflows/agis-rpg-operations.yml'
 
+# จำกัด GITHUB_TOKEN ให้อ่านอย่างเดียว เพื่อลดความเสียหายถ้ามีโค้ดแปลกปลอมรันใน workflow
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
